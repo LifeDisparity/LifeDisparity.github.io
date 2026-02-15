@@ -1,10 +1,10 @@
 import { ArrowRight, Github, Instagram, Linkedin, Mail } from 'lucide-react';
 
-const matrixColumns = Array.from({ length: 28 }, (_, i) => ({
+const matrixColumns = Array.from({ length: 48 }, (_, i) => ({
   id: i,
-  left: `${(i / 28) * 100}%`,
-  delay: `${-(i % 9) * 0.9}s`,
-  duration: `${7 + (i % 6)}s`,
+  left: `${(i / 48) * 100}%`,
+  delay: `${-(i % 11) * 0.7}s`,
+  duration: `${5 + (i % 5)}s`,
 }));
 
 const matrixGlyphs = '01011010\n11010001\n10100111\n01101001\n10010110\n11100010\n01011101\n00110110';
@@ -28,6 +28,7 @@ export default function HeroSection() {
           </span>
         ))}
       </div>
+      <div className="matrix-hotspot" aria-hidden="true" />
 
       <div className="relative w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* Left Photo Panel */}
