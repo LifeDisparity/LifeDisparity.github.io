@@ -81,6 +81,12 @@ export default function ProjectsSection() {
               <span>Learn More</span>
               <ArrowRight size={16} />
             </button>
+            <button
+              onClick={() => setSelectedProject(projects[0])}
+              className="text-link w-fit text-left"
+            >
+              Past Projects
+            </button>
           </div>
         </div>
       </section>

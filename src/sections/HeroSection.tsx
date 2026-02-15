@@ -82,7 +82,7 @@ export default function HeroSection() {
         <div className="flex flex-col justify-center items-center text-center max-w-2xl">
           {/* Micro Label */}
           <span className="micro-label text-secondary-light mb-6">
-            Baruch's Quantitative Club
+            Baruch's Premier Quantitative Club
           </span>
 
           {/* Headline */}
@@ -94,7 +94,7 @@ export default function HeroSection() {
 
           {/* Subheadline */}
           <p className="body-text text-secondary-light mb-8 max-w-md mx-auto" style={{ fontSize: '1.05rem' }}>
-            We build models, write code, and trade ideas across math, data, and markets.
+            We  focus on developing the next generation of quants from Baruch College through a series of interactive workshops, project experience, and more
           </p>
 
           {/* CTAs */}

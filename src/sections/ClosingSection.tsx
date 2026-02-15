@@ -47,7 +47,7 @@ export default function ClosingSection() {
           baruchfqe@gmail.com
         </a>
         <p className="body-text text-secondary-light mb-6" style={{ fontSize: '0.9rem' }}>
-          Baruch's Quantitative Club
+          Baruch's Premier Quantitative Club
         </p>
 
         {/* Social Icons */}
