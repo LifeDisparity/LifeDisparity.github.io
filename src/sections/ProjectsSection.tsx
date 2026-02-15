@@ -4,23 +4,23 @@ import { ArrowRight, X, ExternalLink } from 'lucide-react';
 const projects = [
   {
     id: 1,
-    label: 'Volatility Surface',
-    shortDesc: 'Calibration and visualization toolkit for equity options.',
-    fullDesc: 'A comprehensive toolkit for calibrating and visualizing volatility surfaces from equity options data. Features include real-time data ingestion, multiple calibration models (SVI, SABR), interactive 3D surface plots, and export capabilities for downstream analysis.',
+    label: 'Kalman Filter For Volatility Surface',
+    shortDesc: 'Real-time options theoretical value updates using an Unscented Kalman Filter.',
+    fullDesc: 'We construct a methodology that offers a quick way for option market makers to update their theoretical values for options in real-time. We use an Unscented Kalman Filter (UKF) to quickly calibrate the implied volatility surface parameterization, which replaces the need for a costly objective function that needs to be minimized, allowing for real-time updates of the volatility surface.',
     slideshowLink: '#volatility-slideshow',
   },
   {
     id: 2,
-    label: 'StatArb Backtester',
-    shortDesc: 'Pairs-trading engine with risk overlays and reporting.',
-    fullDesc: 'A production-grade statistical arbitrage backtesting engine supporting cointegration-based pairs trading. Includes dynamic hedge ratio calculation, entry/exit signal generation, comprehensive risk management overlays, and detailed performance reporting with Sharpe ratio and max drawdown analysis.',
+    label: 'Sentiment Analysis Project',
+    shortDesc: 'Predicting stock movement using sentiment from social/news/event text plus price data.',
+    fullDesc: 'This project aims to predict stock price movements by integrating sentiment analysis of Twitter posts, financial news articles, and Kalshi event contract names with historical stock data. By quantifying public sentiment overall and toward specific stocks, we seek to uncover patterns and correlations that influence market dynamics. A Long-Short-Term Memory (LSTM) neural network will model temporal dependencies within the combined sentiment metrics and stock prices.',
     slideshowLink: '#statarb-slideshow',
   },
   {
     id: 3,
-    label: 'ML Order Flow',
-    shortDesc: 'Microstructure classifier for regime detection.',
-    fullDesc: 'Machine learning pipeline for analyzing market microstructure and detecting regime changes in real-time. Uses ensemble methods to classify order flow patterns, identify informed trading, and predict short-term price movements based on limit order book dynamics.',
+    label: 'Another Project Placeholder',
+    shortDesc: 'Placeholder project summary.',
+    fullDesc: 'blah blah blah',
     slideshowLink: '#mlorderflow-slideshow',
   },
 ];
