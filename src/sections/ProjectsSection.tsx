@@ -28,24 +28,37 @@ const projects = [
 const pastProjects = [
   {
     id: 1,
+    year: 2025,
     label: 'Past Project Alpha',
     fullDesc: 'Summary of a completed past project.',
+    slideshowLink: '#past-project-alpha',
   },
   {
     id: 2,
+    year: 2024,
     label: 'Past Project Beta',
     fullDesc: 'Summary of another completed past project.',
+    slideshowLink: '#past-project-beta',
   },
   {
     id: 3,
+    year: 2024,
     label: 'Past Project Gamma',
     fullDesc: 'Summary of an earlier project from previous semesters.',
+    slideshowLink: '#past-project-gamma',
   },
 ];
 
 export default function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
   const [isPastProjectsOpen, setIsPastProjectsOpen] = useState(false);
+  const projectsByYear = Object.entries(
+    pastProjects.reduce<Record<number, typeof pastProjects>>((acc, project) => {
+      if (!acc[project.year]) acc[project.year] = [];
+      acc[project.year].push(project);
+      return acc;
+    }, {})
+  ).sort((a, b) => Number(b[0]) - Number(a[0]));
 
   return (
     <>
@@ -191,19 +204,37 @@ export default function ProjectsSection() {
               </button>
             </div>
 
-            <div className="p-6">
-              {pastProjects.map((project) => (
-                <div
-                  key={project.id}
-                  className={`mb-8 pb-8 ${project.id !== pastProjects.length ? 'border-b border-white/10' : ''}`}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <span className="micro-label text-accent-green">{project.label}</span>
+            <div className="p-6 space-y-4">
+              {projectsByYear.map(([year, yearProjects]) => (
+                <details key={year} className="border border-white/10" open>
+                  <summary className="micro-label text-accent-green cursor-pointer px-4 py-3">
+                    {year}
+                  </summary>
+                  <div className="px-4 pb-4 pt-2">
+                    {yearProjects.map((project, index) => (
+                      <div
+                        key={project.id}
+                        className={`py-4 ${index !== yearProjects.length - 1 ? 'border-b border-white/10' : ''}`}
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <span className="micro-label text-accent-green">{project.label}</span>
+                          <a
+                            href={project.slideshowLink}
+                            className="text-link inline-flex items-center gap-1 text-xs"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span>View Slideshow</span>
+                            <ExternalLink size={12} />
+                          </a>
+                        </div>
+                        <p className="body-text text-secondary-light">
+                          {project.fullDesc}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                  <p className="body-text text-secondary-light">
-                    {project.fullDesc}
-                  </p>
-                </div>
+                </details>
               ))}
             </div>
 
