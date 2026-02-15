@@ -78,18 +78,8 @@ export default function HeroSection() {
       />
       <div className="vignette" />
 
-      <div className="relative z-20 w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        {/* Left Photo Panel */}
-        <div className="photo-frame aspect-[3/4] max-h-[72vh]">
-          <img
-            src="/hero_collaboration.jpg"
-            alt="Students collaborating"
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        {/* Right Content */}
-        <div className="relative z-20 flex flex-col justify-center">
+      <div className="relative z-20 w-full px-[6vw] py-[14vh] flex justify-center">
+        <div className="flex flex-col justify-center items-center text-center max-w-2xl">
           {/* Micro Label */}
           <span className="micro-label text-secondary-light mb-6">
             Baruch's Quantitative Club
@@ -103,12 +93,12 @@ export default function HeroSection() {
           </h1>
 
           {/* Subheadline */}
-          <p className="body-text text-secondary-light mb-8 max-w-md" style={{ fontSize: '1.05rem' }}>
+          <p className="body-text text-secondary-light mb-8 max-w-md mx-auto" style={{ fontSize: '1.05rem' }}>
             We build models, write code, and trade ideas across math, data, and markets.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 items-center">
             <a href="#about" className="cta-button w-fit">
               <span>About Us</span>
               <ArrowRight size={16} />
