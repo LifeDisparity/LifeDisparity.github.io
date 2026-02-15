@@ -47,7 +47,7 @@ export default function ClosingSection() {
           hello@fqe.club
         </a>
         <p className="body-text text-secondary-light mb-6" style={{ fontSize: '0.9rem' }}>
-          University Quantitative Club
+          Baruch's Quantitative Club
         </p>
 
         {/* Social Icons */}

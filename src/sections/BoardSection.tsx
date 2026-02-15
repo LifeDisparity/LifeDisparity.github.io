@@ -1,12 +1,12 @@
 const boardMembers = [
-  { name: 'Alex Chen', role: 'President', image: '/board_01.jpg' },
-  { name: 'Sarah Kim', role: 'VP Projects', image: '/board_02.jpg' },
-  { name: 'Michael Park', role: 'VP Education', image: '/board_03.jpg' },
-  { name: 'Emma Wilson', role: 'VP Outreach', image: '/board_04.jpg' },
-  { name: 'David Liu', role: 'Treasurer', image: '/board_05.jpg' },
-  { name: 'Rachel Green', role: 'Secretary', image: '/board_06.jpg' },
-  { name: 'James Martinez', role: 'Tech Lead', image: '/board_07.jpg' },
-  { name: 'Lisa Thompson', role: 'Events Coordinator', image: '/board_08.jpg' },
+  { name: 'Arthur Faynin', role: 'President', image: '/board_01.jpg' },
+  { name: 'Alfred Leong', role: 'Vice-President', image: '/board_02.jpg' },
+  { name: 'Alexi Tilly', role: 'Treasurer', image: '/board_03.jpg' },
+  { name: 'Abie Lent', role: 'Secretary', image: '/board_04.jpg' },
+  { name: 'Daniel Shmir', role: 'Data Officer', image: '/board_05.jpg' },
+  { name: 'Kateryna Chevplianska', role: 'Data Officer', image: '/board_06.jpg' },
+  { name: 'Mei Lin Pan', role: 'Marketing Officer', image: '/board_07.jpg' },
+  { name: 'Dmytro Popov', role: 'Events Officer', image: '/board_08.jpg' },
 ];
 
 export default function BoardSection() {

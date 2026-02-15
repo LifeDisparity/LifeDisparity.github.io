@@ -131,7 +131,7 @@ export default function ProjectsSection() {
             {/* Modal Footer */}
             <div className="p-6 border-t border-white/10 flex justify-between items-center">
               <a
-                href="https://github.com"
+                href="https://github.com/BaruchFinancialQuantsEngineers-FQE"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-link inline-flex items-center gap-2"
