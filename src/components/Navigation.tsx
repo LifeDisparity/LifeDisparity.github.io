@@ -27,8 +27,7 @@ export default function Navigation() {
       <div className="fixed top-6 left-6 z-[200]">
         <a 
           href="#" 
-          className="text-xl font-bold text-primary-light tracking-tight hover:text-accent-green transition-colors"
-          style={{ fontFamily: '"Futura Book", "Futura-Book", "Futura PT Book", "Futura", "Trebuchet MS", Arial, sans-serif', fontWeight: 700 }}
+          className="font-display text-xl font-bold text-primary-light tracking-tight hover:text-accent-green transition-colors"
           onClick={(e) => {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
