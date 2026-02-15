@@ -1,38 +1,13 @@
 import { ArrowRight, Github, Instagram, Linkedin, Mail } from 'lucide-react';
 
-const matrixColumns = Array.from({ length: 48 }, (_, i) => ({
-  id: i,
-  left: `${(i / 48) * 100}%`,
-  delay: `${-(i % 11) * 0.7}s`,
-  duration: `${5 + (i % 5)}s`,
-}));
-
-const matrixGlyphs = '01011010\n11010001\n10100111\n01101001\n10010110\n11100010\n01011101\n00110110';
-
 export default function HeroSection() {
   return (
     <section className="min-h-screen bg-primary-dark relative flex items-center">
       <div className="vignette" />
-      <div className="matrix-rain" aria-hidden="true">
-        {matrixColumns.map((column) => (
-          <span
-            key={column.id}
-            className="matrix-column"
-            style={{
-              left: column.left,
-              animationDelay: column.delay,
-              animationDuration: column.duration,
-            }}
-          >
-            {matrixGlyphs}
-          </span>
-        ))}
-      </div>
-      <div className="matrix-hotspot" aria-hidden="true" />
 
-      <div className="relative w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* Left Photo Panel */}
-        <div className="photo-frame relative z-0 aspect-[3/4] max-h-[72vh]">
+        <div className="photo-frame aspect-[3/4] max-h-[72vh]">
           <img
             src="/hero_collaboration.jpg"
             alt="Students collaborating"
@@ -41,7 +16,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right Content */}
-        <div className="relative z-20 flex flex-col justify-center">
+        <div className="flex flex-col justify-center">
           {/* Micro Label */}
           <span className="micro-label text-secondary-light mb-6">
             Baruch's Quantitative Club
@@ -73,7 +48,7 @@ export default function HeroSection() {
       </div>
 
       {/* Bottom Socials */}
-      <div className="absolute right-[6vw] bottom-[6vh] z-20 flex items-center gap-4">
+      <div className="absolute right-[6vw] bottom-[6vh] flex items-center gap-4">
         <a
           href="https://github.com/BaruchFinancialQuantsEngineers-FQE/"
           target="_blank"

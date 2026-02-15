@@ -137,56 +137,6 @@
   background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%);
 }
 
-.matrix-rain {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 10;
-  opacity: 0.85;
-  mix-blend-mode: screen;
-}
-
-.matrix-column {
-  position: absolute;
-  top: -80%;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.95rem;
-  line-height: 1.0;
-  white-space: pre;
-  color: rgba(57, 255, 20, 1);
-  text-shadow: 0 0 14px rgba(57, 255, 20, 0.95);
-  animation-name: matrix-fall;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-.matrix-hotspot {
-  position: absolute;
-  inset: 0;
-  z-index: 11;
-  pointer-events: none;
-  background: radial-gradient(circle at 72% 45%, rgba(57, 255, 20, 0.32) 0%, rgba(57, 255, 20, 0.14) 22%, transparent 50%);
-  mix-blend-mode: screen;
-}
-
-@keyframes matrix-fall {
-  0% {
-    transform: translateY(-120%);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.85;
-  }
-  90% {
-    opacity: 0.45;
-  }
-  100% {
-    transform: translateY(240%);
-    opacity: 0;
-  }
-}
-
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
