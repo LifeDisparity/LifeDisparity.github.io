@@ -1,0 +1,36 @@
+/* App-specific styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Smooth image loading */
+img {
+  opacity: 1;
+}
+
+/* Prevent text selection on UI elements */
+.micro-label,
+.nav-link {
+  user-select: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .photo-frame {
+    width: 100% !important;
+    max-height: 50vh;
+  }
+  
+  .headline-xl,
+  .headline-lg {
+    font-size: clamp(1.75rem, 8vw, 2.5rem) !important;
+  }
+}

@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 30% 5%;
+    --foreground: 220 20% 97%;
+    --card: 220 25% 8%;
+    --card-foreground: 220 20% 97%;
+    --popover: 220 25% 8%;
+    --popover-foreground: 220 20% 97%;
+    --primary: 187 80% 53%;
+    --primary-foreground: 220 30% 5%;
+    --secondary: 220 20% 12%;
+    --secondary-foreground: 220 20% 97%;
+    --muted: 220 20% 15%;
+    --muted-foreground: 215 15% 65%;
+    --accent: 187 80% 53%;
+    --accent-foreground: 220 30% 5%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 187 80% 53%;
+    --radius: 0px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Typography */
+.font-display {
+  font-family: 'Sora', sans-serif;
+}
+
+.font-mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Headline Styles */
+.headline-xl {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.headline-lg {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+}
+
+/* Micro Label */
+.micro-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Body Text */
+.body-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Photo Frame */
+.photo-frame {
+  position: relative;
+  border: 1px solid rgba(244, 246, 250, 0.14);
+}
+
+.photo-frame::before,
+.photo-frame::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: rgba(34, 211, 238, 0.4);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.photo-frame::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+
+.photo-frame::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+/* Grain Overlay */
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Vignette */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0F17;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 211, 238, 0.5);
+}
+
+/* CTA Button */
+.cta-button {
+  @apply inline-flex items-center gap-2 px-6 py-3 border border-[#22D3EE] text-[#22D3EE] font-mono text-sm tracking-wider uppercase transition-all duration-200;
+}
+
+.cta-button:hover {
+  @apply bg-[#22D3EE]/10 -translate-y-0.5;
+}
+
+/* Text Link */
+.text-link {
+  @apply text-[#A9B3C2] font-mono text-sm tracking-wide transition-colors duration-200;
+}
+
+.text-link:hover {
+  @apply text-[#22D3EE];
+}
+
+/* Nav Link */
+.nav-link {
+  @apply relative text-[#A9B3C2] font-mono text-xs tracking-widest uppercase transition-colors duration-200;
+}
+
+.nav-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-px bg-[#22D3EE] transition-all duration-300;
+}
+
+.nav-link:hover {
+  @apply text-[#F4F6FA];
+}
+
+.nav-link:hover::after {
+  @apply w-full;
+}
+
+/* Background Colors */
+.bg-primary-dark {
+  background-color: #0B0F17;
+}
+
+.bg-secondary-dark {
+  background-color: #111827;
+}
+
+/* Text Colors */
+.text-primary-light {
+  color: #F4F6FA;
+}
+
+.text-secondary-light {
+  color: #A9B3C2;
+}
+
+.text-accent-cyan {
+  color: #22D3EE;
+}
+
+/* Selection */
+::selection {
+  background-color: rgba(34, 211, 238, 0.3);
+  color: #F4F6FA;
+}
+
+/* Focus */
+:focus-visible {
+  outline: 2px solid rgba(34, 211, 238, 0.6);
+  outline-offset: 2px;
+}
