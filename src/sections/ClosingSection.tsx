@@ -52,13 +52,29 @@ export default function ClosingSection() {
 
         {/* Social Icons */}
         <div className="flex items-center gap-6 mb-10">
-          <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
+          <a
+            href="https://github.com/BaruchFinancialQuantsEngineers-FQE"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="FQE GitHub"
+            className="text-secondary-light hover:text-accent-green transition-colors"
+          >
             <Github size={20} strokeWidth={1.5} />
           </a>
-          <a href="https://www.linkedin.com/company/fqe-baruch/" className="text-secondary-light hover:text-accent-green transition-colors">
+          <a
+            href="https://www.linkedin.com/company/fqe-baruch/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="FQE LinkedIn"
+            className="text-secondary-light hover:text-accent-green transition-colors"
+          >
             <Linkedin size={20} strokeWidth={1.5} />
           </a>
-          <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
+          <a
+            href="mailto:hello@fqe.club"
+            aria-label="Email FQE"
+            className="text-secondary-light hover:text-accent-green transition-colors"
+          >
             <Mail size={20} strokeWidth={1.5} />
           </a>
         </div>
