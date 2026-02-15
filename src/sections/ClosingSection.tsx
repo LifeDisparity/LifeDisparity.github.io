@@ -30,7 +30,7 @@ export default function ClosingSection() {
 
       {/* Closing Word */}
       <div className="text-center py-[6vh]">
-        <h2 
+        <h2
           className="headline-lg text-primary-light"
           style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)' }}
         >
@@ -40,8 +40,8 @@ export default function ClosingSection() {
 
       {/* Contact Block */}
       <div className="flex flex-col items-center pb-[6vh]">
-        <a 
-          href="mailto:hello@fqe.club" 
+        <a
+          href="mailto:hello@fqe.club"
           className="micro-label text-accent-green mb-4 hover:underline"
         >
           hello@fqe.club
@@ -55,7 +55,7 @@ export default function ClosingSection() {
           <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
             <Github size={20} strokeWidth={1.5} />
           </a>
-          <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
+          <a href="https://www.linkedin.com/company/fqe-baruch/" className="text-secondary-light hover:text-accent-green transition-colors">
             <Linkedin size={20} strokeWidth={1.5} />
           </a>
           <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">

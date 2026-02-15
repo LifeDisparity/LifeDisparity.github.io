@@ -19,7 +19,7 @@ export default function HeroSection() {
         <div className="flex flex-col justify-center">
           {/* Micro Label */}
           <span className="micro-label text-secondary-light mb-6">
-            Quantitative Club
+            Baruch's Quantitative Club
           </span>
 
           {/* Headline */}
@@ -52,7 +52,7 @@ export default function HeroSection() {
         <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
           <Github size={18} strokeWidth={1.5} />
         </a>
-        <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
+        <a href="https://www.linkedin.com/company/fqe-baruch/" className="text-secondary-light hover:text-accent-green transition-colors">
           <Linkedin size={18} strokeWidth={1.5} />
         </a>
         <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
