@@ -29,7 +29,7 @@ function App() {
           layout="right-photo"
           microLabel="About"
           headline="We Are Builders"
-          body="FQE is a student collective that applies theory to practice. We use stochastic calculus, machine learning, and systems programming to solve real-world finance problems."
+          body="The Financial Quants and Engineers club will develop students' technical skills and network at the intersection of quantitative finance and technology. Members will work on a variety of projects within data science, risk analysis, quantitative modeling, and algorithmic trading. The main goal of the organization is to provide the necessary exposure and skills for students to gain roles in quantitative fields. FQE regularly hosts seminars, organizes discussions with leading professors, and offers opportunities for members to work on innovative projects, providing valuable hands-on experience. Our goal is to empower the next generation of quants to lead and innovate in the ever-evolving landscape of finance and technology."
           imageSrc="/about_whiteboard.jpg"
           imageAlt="Student writing on whiteboard"
           items={[
