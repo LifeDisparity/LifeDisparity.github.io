@@ -49,13 +49,13 @@ export default function HeroSection() {
 
       {/* Bottom Socials */}
       <div className="absolute right-[6vw] bottom-[6vh] flex items-center gap-4">
-        <a href="#" className="text-secondary-light hover:text-[#22D3EE] transition-colors">
+        <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
           <Github size={18} strokeWidth={1.5} />
         </a>
-        <a href="#" className="text-secondary-light hover:text-[#22D3EE] transition-colors">
+        <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
           <Linkedin size={18} strokeWidth={1.5} />
         </a>
-        <a href="#" className="text-secondary-light hover:text-[#22D3EE] transition-colors">
+        <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
           <Mail size={18} strokeWidth={1.5} />
         </a>
       </div>

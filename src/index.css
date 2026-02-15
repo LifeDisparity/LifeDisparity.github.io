@@ -6,25 +6,25 @@
 
 @layer base {
   :root {
-    --background: 220 30% 5%;
-    --foreground: 220 20% 97%;
-    --card: 220 25% 8%;
-    --card-foreground: 220 20% 97%;
-    --popover: 220 25% 8%;
-    --popover-foreground: 220 20% 97%;
-    --primary: 187 80% 53%;
-    --primary-foreground: 220 30% 5%;
-    --secondary: 220 20% 12%;
-    --secondary-foreground: 220 20% 97%;
-    --muted: 220 20% 15%;
-    --muted-foreground: 215 15% 65%;
-    --accent: 187 80% 53%;
-    --accent-foreground: 220 30% 5%;
+    --background: 150 40% 5%;
+    --foreground: 140 20% 97%;
+    --card: 150 35% 8%;
+    --card-foreground: 140 20% 97%;
+    --popover: 150 35% 8%;
+    --popover-foreground: 140 20% 97%;
+    --primary: 142 70% 45%;
+    --primary-foreground: 150 40% 5%;
+    --secondary: 150 30% 12%;
+    --secondary-foreground: 140 20% 97%;
+    --muted: 150 25% 15%;
+    --muted-foreground: 140 15% 65%;
+    --accent: 142 70% 50%;
+    --accent-foreground: 150 40% 5%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 15% 18%;
-    --input: 220 15% 18%;
-    --ring: 187 80% 53%;
+    --border: 150 20% 18%;
+    --input: 150 20% 18%;
+    --ring: 142 70% 45%;
     --radius: 0px;
   }
 }
@@ -89,7 +89,7 @@
 /* Photo Frame */
 .photo-frame {
   position: relative;
-  border: 1px solid rgba(244, 246, 250, 0.14);
+  border: 1px solid rgba(240, 250, 244, 0.14);
 }
 
 .photo-frame::before,
@@ -98,7 +98,7 @@
   position: absolute;
   width: 24px;
   height: 24px;
-  border-color: rgba(34, 211, 238, 0.4);
+  border-color: rgba(74, 222, 128, 0.4);
   border-style: solid;
   pointer-events: none;
 }
@@ -143,48 +143,48 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0B0F17;
+  background: #05140a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(34, 211, 238, 0.3);
+  background: rgba(74, 222, 128, 0.3);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(34, 211, 238, 0.5);
+  background: rgba(74, 222, 128, 0.5);
 }
 
 /* CTA Button */
 .cta-button {
-  @apply inline-flex items-center gap-2 px-6 py-3 border border-[#22D3EE] text-[#22D3EE] font-mono text-sm tracking-wider uppercase transition-all duration-200;
+  @apply inline-flex items-center gap-2 px-6 py-3 border border-[#4ADE80] text-[#4ADE80] font-mono text-sm tracking-wider uppercase transition-all duration-200;
 }
 
 .cta-button:hover {
-  @apply bg-[#22D3EE]/10 -translate-y-0.5;
+  @apply bg-[#4ADE80]/10 -translate-y-0.5;
 }
 
 /* Text Link */
 .text-link {
-  @apply text-[#A9B3C2] font-mono text-sm tracking-wide transition-colors duration-200;
+  @apply text-[#A3B8AA] font-mono text-sm tracking-wide transition-colors duration-200;
 }
 
 .text-link:hover {
-  @apply text-[#22D3EE];
+  @apply text-[#4ADE80];
 }
 
 /* Nav Link */
 .nav-link {
-  @apply relative text-[#A9B3C2] font-mono text-xs tracking-widest uppercase transition-colors duration-200;
+  @apply relative text-[#A3B8AA] font-mono text-xs tracking-widest uppercase transition-colors duration-200;
 }
 
 .nav-link::after {
   content: '';
-  @apply absolute bottom-0 left-0 w-0 h-px bg-[#22D3EE] transition-all duration-300;
+  @apply absolute bottom-0 left-0 w-0 h-px bg-[#4ADE80] transition-all duration-300;
 }
 
 .nav-link:hover {
-  @apply text-[#F4F6FA];
+  @apply text-[#F0FAF4];
 }
 
 .nav-link:hover::after {
@@ -193,34 +193,52 @@
 
 /* Background Colors */
 .bg-primary-dark {
-  background-color: #0B0F17;
+  background-color: #05140a;
 }
 
 .bg-secondary-dark {
-  background-color: #111827;
+  background-color: #0a1f12;
 }
 
 /* Text Colors */
 .text-primary-light {
-  color: #F4F6FA;
+  color: #F0FAF4;
 }
 
 .text-secondary-light {
-  color: #A9B3C2;
+  color: #A3B8AA;
 }
 
-.text-accent-cyan {
-  color: #22D3EE;
+.text-accent-green {
+  color: #4ADE80;
 }
 
 /* Selection */
 ::selection {
-  background-color: rgba(34, 211, 238, 0.3);
-  color: #F4F6FA;
+  background-color: rgba(74, 222, 128, 0.3);
+  color: #F0FAF4;
 }
 
 /* Focus */
 :focus-visible {
-  outline: 2px solid rgba(34, 211, 238, 0.6);
+  outline: 2px solid rgba(74, 222, 128, 0.6);
   outline-offset: 2px;
+}
+
+/* Logo Carousel Animation */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.logo-carousel {
+  animation: scroll 30s linear infinite;
+}
+
+.logo-carousel:hover {
+  animation-play-state: paused;
 }

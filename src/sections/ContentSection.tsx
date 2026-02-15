@@ -67,7 +67,7 @@ export default function ContentSection({
             <div className="space-y-4 mb-8">
               {items.map((item, index) => (
                 <div key={index} className="flex flex-col">
-                  <span className="micro-label text-accent-cyan mb-1">{item.label}</span>
+                  <span className="micro-label text-accent-green mb-1">{item.label}</span>
                   <span className="body-text text-secondary-light" style={{ fontSize: '0.9rem' }}>
                     {item.description}
                   </span>

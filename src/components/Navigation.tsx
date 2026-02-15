@@ -27,7 +27,7 @@ export default function Navigation() {
       <div className="fixed top-6 left-6 z-[200]">
         <a 
           href="#" 
-          className="font-display text-xl font-bold text-primary-light tracking-tight hover:text-accent-cyan transition-colors"
+          className="font-display text-xl font-bold text-primary-light tracking-tight hover:text-accent-green transition-colors"
           onClick={(e) => {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -71,7 +71,7 @@ export default function Navigation() {
               key={link.label}
               href={link.href}
               onClick={(e) => handleNavClick(e, link.href)}
-              className="font-display text-2xl font-bold text-primary-light hover:text-accent-cyan transition-colors"
+              className="font-display text-2xl font-bold text-primary-light hover:text-accent-green transition-colors"
             >
               {link.label}
             </a>

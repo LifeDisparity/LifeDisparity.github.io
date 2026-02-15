@@ -5,7 +5,6 @@ import { inspectAttr } from 'kimi-plugin-inspect-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // User/organization site repo (LifeDisparity.github.io) is served from root.
   base: '/',
   plugins: [inspectAttr(), react()],
   resolve: {

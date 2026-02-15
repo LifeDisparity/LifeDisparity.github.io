@@ -42,7 +42,7 @@ export default function ClosingSection() {
       <div className="flex flex-col items-center pb-[6vh]">
         <a 
           href="mailto:hello@fqe.club" 
-          className="micro-label text-accent-cyan mb-4 hover:underline"
+          className="micro-label text-accent-green mb-4 hover:underline"
         >
           hello@fqe.club
         </a>
@@ -52,13 +52,13 @@ export default function ClosingSection() {
 
         {/* Social Icons */}
         <div className="flex items-center gap-6 mb-10">
-          <a href="#" className="text-secondary-light hover:text-[#22D3EE] transition-colors">
+          <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
             <Github size={20} strokeWidth={1.5} />
           </a>
-          <a href="#" className="text-secondary-light hover:text-[#22D3EE] transition-colors">
+          <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
             <Linkedin size={20} strokeWidth={1.5} />
           </a>
-          <a href="#" className="text-secondary-light hover:text-[#22D3EE] transition-colors">
+          <a href="#" className="text-secondary-light hover:text-accent-green transition-colors">
             <Mail size={20} strokeWidth={1.5} />
           </a>
         </div>

@@ -3,6 +3,9 @@ import './App.css';
 import Navigation from './components/Navigation';
 import HeroSection from './sections/HeroSection';
 import ContentSection from './sections/ContentSection';
+import ProjectsSection from './sections/ProjectsSection';
+import AlumniSection from './sections/AlumniSection';
+import BoardSection from './sections/BoardSection';
 import ContactSection from './sections/ContactSection';
 import ClosingSection from './sections/ClosingSection';
 
@@ -37,59 +40,13 @@ function App() {
         />
 
         {/* Projects */}
-        <ContentSection
-          id="projects"
-          layout="left-photo"
-          microLabel="Projects"
-          headline="Projects That Matter"
-          body="From alpha research to execution systems. Our work is built to be tested, iterated, and shipped."
-          imageSrc="/projects_laptop.jpg"
-          imageAlt="Coding on laptop"
-          items={[
-            { label: 'Volatility Surface', description: 'Calibration and visualization toolkit for equity options.' },
-            { label: 'StatArb Backtester', description: 'Pairs-trading engine with risk overlays and reporting.' },
-            { label: 'ML Order Flow', description: 'Microstructure classifier for regime detection.' },
-          ]}
-          ctaText="View on GitHub"
-          ctaHref="https://github.com"
-        />
+        <ProjectsSection />
 
         {/* Alumni */}
-        <ContentSection
-          id="alumni"
-          background="secondary"
-          layout="right-photo"
-          microLabel="Alumni"
-          headline="Where Members Go"
-          body="Our graduates work in quantitative research, trading, data science, and engineering at firms that value rigor."
-          imageSrc="/alumni_campus.jpg"
-          imageAlt="Campus scene"
-          items={[
-            { label: 'Buy-Side', description: 'Hedge funds and asset managers' },
-            { label: 'Sell-Side', description: 'Quantitative research and trading desks' },
-            { label: 'Tech / Fintech', description: 'Data science and infrastructure roles' },
-          ]}
-          ctaText="Read Alumni Stories"
-        />
+        <AlumniSection />
 
         {/* Board */}
-        <ContentSection
-          id="board"
-          layout="left-photo"
-          microLabel="Board"
-          headline="Meet the Board"
-          body="A small team focused on building things that work and helping others learn."
-          imageSrc="/board_portrait.jpg"
-          imageAlt="Board member portrait"
-          items={[
-            { label: 'President', description: 'Strategy, partnerships, and club direction.' },
-            { label: 'VP Projects', description: 'Research pipelines and code quality.' },
-            { label: 'VP Education', description: 'Workshops, curriculum, and mentorship.' },
-            { label: 'VP Outreach', description: 'Events, recruiting, and alumni relations.' },
-          ]}
-          ctaText="Contact the Board"
-          ctaHref="mailto:hello@fqe.club"
-        />
+        <BoardSection />
 
         {/* Events */}
         <ContentSection
@@ -106,24 +63,6 @@ function App() {
             { label: 'Case Competition', description: 'Team-based research and presentation.' },
           ]}
           ctaText="See the Calendar"
-        />
-
-        {/* Resources */}
-        <ContentSection
-          id="resources"
-          background="secondary"
-          layout="left-photo"
-          microLabel="Resources"
-          headline="Tools We Use"
-          body="A shared stack for research, collaboration, and shipping real systems."
-          imageSrc="/resources_working.jpg"
-          imageAlt="Student working"
-          items={[
-            { label: 'Code Repos', description: 'Templates, backtesters, and notebooks.' },
-            { label: 'Data Access', description: 'Curated datasets and vendor partnerships.' },
-            { label: 'Compute', description: 'Cloud notebooks and simulation environments.' },
-          ]}
-          ctaText="Browse Resources"
         />
 
         {/* Contact */}
