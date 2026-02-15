@@ -77,7 +77,7 @@ export default function HeroSection() {
           <Instagram size={18} strokeWidth={1.5} />
         </a>
         <a
-          href="mailto:hello@fqe.club"
+          href="mailto:baruchfqe@gmail.com"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Email FQE"

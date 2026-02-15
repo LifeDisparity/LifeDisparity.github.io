@@ -41,10 +41,10 @@ export default function ClosingSection() {
       {/* Contact Block */}
       <div className="flex flex-col items-center pb-[6vh]">
         <a
-          href="mailto:hello@fqe.club"
+          href="mailto:baruchfqe@gmail.com"
           className="micro-label text-accent-green mb-4 hover:underline"
         >
-          hello@fqe.club
+          baruchfqe@gmail.com
         </a>
         <p className="body-text text-secondary-light mb-6" style={{ fontSize: '0.9rem' }}>
           Baruch's Quantitative Club
@@ -80,7 +80,7 @@ export default function ClosingSection() {
             <Instagram size={20} strokeWidth={1.5} />
           </a>
           <a
-            href="mailto:hello@fqe.club"
+            href="mailto:baruchfqe@gmail.com"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Email FQE"

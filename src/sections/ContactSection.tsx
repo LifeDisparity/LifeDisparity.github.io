@@ -26,7 +26,7 @@ export default function ContactSection() {
 
           {/* Primary CTA */}
           <a 
-            href="mailto:hello@fqe.club" 
+            href="mailto:baruchfqe@gmail.com" 
             className="cta-button mb-4 w-fit"
           >
             <span>Apply to Join</span>
@@ -35,7 +35,7 @@ export default function ContactSection() {
 
           {/* Secondary CTA */}
           <div className="mt-6">
-            <a href="mailto:hello@fqe.club" className="text-link inline-flex items-center gap-2">
+            <a href="mailto:baruchfqe@gmail.com" className="text-link inline-flex items-center gap-2">
               <Mail size={14} />
               <span>Email the Board</span>
             </a>
