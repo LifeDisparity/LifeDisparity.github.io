@@ -1,4 +1,4 @@
-import { ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
+import { ArrowRight, Github, Instagram, Linkedin, Mail } from 'lucide-react';
 
 export default function HeroSection() {
   return (
@@ -66,6 +66,15 @@ export default function HeroSection() {
           className="text-secondary-light hover:text-accent-green transition-colors"
         >
           <Linkedin size={18} strokeWidth={1.5} />
+        </a>
+        <a
+          href="https://www.instagram.com/baruchfqe/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="FQE Instagram"
+          className="text-secondary-light hover:text-accent-green transition-colors"
+        >
+          <Instagram size={18} strokeWidth={1.5} />
         </a>
         <a
           href="mailto:hello@fqe.club"

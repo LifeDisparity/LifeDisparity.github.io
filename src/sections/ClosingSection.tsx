@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Github, Instagram, Linkedin, Mail } from 'lucide-react';
 
 export default function ClosingSection() {
   return (
@@ -69,6 +69,15 @@ export default function ClosingSection() {
             className="text-secondary-light hover:text-accent-green transition-colors"
           >
             <Linkedin size={20} strokeWidth={1.5} />
+          </a>
+          <a
+            href="https://www.instagram.com/baruchfqe/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="FQE Instagram"
+            className="text-secondary-light hover:text-accent-green transition-colors"
+          >
+            <Instagram size={20} strokeWidth={1.5} />
           </a>
           <a
             href="mailto:hello@fqe.club"
