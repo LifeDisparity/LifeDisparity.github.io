@@ -47,6 +47,13 @@ const pastProjects = [
     fullDesc: 'Summary of an earlier project from previous semesters.',
     slideshowLink: '#past-project-gamma',
   },
+  {
+    id: 4,
+    year: 2022,
+    label: 'Past Project Foxtrot',
+    fullDesc: 'Summary of an earlier project from previous semesters.',
+    slideshowLink: '#past-project-foxtrot',
+  },
 ];
 
 export default function ProjectsSection() {
