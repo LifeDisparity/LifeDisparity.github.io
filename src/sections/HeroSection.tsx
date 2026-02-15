@@ -29,9 +29,9 @@ export default function HeroSection() {
         ))}
       </div>
 
-      <div className="relative z-10 w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* Left Photo Panel */}
-        <div className="photo-frame aspect-[3/4] max-h-[72vh]">
+        <div className="photo-frame relative z-0 aspect-[3/4] max-h-[72vh]">
           <img
             src="/hero_collaboration.jpg"
             alt="Students collaborating"
@@ -40,7 +40,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right Content */}
-        <div className="flex flex-col justify-center">
+        <div className="relative z-20 flex flex-col justify-center">
           {/* Micro Label */}
           <span className="micro-label text-secondary-light mb-6">
             Baruch's Quantitative Club
@@ -72,7 +72,7 @@ export default function HeroSection() {
       </div>
 
       {/* Bottom Socials */}
-      <div className="absolute right-[6vw] bottom-[6vh] z-10 flex items-center gap-4">
+      <div className="absolute right-[6vw] bottom-[6vh] z-20 flex items-center gap-4">
         <a
           href="https://github.com/BaruchFinancialQuantsEngineers-FQE/"
           target="_blank"
