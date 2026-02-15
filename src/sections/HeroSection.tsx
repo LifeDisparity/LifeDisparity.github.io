@@ -1,11 +1,35 @@
 import { ArrowRight, Github, Instagram, Linkedin, Mail } from 'lucide-react';
 
+const matrixColumns = Array.from({ length: 28 }, (_, i) => ({
+  id: i,
+  left: `${(i / 28) * 100}%`,
+  delay: `${-(i % 9) * 0.9}s`,
+  duration: `${7 + (i % 6)}s`,
+}));
+
+const matrixGlyphs = '01011010\n11010001\n10100111\n01101001\n10010110\n11100010\n01011101\n00110110';
+
 export default function HeroSection() {
   return (
     <section className="min-h-screen bg-primary-dark relative flex items-center">
       <div className="vignette" />
+      <div className="matrix-rain" aria-hidden="true">
+        {matrixColumns.map((column) => (
+          <span
+            key={column.id}
+            className="matrix-column"
+            style={{
+              left: column.left,
+              animationDelay: column.delay,
+              animationDuration: column.duration,
+            }}
+          >
+            {matrixGlyphs}
+          </span>
+        ))}
+      </div>
 
-      <div className="w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* Left Photo Panel */}
         <div className="photo-frame aspect-[3/4] max-h-[72vh]">
           <img
@@ -48,7 +72,7 @@ export default function HeroSection() {
       </div>
 
       {/* Bottom Socials */}
-      <div className="absolute right-[6vw] bottom-[6vh] flex items-center gap-4">
+      <div className="absolute right-[6vw] bottom-[6vh] z-10 flex items-center gap-4">
         <a
           href="https://github.com/BaruchFinancialQuantsEngineers-FQE/"
           target="_blank"
