@@ -78,7 +78,7 @@ export default function HeroSection() {
       />
       <div className="vignette" />
 
-      <div className="relative z-0 w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-20 w-full px-[6vw] py-[14vh] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* Left Photo Panel */}
         <div className="photo-frame aspect-[3/4] max-h-[72vh]">
           <img
