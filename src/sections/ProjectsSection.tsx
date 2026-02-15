@@ -25,8 +25,27 @@ const projects = [
   },
 ];
 
+const pastProjects = [
+  {
+    id: 1,
+    label: 'Past Project Alpha',
+    fullDesc: 'Summary of a completed past project.',
+  },
+  {
+    id: 2,
+    label: 'Past Project Beta',
+    fullDesc: 'Summary of another completed past project.',
+  },
+  {
+    id: 3,
+    label: 'Past Project Gamma',
+    fullDesc: 'Summary of an earlier project from previous semesters.',
+  },
+];
+
 export default function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const [isPastProjectsOpen, setIsPastProjectsOpen] = useState(false);
 
   return (
     <>
@@ -82,8 +101,8 @@ export default function ProjectsSection() {
               <ArrowRight size={16} />
             </button>
             <button
-              onClick={() => setSelectedProject(projects[0])}
-              className="text-link w-fit text-left"
+              onClick={() => setIsPastProjectsOpen(true)}
+              className="text-link mt-4 w-fit text-left"
             >
               Past Projects
             </button>
@@ -147,6 +166,50 @@ export default function ProjectsSection() {
               </a>
               <button
                 onClick={() => setSelectedProject(null)}
+                className="cta-button"
+              >
+                <span>Close</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Past Projects Modal */}
+      {isPastProjectsOpen && (
+        <div className="fixed inset-0 z-[300] bg-black/80 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="bg-secondary-dark max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-white/10">
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <h3 className="headline-lg text-primary-light" style={{ fontSize: '1.5rem' }}>
+                Past Projects
+              </h3>
+              <button
+                onClick={() => setIsPastProjectsOpen(false)}
+                className="text-secondary-light hover:text-accent-green transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {pastProjects.map((project) => (
+                <div
+                  key={project.id}
+                  className={`mb-8 pb-8 ${project.id !== pastProjects.length ? 'border-b border-white/10' : ''}`}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="micro-label text-accent-green">{project.label}</span>
+                  </div>
+                  <p className="body-text text-secondary-light">
+                    {project.fullDesc}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-6 border-t border-white/10 flex justify-end items-center">
+              <button
+                onClick={() => setIsPastProjectsOpen(false)}
                 className="cta-button"
               >
                 <span>Close</span>
