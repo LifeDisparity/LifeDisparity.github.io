@@ -53,9 +53,9 @@ export default function ClosingSection() {
         {/* Social Icons */}
         <div className="flex items-center gap-6 mb-10">
           <a
-            href="https://github.com/BaruchFinancialQuantsEngineers-FQE"
+            href="https://github.com/BaruchFinancialQuantsEngineers-FQE/"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             aria-label="FQE GitHub"
             className="text-secondary-light hover:text-accent-green transition-colors"
           >
@@ -64,7 +64,7 @@ export default function ClosingSection() {
           <a
             href="https://www.linkedin.com/company/fqe-baruch/"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             aria-label="FQE LinkedIn"
             className="text-secondary-light hover:text-accent-green transition-colors"
           >
@@ -72,6 +72,8 @@ export default function ClosingSection() {
           </a>
           <a
             href="mailto:hello@fqe.club"
+            target="_blank"
+            rel="noopener noreferrer"
             aria-label="Email FQE"
             className="text-secondary-light hover:text-accent-green transition-colors"
           >
