@@ -28,28 +28,28 @@ export default function AlumniSection() {
             Where Members Go
           </h2>
           <p className="body-text text-secondary-light mt-4 max-w-xl">
-            Our graduates work in quantitative research, trading, data science, and engineering at firms that value rigor.
+            Our alumni build quantitative strategies, trading systems, and data infrastructure at leading financial and technology firms.
           </p>
         </div>
 
         {/* Placement Categories */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="border border-white/10 p-6">
-            <span className="micro-label text-accent-green mb-2 block">Buy-Side</span>
+            <span className="micro-label text-accent-green mb-2 block">ALPHA & PORTFOLIO STRATEGIES</span>
             <p className="body-text text-secondary-light text-sm">
-              Hedge funds and asset managers
+              Systematic funds and asset management firms
             </p>
           </div>
           <div className="border border-white/10 p-6">
-            <span className="micro-label text-accent-green mb-2 block">Sell-Side</span>
+            <span className="micro-label text-accent-green mb-2 block">DERIVATIVES & MARKET STRUCTURE</span>
             <p className="body-text text-secondary-light text-sm">
-              Quantitative research and trading desks
+              Quant research, trading, and market making
             </p>
           </div>
           <div className="border border-white/10 p-6">
-            <span className="micro-label text-accent-green mb-2 block">Tech / Fintech</span>
+            <span className="micro-label text-accent-green mb-2 block">DATA, ML & INFRASTRUCTURE</span>
             <p className="body-text text-secondary-light text-sm">
-              Data science and infrastructure roles
+              Quant engineering and financial systems
             </p>
           </div>
         </div>
