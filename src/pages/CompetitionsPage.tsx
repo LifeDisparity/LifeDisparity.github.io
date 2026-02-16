@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { ArrowLeft, ArrowRight, BarChart3, BrainCircuit, Code2, ShieldCheck, Timer, Trophy, Users } from 'lucide-react';
 
 const timeline = [
@@ -33,20 +33,37 @@ const judging = [
 ];
 
 export default function CompetitionsPage() {
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const previousRestoration = 'scrollRestoration' in window.history ? window.history.scrollRestoration : null;
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
     const forceTop = () => {
+      const html = document.documentElement;
+      const previousInlineBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = 'auto';
       window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
+      html.scrollTop = 0;
       document.body.scrollTop = 0;
+      html.style.scrollBehavior = previousInlineBehavior;
     };
 
     forceTop();
     const rafId = window.requestAnimationFrame(forceTop);
-    const timeoutId = window.setTimeout(forceTop, 60);
+    const intervalId = window.setInterval(forceTop, 50);
+    const timeoutId = window.setTimeout(() => {
+      window.clearInterval(intervalId);
+      forceTop();
+    }, 800);
 
     return () => {
       window.cancelAnimationFrame(rafId);
+      window.clearInterval(intervalId);
       window.clearTimeout(timeoutId);
+      if (previousRestoration) {
+        window.history.scrollRestoration = previousRestoration;
+      }
     };
   }, []);
 
