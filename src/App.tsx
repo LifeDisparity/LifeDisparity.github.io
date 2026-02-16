@@ -65,6 +65,24 @@ function App() {
           ctaText="See the Calendar"
         />
 
+        {/* Competition */}
+        <ContentSection
+          id="competition"
+          layout="left-photo"
+          microLabel="Competition"
+          headline="Compete, Present, Win"
+          body="Our competition track challenges members to solve real quantitative finance problems under deadlines, then present methods and results to peers, alumni, and industry professionals."
+          imageSrc="/resources_working.jpg"
+          imageAlt="Students working with laptops and notebooks"
+          items={[
+            { label: 'Team Rounds', description: 'Small teams build and iterate on a focused quant case prompt.' },
+            { label: 'Live Reviews', description: 'Get feedback from alumni and experienced members each round.' },
+            { label: 'Final Showcase', description: 'Present your strategy, code, and results to a judging panel.' },
+          ]}
+          ctaText="Learn More"
+          ctaHref="#contact"
+        />
+
         {/* Contact */}
         <ContactSection />
 
