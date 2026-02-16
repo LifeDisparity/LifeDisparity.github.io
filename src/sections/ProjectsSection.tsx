@@ -213,7 +213,7 @@ export default function ProjectsSection() {
 
             <div className="p-6 space-y-4">
               {projectsByYear.map(([year, yearProjects]) => (
-                <details key={year} className="border border-white/10" open>
+                <details key={year} className="border border-white/10">
                   <summary className="micro-label text-accent-green cursor-pointer px-4 py-3">
                     {year}
                   </summary>
