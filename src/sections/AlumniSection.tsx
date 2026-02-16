@@ -1,17 +1,35 @@
-const companyLogos = [
-  { name: 'Citadel', image: '/logo_citadel.jpg' },
-  { name: 'Jane Street', image: '/logo_janestreet.jpg' },
-  { name: 'Two Sigma', image: '/logo_twosigma.jpg' },
-  { name: 'DE Shaw', image: '/logo_deshaw.jpg' },
-  { name: 'HRT', image: '/logo_hrt.jpg' },
-  { name: 'Jump Trading', image: '/logo_jump.jpg' },
-  { name: 'Optiver', image: '/logo_optiver.jpg' },
-  { name: 'Goldman Sachs', image: '/logo_goldman.jpg' },
+const companies = [
+  'American Express',
+  'Bank of America',
+  'Bloomberg',
+  'BNY Mellon',
+  'Cargill',
+  'Chimera',
+  'Citi',
+  'Credit Agricole CIB',
+  'Deloitte',
+  'Deutsche Bank',
+  'EY',
+  'Fidelity',
+  'FTI Consulting',
+  'Goldman Sachs',
+  'Intel',
+  'JPMorgan Chase',
+  'Marex Solutions',
+  'Meta',
+  'MUFG',
+  'PwC',
+  'Raymond James',
+  'State Street',
+  'The Depository Trust & Clearing Corporation (DTCC)',
+  'VanEck',
+  'Wells Fargo',
+  'Wolfe Research',
 ];
 
 export default function AlumniSection() {
   // Double the logos for seamless infinite scroll
-  const allLogos = [...companyLogos, ...companyLogos];
+  const allCompanies = [...companies, ...companies];
 
   return (
     <section
@@ -57,16 +75,14 @@ export default function AlumniSection() {
         {/* Logo Carousel */}
         <div className="relative overflow-hidden">
           <div className="logo-carousel flex gap-8">
-            {allLogos.map((company, index) => (
+            {allCompanies.map((company, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 w-48 h-32 photo-frame overflow-hidden hover:opacity-80 transition-opacity"
+                className="flex-shrink-0 w-64 h-24 photo-frame px-4 py-3 flex items-center justify-center hover:opacity-80 transition-opacity"
               >
-                <img
-                  src={company.image}
-                  alt={company.name}
-                  className="w-full h-full object-cover"
-                />
+                <span className="micro-label text-primary-light text-center leading-snug">
+                  {company}
+                </span>
               </div>
             ))}
           </div>
