@@ -33,11 +33,11 @@
   * {
     @apply border-border;
   }
-  
+
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', sans-serif;
@@ -134,7 +134,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%);
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
 }
 
 /* Custom Scrollbar */
@@ -230,13 +230,14 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(calc(-50% - 1rem));
   }
 }
 
 .logo-carousel {
-  animation: scroll 32s linear infinite;
+  animation: scroll 38s linear infinite;
 }
 
 .logo-carousel:hover {
