@@ -219,7 +219,6 @@ export default function CompetitionsPage() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <p className="body-text text-secondary-light text-sm mt-5">Evaluation: Aaa</p>
             </div>
 
             <div className="border border-white/10 p-6">
