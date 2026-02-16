@@ -12,6 +12,7 @@ interface ContentSectionProps {
   items?: { label: string; description: string }[];
   ctaText?: string;
   ctaHref?: string;
+  ctaVariant?: 'link' | 'button';
 }
 
 export default function ContentSection({
@@ -26,6 +27,7 @@ export default function ContentSection({
   items = [],
   ctaText,
   ctaHref = '#',
+  ctaVariant = 'link',
 }: ContentSectionProps) {
   const isLeftPhoto = layout === 'left-photo';
   const bgClass = background === 'primary' ? 'bg-primary-dark' : 'bg-secondary-dark';
@@ -78,9 +80,12 @@ export default function ContentSection({
 
           {/* CTA */}
           {ctaText && (
-            <a href={ctaHref} className="text-link inline-flex items-center gap-2">
+            <a
+              href={ctaHref}
+              className={ctaVariant === 'button' ? 'cta-button w-fit' : 'text-link inline-flex items-center gap-2'}
+            >
               <span>{ctaText}</span>
-              <ArrowRight size={14} />
+              <ArrowRight size={ctaVariant === 'button' ? 16 : 14} />
             </a>
           )}
         </div>

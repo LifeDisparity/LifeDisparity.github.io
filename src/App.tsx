@@ -58,6 +58,7 @@ function App() {
           ]}
           ctaText="Learn More"
           ctaHref="#contact"
+          ctaVariant="button"
         />
 
         {/* Alumni */}
