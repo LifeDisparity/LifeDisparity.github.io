@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import './App.css';
 
 import Navigation from './components/Navigation';
@@ -8,8 +9,28 @@ import AlumniSection from './sections/AlumniSection';
 import BoardSection from './sections/BoardSection';
 import ContactSection from './sections/ContactSection';
 import ClosingSection from './sections/ClosingSection';
+import CompetitionsPage from './pages/CompetitionsPage';
+
+const COMPETITIONS_HASH = '#/competitions';
 
 function App() {
+  const [isCompetitionsPage, setIsCompetitionsPage] = useState(
+    () => window.location.hash === COMPETITIONS_HASH
+  );
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setIsCompetitionsPage(window.location.hash === COMPETITIONS_HASH);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  if (isCompetitionsPage) {
+    return <CompetitionsPage />;
+  }
+
   return (
     <div className="relative">
       {/* Grain Overlay */}
@@ -57,7 +78,7 @@ function App() {
             { label: 'Final Showcase', description: 'Present your strategy, code, and results to a judging panel.' },
           ]}
           ctaText="Learn More"
-          ctaHref="#contact"
+          ctaHref={COMPETITIONS_HASH}
           ctaVariant="button"
         />
 
