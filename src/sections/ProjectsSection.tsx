@@ -245,7 +245,16 @@ export default function ProjectsSection() {
               ))}
             </div>
 
-            <div className="p-6 border-t border-white/10 flex justify-end items-center">
+            <div className="p-6 border-t border-white/10 flex justify-between items-center">
+              <a
+                href="https://github.com/BaruchFinancialQuantsEngineers-FQE"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-link inline-flex items-center gap-2"
+              >
+                <span>View on GitHub</span>
+                <ExternalLink size={14} />
+              </a>
               <button
                 onClick={() => setIsPastProjectsOpen(false)}
                 className="cta-button"
