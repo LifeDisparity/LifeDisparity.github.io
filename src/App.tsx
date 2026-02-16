@@ -29,13 +29,13 @@ function App() {
           layout="right-photo"
           microLabel="About"
           headline="We Are Builders"
-          body="FQE is a student collective that applies theory to practice. We use stochastic calculus, machine learning, and systems programming to solve real-world finance problems."
+          body="FQE is a student collective building at the intersection of quantitative finance and technology. We develop technical skill and professional network through hands-on research, data science, risk modeling, and algorithmic trading."
           imageSrc="/about_whiteboard.jpg"
           imageAlt="Student writing on whiteboard"
           items={[
-            { label: 'Workshops', description: 'Hands-on quant modeling and data pipeline sessions.' },
-            { label: 'Projects', description: 'End-to-end research, backtests, and deployable tools.' },
-            { label: 'Mentorship', description: 'Alumni and faculty guidance for career paths.' },
+            { label: 'Workshops', description: 'Applied sessions in quantitative modeling, stochastic methods, and production-ready data pipelines.' },
+            { label: 'Projects', description: 'End-to-end research, backtests, and deployable trading systems.' },
+            { label: 'Mentorship', description: 'Direct access to alumni, faculty, and industry leaders shaping the future of finance.' },
           ]}
         />
 
