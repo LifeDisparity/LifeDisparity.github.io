@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, Mail, X } from 'lucide-react';
+import { ArrowRight, Info, X } from 'lucide-react';
 
 export default function ContactSection() {
   const [isInterviewInfoOpen, setIsInterviewInfoOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function ContactSection() {
                 onClick={() => setIsInterviewInfoOpen(true)}
                 className="text-link inline-flex items-center gap-2"
               >
-                <Mail size={14} />
+                <Info size={14} />
                 <span>Interview Information</span>
               </button>
             </div>
@@ -127,7 +127,6 @@ export default function ContactSection() {
                 If the interview does answer technical questions within the given time frame, it is viewed as incomplete and is your judgement if they would have arrived at the correct answer (for the math technicals). Do not provide the solution if the candidate is not understanding the problem or making progress on it.
               </p>
 
-              <p>Explicit grading scheme below:</p>
             </div>
 
             <div className="p-6 border-t border-white/10 flex justify-end items-center">
