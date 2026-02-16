@@ -74,7 +74,7 @@ export default function AlumniSection() {
 
         {/* Logo Carousel */}
         <div className="relative overflow-hidden">
-          <div className="logo-carousel flex gap-8">
+          <div className="logo-carousel flex w-max gap-8">
             {allLogos.map((company, index) => (
               <div
                 key={index}
