@@ -237,7 +237,7 @@
 }
 
 .logo-carousel {
-  animation: scroll 60s linear infinite;
+  animation: scroll 75s linear infinite;
 }
 
 .logo-carousel:hover {
