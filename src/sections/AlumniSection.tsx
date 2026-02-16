@@ -78,12 +78,12 @@ export default function AlumniSection() {
             {allLogos.map((company, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 w-48 h-32 photo-frame overflow-hidden hover:opacity-80 transition-opacity"
+                className="flex-shrink-0 w-48 h-32 photo-frame overflow-hidden p-3 flex items-center justify-center hover:opacity-80 transition-opacity"
               >
                 <img
                   src={company.image}
                   alt={company.name}
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain"
                 />
               </div>
             ))}
