@@ -231,12 +231,12 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(calc(-50% - 1rem));
   }
 }
 
 .logo-carousel {
-  animation: scroll 30s linear infinite;
+  animation: scroll 24s linear infinite;
 }
 
 .logo-carousel:hover {
