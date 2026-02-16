@@ -4,7 +4,7 @@ import { Menu, X } from 'lucide-react';
 const navLinks = [
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
-  { label: 'Competions', href: '#competition' },
+  { label: 'Competitions', href: '#competition' },
   { label: 'Alumni', href: '#alumni' },
   { label: 'Board', href: '#board' },
   { label: 'Contact', href: '#contact' },
@@ -26,8 +26,8 @@ export default function Navigation() {
     <>
       {/* Logo */}
       <div className="fixed top-6 left-6 z-[200]">
-        <a 
-          href="#" 
+        <a
+          href="#"
           className="font-display text-xl font-bold text-primary-light tracking-tight hover:text-accent-green transition-colors"
           onClick={(e) => {
             e.preventDefault();
@@ -62,9 +62,8 @@ export default function Navigation() {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed inset-0 z-[150] bg-primary-dark/95 backdrop-blur-sm md:hidden transition-all duration-300 ${
-          isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 z-[150] bg-primary-dark/95 backdrop-blur-sm md:hidden transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
       >
         <div className="flex flex-col items-center justify-center h-full gap-8">
           {navLinks.map((link) => (
