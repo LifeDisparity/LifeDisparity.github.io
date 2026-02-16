@@ -43,6 +43,13 @@ const incentives = [
   'Published in our FQE website',
 ];
 
+const rules = [
+  'The use of Artificial Intelligence to generate code is strictly forbidden.',
+  'Any AI-generated code use will immediately disqualify your team.',
+  'All submissions must be your team’s original work.',
+  'Teams must follow the official deadlines and live trading windows.',
+];
+
 export default function CompetitionsPage() {
   useLayoutEffect(() => {
     const previousRestoration = 'scrollRestoration' in window.history ? window.history.scrollRestoration : null;
@@ -198,25 +205,34 @@ export default function CompetitionsPage() {
         </section>
 
         <section className="bg-secondary-dark py-[12vh]">
-          <div className="w-full px-[6vw] flex flex-col items-center text-center">
-            <div className="flex items-center gap-3 mb-4">
-              <Trophy className="text-accent-green" size={18} />
-              <ShieldAlert className="text-accent-green" size={18} />
+          <div className="w-full px-[6vw] grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="border border-white/10 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <ShieldAlert className="text-accent-green" size={18} />
+                <span className="micro-label text-accent-green">Rules</span>
+              </div>
+              <ul className="space-y-2 body-text text-secondary-light text-sm">
+                {rules.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <p className="body-text text-secondary-light text-sm mt-5">Evaluation: Aaa</p>
             </div>
-            <h2 className="headline-lg text-primary-light mb-4" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-              Evaluation & Incentives
-            </h2>
-            <p className="body-text text-secondary-light mb-4 max-w-3xl">
-              The use of Artificial Intelligence to generate code is strictly forbidden. Use will immediately disqualify your team.
-            </p>
-            <p className="body-text text-secondary-light mb-6 max-w-3xl">
-              Evaluation: Aaa
-            </p>
-            <ul className="space-y-2 body-text text-secondary-light text-sm mb-8 max-w-3xl">
-              {incentives.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+
+            <div className="border border-white/10 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Trophy className="text-accent-green" size={18} />
+                <span className="micro-label text-accent-green">Prizes</span>
+              </div>
+              <ul className="space-y-2 body-text text-secondary-light text-sm">
+                {incentives.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="w-full px-[6vw] flex justify-center mt-10">
             <a href="mailto:baruchfqe@gmail.com?subject=Competition%20Registration" className="cta-button w-fit">
               <span>Submit Application</span>
               <ArrowRight size={16} />
