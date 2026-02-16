@@ -1,4 +1,4 @@
-const boardMembers = [
+const leadershipMembers = [
   { name: 'Arthur Faynin', role: 'President', image: '/board_01.jpg' },
   { name: 'Alfred Leong', role: 'Vice-President', image: '/board_02.jpg' },
   { name: 'Alexi Tilly', role: 'Treasurer', image: '/board_03.jpg' },
@@ -9,29 +9,29 @@ const boardMembers = [
   { name: 'Dmytro Popov', role: 'Events Officer', image: '/board_08.jpg' },
 ];
 
-export default function BoardSection() {
+export default function LeadershipSection() {
   return (
     <section
-      id="board"
+      id="leadership"
       className="min-h-screen bg-primary-dark relative flex items-center py-[12vh]"
     >
       <div className="w-full px-[6vw]">
         {/* Header */}
         <div className="mb-12">
           <span className="micro-label text-secondary-light mb-4 block">
-            Board
+            Leadership
           </span>
           <h2 className="headline-lg text-primary-light" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
-            Meet the Board
+            Meet the Leadership
           </h2>
           <p className="body-text text-secondary-light mt-4 max-w-xl">
             A small team focused on building things that work and helping others learn.
           </p>
         </div>
 
-        {/* Board Grid */}
+        {/* Leadership Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {boardMembers.map((member, index) => (
+          {leadershipMembers.map((member, index) => (
             <div key={index} className="flex flex-col items-center">
               <div className="photo-frame w-full aspect-square mb-4 overflow-hidden">
                 <img

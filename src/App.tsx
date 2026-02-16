@@ -6,7 +6,7 @@ import HeroSection from './sections/HeroSection';
 import ContentSection from './sections/ContentSection';
 import ProjectsSection from './sections/ProjectsSection';
 import AlumniSection from './sections/AlumniSection';
-import BoardSection from './sections/BoardSection';
+import LeadershipSection from './sections/BoardSection';
 import ContactSection from './sections/ContactSection';
 import ClosingSection from './sections/ClosingSection';
 import CompetitionsPage from './pages/CompetitionsPage';
@@ -91,8 +91,8 @@ function App() {
         {/* Alumni */}
         <AlumniSection />
 
-        {/* Board */}
-        <BoardSection />
+        {/* Leadership */}
+        <LeadershipSection />
 
         {/* Events */}
         <ContentSection
