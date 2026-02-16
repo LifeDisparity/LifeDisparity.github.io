@@ -75,14 +75,13 @@ function App() {
           layout="right-photo"
           microLabel="Competition"
           headline="1st Annual Undergraduate Trading Competition"
-          body="Financial Quants & Engineers at Baruch are hosting a trading competition for current Baruch undergraduates interested in building and testing a trading strategy in real time."
+          body="FQE is hosting a trading competition for current Baruch undergraduates interested in building and testing a trading strategy in real time."
           imageSrc="/resources_working.jpg"
           imageAlt="Students working with laptops and notebooks"
           items={[
             { label: 'Eligibility', description: 'Current Baruch undergraduate students. Coding knowledge is strongly recommended.' },
-            { label: 'Key Dates', description: 'Application deadline: March 20th. Coding assessment due: March 27th. Live trading days: April 11th and April 18th (8am to 12pm).' },
-            { label: 'Format', description: 'Systematic division, max 3 people per team, coding assessment plus two live trading rounds.' },
-            { label: 'Rules & Prizes', description: 'AI-generated code is strictly forbidden (immediate disqualification). Prize pool: 300, 200, 100 for top 3 teams.' },
+            { label: 'Key Dates', description: 'Application deadline: March 20th.' },
+            { label: 'Prizes', description: 'Prize pool: 300, 200, 100 for top 3 teams, plus recognition and resume-building exposure.' },
           ]}
           ctaText="Learn More"
           ctaHref={COMPETITIONS_HASH}
