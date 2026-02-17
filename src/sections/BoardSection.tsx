@@ -1,11 +1,11 @@
 const leadershipMembers = [
-  { name: 'Arthur Faynin', role: 'President', image: '/board_01.jpg' },
-  { name: 'Alfred Leong', role: 'Vice-President', image: '/board_02.jpg' },
-  { name: 'Alexi Tilly', role: 'Treasurer', image: '/board_03.jpg' },
-  { name: 'Abie Lent', role: 'Secretary', image: '/board_04.jpg' },
-  { name: 'Daniel Shmir', role: 'Data Officer', image: '/board_05.jpg' },
-  { name: 'Kateryna Chevplianska', role: 'Data Officer', image: '/board_06.jpg' },
-  { name: 'Mei Lin Pan', role: 'Marketing Officer', image: '/board_07.jpg' },
+  { name: 'Arthur Faynin', role: 'President', image: '/Arthur_Faynin.jpg' },
+  { name: 'Alfred Leong', role: 'Vice-President', image: '/Alfred_Leong.jpg' },
+  { name: 'Alexi Tilly', role: 'Treasurer', image: '/Alexi_Tilly.jpg' },
+  { name: 'Abie Lent', role: 'Secretary', image: '/Abie_Lent.jpg' },
+  { name: 'Daniel Shmir', role: 'Data Officer', image: '/Daniel_Shmir.jpg' },
+  { name: 'Kateryna Chevplianska', role: 'Data Officer', image: '/Kateryna_Chevplianska.png' },
+  { name: 'Mei Lin Pan', role: 'Marketing Officer', image: '/Mei_Lin_Pan.webp' },
   { name: 'Dmytro Popov', role: 'Events Officer', image: '/board_08.jpg' },
 ];
 
