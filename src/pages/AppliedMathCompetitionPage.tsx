@@ -124,7 +124,6 @@ export default function AppliedMathCompetitionPage() {
     const cell = 16;
     const fontSize = 12;
     const waveChars = [' ', '.', ':', '-', '=', '+', '*', 'o', 'O', '@'];
-    const constants = ['pi', 'e', 'phi', 'tau', 'sqrt2', 'ln2'];
 
     type Drop = {
       x: number;
@@ -142,20 +141,10 @@ export default function AppliedMathCompetitionPage() {
       amplitude: number;
     };
 
-    type Donut = {
-      x: number;
-      y: number;
-      angle: number;
-      spin: number;
-      life: number;
-      symbol: string;
-    };
-
     let cols = 0;
     let rows = 0;
     let drops: Drop[] = [];
     let ripples: Ripple[] = [];
-    let donuts: Donut[] = [];
     let rafId = 0;
 
     const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
@@ -197,18 +186,6 @@ export default function AppliedMathCompetitionPage() {
       if (ripples.length > 28) {
         ripples.shift();
       }
-
-      donuts.push({
-        x,
-        y,
-        angle: Math.random() * Math.PI * 2,
-        spin: (Math.random() > 0.5 ? 1 : -1) * (0.05 + Math.random() * 0.08),
-        life: 70 + Math.random() * 28,
-        symbol: constants[Math.floor(Math.random() * constants.length)],
-      });
-      if (donuts.length > 20) {
-        donuts.shift();
-      }
     };
 
     const drawSurface = () => {
@@ -235,30 +212,6 @@ export default function AppliedMathCompetitionPage() {
 
           ctx.fillStyle = `rgba(163, 184, 170, ${alpha})`;
           ctx.fillText(waveChars[index], x, y);
-        }
-      }
-    };
-
-    const drawDonuts = () => {
-      for (let i = donuts.length - 1; i >= 0; i -= 1) {
-        const donut = donuts[i];
-        const alpha = clamp(donut.life / 95, 0, 1);
-        const points = 8;
-        const step = (Math.PI * 2) / points;
-        const ringRadius = 8 + (95 - donut.life) * 0.14;
-
-        ctx.fillStyle = `rgba(74, 222, 128, ${0.25 + alpha * 0.65})`;
-        for (let p = 0; p < points; p += 1) {
-          const a = donut.angle + p * step;
-          const x = donut.x + Math.cos(a) * ringRadius;
-          const y = donut.y + Math.sin(a) * ringRadius * 0.58;
-          ctx.fillText(donut.symbol, x, y);
-        }
-
-        donut.angle += donut.spin;
-        donut.life -= 1.6;
-        if (donut.life <= 0) {
-          donuts.splice(i, 1);
         }
       }
     };
@@ -295,7 +248,6 @@ export default function AppliedMathCompetitionPage() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       drawSurface();
-      drawDonuts();
       drawRain();
       updateRipples();
 
@@ -306,7 +258,6 @@ export default function AppliedMathCompetitionPage() {
       setCanvasSize();
       drops = Array.from({ length: Math.max(10, Math.floor(cols * 0.45)) }, () => createDrop(true));
       ripples = [];
-      donuts = [];
     };
 
     init();
