@@ -30,7 +30,9 @@ export default function ContactSection() {
 
             {/* Primary CTA */}
             <a
-              href="mailto:baruchfqe@gmail.com"
+              href="https://linktr.ee/FQEBaruch"
+              target="_blank"
+              rel="noopener noreferrer"
               className="cta-button mb-4 w-fit"
             >
               <span>Apply to Join</span>

@@ -243,3 +243,14 @@
 .logo-carousel:hover {
   animation-play-state: paused;
 }
+
+/* Leadership Name Link */
+.leadership-name-link {
+  transition: color 200ms ease, text-shadow 200ms ease;
+}
+
+.leadership-name-link:hover {
+  color: #4ADE80;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.8);
+}
+

@@ -42,7 +42,7 @@ export default function LeadershipSection() {
               </div>
               <a
                 href={`mailto:${member.email}`}
-                className="font-display font-semibold text-primary-light text-center hover:text-accent-green transition-colors"
+                className="font-display font-semibold text-primary-light text-center leadership-name-link"
               >
                 {member.name}
               </a>
