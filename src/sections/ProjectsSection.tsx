@@ -92,7 +92,7 @@ export default function ProjectsSection() {
 
             {/* Headline */}
             <h2 className="headline-lg text-primary-light mb-6" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
-              Projects That Matter
+              Our Current Work
             </h2>
 
             {/* Body */}

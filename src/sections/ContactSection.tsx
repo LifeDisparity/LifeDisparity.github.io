@@ -20,7 +20,7 @@ export default function ContactSection() {
 
             {/* Headline */}
             <h2 className="headline-lg text-primary-light mb-6" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
-              Ready to Build?
+              How to reach us
             </h2>
 
             {/* Body */}
@@ -82,91 +82,34 @@ export default function ContactSection() {
 
             <div className="p-6 body-text text-secondary-light space-y-6">
               <div>
-                <p className="font-semibold text-primary-light">What We Look For</p>
-                <p className="mt-1">Ideal candidate traits:</p>
-                <ul className="list-disc pl-6 mt-2 space-y-1">
-                  <li>Approachable and coachable</li>
-                  <li>Willing to challenge themselves and expand their knowledge</li>
-                  <li>Genuinely interested in quantitative finance, mathematics, and computer science</li>
-                  <li>Working on or interested in personal projects in finance, math, or programming</li>
-                  <li>Able to clearly explain reasoning, even when making mistakes</li>
-                </ul>
-                <p className="mt-3">We value intellectual honesty, curiosity, and independent thinking more than perfect answers.</p>
-              </div>
-
-              <div>
-                <p className="font-semibold text-primary-light">Background Expectations</p>
-                <p className="mt-2 font-medium text-primary-light">Freshmen / Sophomores / Transfer Students (Non-STEM)</p>
-                <ul className="list-disc pl-6 mt-1 space-y-1">
-                  <li>Interest in quantitative disciplines</li>
-                  <li>Some exposure to math, programming, or finance (formal or informal)</li>
-                  <li>Coding experience encouraged but not required</li>
-                  <li>Willingness to attempt technical questions and explain reasoning</li>
-                  <li>Ability to solve at least one technical question correctly</li>
-                </ul>
-
-                <p className="mt-3 font-medium text-primary-light">Juniors / Seniors / Transfer Students (STEM)</p>
-                <ul className="list-disc pl-6 mt-1 space-y-1">
-                  <li>Coursework or internship experience in math, finance, or computer science</li>
-                  <li>At least one personal technical project</li>
-                  <li>Stronger expectation on technical performance</li>
-                  <li>Ability to solve at least two technical questions</li>
-                  <li>Clear explanation of reasoning, assumptions, and logic</li>
-                </ul>
-
-                <p className="mt-3">
-                  Non-STEM majors are generally discouraged unless they show a clear commitment to technical growth (STEM minor, projects, coursework, etc.).
-                </p>
-              </div>
-
-              <div>
-                <p className="font-semibold text-primary-light">Academic Integrity</p>
-                <p className="mt-1">Technical interviews assess independent reasoning ability.</p>
-                <ul className="list-disc pl-6 mt-2 space-y-1">
-                  <li>Calculators are not allowed</li>
-                  <li>AI tools are not allowed</li>
-                  <li>You may be asked to show written work or share your screen during coding</li>
-                </ul>
-                <p className="mt-3">
-                  Individuals found cheating during interviews will be disqualified from consideration.
-                </p>
-              </div>
-
-              <div>
                 <p className="font-semibold text-primary-light">Interview Structure</p>
-                <p className="mt-1">Interviews are typically conducted by two current members:</p>
-                <ol className="list-decimal pl-6 mt-2 space-y-3">
-                  <li>
-                    Screening
-                    <p className="mt-1">A brief background check to ensure alignment with the club&apos;s quantitative focus.</p>
-                  </li>
-                  <li>
-                    Behavioral Interview (~10 minutes)
-                    <p className="mt-1">We assess communication skills, professionalism, independence, and motivation.</p>
-                    <p className="mt-1">Sample prompts:</p>
-                    <ul className="list-disc pl-6 mt-1 space-y-1">
-                      <li>Tell us about yourself.</li>
-                      <li>Why are you interested in FQE?</li>
-                      <li>What technical projects have you worked on?</li>
-                      <li>What do you hope to gain from the club?</li>
-                      <li>How do you approach using AI in projects?</li>
-                    </ul>
-                  </li>
-                  <li>
-                    Easy Technical (~5 minutes)
-                    <p className="mt-1">A foundational quantitative question designed to be relatively quick.</p>
-                    <p className="mt-1">Topics may include expected value, basic probability, logic puzzles, exponential growth, and introductory finance concepts.</p>
-                  </li>
-                  <li>
-                    Hard Technical (~5-10 minutes)
-                    <p className="mt-1">A more complex quantitative problem focused on structure, logic, and assumptions.</p>
-                  </li>
-                  <li>
-                    LeetCode-Style Coding Question (~10 minutes)
-                    <p className="mt-1">You may be asked to code live, explain complexity, and discuss edge cases.</p>
-                    <p className="mt-1">Questions may involve array/list manipulation, sorting and merging, parentheses validation, number transformations, and basic algorithms.</p>
-                  </li>
-                </ol>
+
+                <div className="mt-3">
+                  <p className="font-medium text-primary-light">Behavioral Interview</p>
+                  <p className="mt-1">
+                    We assess communication skills, professionalism, independence, and motivation.
+                  </p>
+                </div>
+
+                <div className="mt-4">
+                  <p className="font-medium text-primary-light">Technical (2 Questions)</p>
+                  <p className="mt-1">
+                    A foundational quantitative question designed to be relatively quick and a more complex quantitative problem focused on structure, logic, and assumptions.
+                  </p>
+                  <p className="mt-2">
+                    Topics may include expected value, basic probability, logic puzzles, exponential growth, and introductory finance concepts.
+                  </p>
+                </div>
+
+                <div className="mt-4">
+                  <p className="font-medium text-primary-light">LeetCode-Style Coding Question</p>
+                  <p className="mt-1">
+                    You may be asked to code live, explain complexity, and discuss edge cases.
+                  </p>
+                  <p className="mt-2">
+                    Questions may involve array/list manipulation, sorting and merging, parentheses validation, number transformations, and basic algorithms.
+                  </p>
+                </div>
               </div>
 
               <div>
@@ -180,9 +123,24 @@ export default function ContactSection() {
                 <p className="mt-3">
                   Minimum technical performance is required for project placement. Candidates are compared within similar academic levels.
                 </p>
-                <p className="mt-3">At the end of the day, we are looking for members who will contribute meaningfully, grow technically, strengthen the FQE network, and take projects seriously.</p>
+                <p className="mt-3">
+                  At the end of the day, we are looking for members who will contribute meaningfully, grow technically, strengthen the FQE network, and take projects seriously.
+                </p>
                 <p className="mt-3">
                   Final notes: attempt each question, explain your reasoning clearly, think independently, and maintain integrity.
+                </p>
+              </div>
+
+              <div>
+                <p className="font-semibold text-primary-light">Note on Integrity</p>
+                <p className="mt-1">Technical interviews assess independent reasoning ability.</p>
+                <ul className="list-disc pl-6 mt-2 space-y-1">
+                  <li>Calculators are not allowed</li>
+                  <li>AI tools are not allowed</li>
+                  <li>You may be asked to show written work and/or share your screen during coding</li>
+                </ul>
+                <p className="mt-3">
+                  Individuals found cheating during interviews will be disqualified from consideration.
                 </p>
               </div>
             </div>

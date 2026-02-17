@@ -55,7 +55,7 @@ function App() {
           id="about"
           layout="right-photo"
           microLabel="About"
-          headline="We Are Builders"
+          headline=" FQE @ Baruch College"
           body="FQE is a student collective building at the intersection of quantitative finance and technology. We develop technical skill and professional network through hands-on research, data science, risk modeling, and algorithmic trading."
           imageSrc="/about_whiteboard.jpg"
           imageAlt="Student writing on whiteboard"

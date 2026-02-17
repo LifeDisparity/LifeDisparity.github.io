@@ -25,7 +25,7 @@ export default function LeadershipSection() {
             Meet the Leadership
           </h2>
           <p className="body-text text-secondary-light mt-4 max-w-xl">
-            A small team focused on building things that work and helping others learn.
+            A team committed to excellence, innovation, and member success.
           </p>
         </div>
 
