@@ -111,7 +111,7 @@ export default function CompetitionsPage() {
 
             <div className="flex flex-col justify-center">
               <span className="micro-label text-secondary-light mb-6">Competition</span>
-              <h1 className="headline-xl text-primary-light mb-6" style={{ fontSize: 'clamp(2.4rem, 5vw, 4.5rem)' }}>
+              <h1 className="headline-xl text-primary-light mb-6" style={{ fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.04 }}>
                 1st Annual, FQE Undergraduate Trading Competition
               </h1>
               <p className="body-text text-secondary-light mb-8">
