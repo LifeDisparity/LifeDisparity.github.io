@@ -135,15 +135,6 @@ export default function AppliedMathCompetitionPage() {
               <h1 className="headline-xl text-primary-light mb-6" style={{ fontSize: 'clamp(2.3rem, 5vw, 4.4rem)', lineHeight: 1.04 }}>
                 FQE Undergraduate Applied Mathematics Competition
               </h1>
-              <p className="body-text text-secondary-light mb-6">
-                Financial Quants & Engineers at Baruch are hosting an Applied Mathematics Competition
-                where undergraduate teams work on a STEM project throughout the semester and present
-                their results for a cash reward.
-              </p>
-              <p className="body-text text-secondary-light mb-8">
-                This track prioritizes mathematical modeling and computational problem-solving
-                applied to real-world systems.
-              </p>
               <div className="flex flex-col gap-4 items-center">
                 <a href="mailto:baruchfqe@gmail.com?subject=Applied%20Mathematics%20Competition%20Application" className="cta-button w-fit">
                   <span>Apply to Compete</span>

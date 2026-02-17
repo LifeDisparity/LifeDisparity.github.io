@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight, Calculator, Clock3, ShieldAlert, Sigma, Trophy, Users } from 'lucide-react';
 
 const deadlines = [
@@ -73,6 +73,9 @@ const incentives = [
 ];
 
 export default function TradingCompetitionPage() {
+  const heroSectionRef = useRef<HTMLElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   useLayoutEffect(() => {
     const previousRestoration = 'scrollRestoration' in window.history ? window.history.scrollRestoration : null;
     if ('scrollRestoration' in window.history) {
@@ -107,6 +110,75 @@ export default function TradingCompetitionPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const section = heroSectionRef.current;
+    if (!canvas || !section) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const fontSize = 12;
+    const bullSymbols = ['|', '!', 'I', ':', '+', '^', '/'];
+    const bearSymbols = ['|', '!', 'I', ':', '-', 'v', '\\'];
+    let isBullMarket = true;
+    let columns = 0;
+    let drops: number[] = [];
+
+    const setCanvasSize = () => {
+      canvas.width = section.offsetWidth;
+      canvas.height = section.offsetHeight;
+    };
+
+    const resetDrops = () => {
+      columns = Math.max(1, Math.floor(canvas.width / fontSize));
+      drops = Array.from({ length: columns }, () => Math.floor(Math.random() * (canvas.height / fontSize)));
+    };
+
+    setCanvasSize();
+    ctx.font = `${fontSize}px "IBM Plex Mono", monospace`;
+    resetDrops();
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(5, 20, 10, 0.12)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const symbols = isBullMarket ? bullSymbols : bearSymbols;
+      ctx.fillStyle = isBullMarket ? 'rgba(74, 222, 128, 0.95)' : 'rgba(248, 113, 113, 0.95)';
+
+      for (let i = 0; i < drops.length; i += 1) {
+        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        ctx.fillText(symbol, x, y);
+
+        drops[i] += 0.9 + Math.random() * 0.6;
+        if (y > canvas.height && Math.random() > 0.965) {
+          drops[i] = 0;
+        }
+      }
+    };
+
+    const drawIntervalId = window.setInterval(draw, 34);
+    const marketIntervalId = window.setInterval(() => {
+      isBullMarket = !isBullMarket;
+    }, 5000);
+
+    const handleResize = () => {
+      setCanvasSize();
+      ctx.font = `${fontSize}px "IBM Plex Mono", monospace`;
+      resetDrops();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.clearInterval(drawIntervalId);
+      window.clearInterval(marketIntervalId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-primary-dark">
       <div className="grain-overlay" />
@@ -125,21 +197,20 @@ export default function TradingCompetitionPage() {
       </div>
 
       <main>
-        <section className="min-h-screen bg-primary-dark relative flex items-center py-[12vh]">
-          <div className="w-full px-[6vw] flex justify-center">
+        <section ref={heroSectionRef} className="min-h-screen bg-primary-dark relative flex items-center py-[12vh]">
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0 z-10 w-full h-full pointer-events-none"
+            aria-hidden="true"
+          />
+          <div className="vignette" />
+
+          <div className="relative z-20 w-full px-[6vw] flex justify-center">
             <div className="flex flex-col justify-center items-center text-center max-w-3xl">
               <span className="micro-label text-secondary-light mb-6">Competition</span>
               <h1 className="headline-xl text-primary-light mb-6" style={{ fontSize: 'clamp(2.3rem, 5vw, 4.4rem)', lineHeight: 1.04 }}>
                 FQE Undergraduate Trading Competition
               </h1>
-              <p className="body-text text-secondary-light mb-6">
-                Financial Quants & Engineers at Baruch are hosting a Trading Competition to give
-                undergraduate students the opportunity to build and run trading strategies in real time.
-              </p>
-              <p className="body-text text-secondary-light mb-8">
-                Teams move from coding assessment to two live trading sessions, with iterative strategy
-                refinement and technical evaluation throughout the process.
-              </p>
               <div className="flex flex-col gap-4 items-center">
                 <a href="mailto:baruchfqe@gmail.com?subject=Trading%20Competition%20Application" className="cta-button w-fit">
                   <span>Apply to Compete</span>
