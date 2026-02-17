@@ -202,8 +202,8 @@ export default function AppliedMathCompetitionPage() {
           const index = x + y * cols;
           if (charBuffer[index] === ' ') continue;
 
-          const alpha = Math.min(1, 0.2 + lightBuffer[index] * 0.82);
-          ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`;
+          const alpha = Math.min(0.42, 0.08 + lightBuffer[index] * 0.34);
+          ctx.fillStyle = `rgba(110, 140, 175, ${alpha})`;
           ctx.fillText(charBuffer[index], x * cellW, y * cellH);
         }
       }
