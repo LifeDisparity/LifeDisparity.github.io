@@ -129,12 +129,8 @@ export default function AppliedMathCompetitionPage() {
 
       <main>
         <section className="min-h-screen bg-primary-dark relative flex items-center py-[12vh]">
-          <div className="w-full px-[6vw] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="photo-frame aspect-[3/4] max-h-[72vh]">
-              <img src="/about_whiteboard.jpg" alt="Applied mathematics competition research session" className="w-full h-full object-cover" />
-            </div>
-
-            <div className="flex flex-col justify-center">
+          <div className="w-full px-[6vw] flex justify-center">
+            <div className="flex flex-col justify-center items-center text-center max-w-3xl">
               <span className="micro-label text-secondary-light mb-6">Competition</span>
               <h1 className="headline-xl text-primary-light mb-6" style={{ fontSize: 'clamp(2.3rem, 5vw, 4.4rem)', lineHeight: 1.04 }}>
                 FQE Undergraduate Applied Mathematics Competition
@@ -148,7 +144,7 @@ export default function AppliedMathCompetitionPage() {
                 This track prioritizes mathematical modeling and computational problem-solving
                 applied to real-world systems.
               </p>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 items-center">
                 <a href="mailto:baruchfqe@gmail.com?subject=Applied%20Mathematics%20Competition%20Application" className="cta-button w-fit">
                   <span>Apply to Compete</span>
                   <ArrowRight size={16} />
