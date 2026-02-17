@@ -86,7 +86,7 @@ export default function HeroSection() {
           </span>
 
           {/* Headline */}
-          <h1 className="headline-xl text-primary-light mb-8" style={{ fontSize: 'clamp(2.5rem, 5.5vw, 5rem)' }}>
+          <h1 className="headline-xl text-primary-light mb-8 leading-[1.02]" style={{ fontSize: 'clamp(2.5rem, 5.5vw, 5rem)' }}>
             <span className="block">Financial</span>
             <span className="block">Quants &</span>
             <span className="block">Engineers</span>
