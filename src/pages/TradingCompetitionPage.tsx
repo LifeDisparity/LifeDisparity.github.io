@@ -229,11 +229,12 @@ export default function TradingCompetitionPage() {
       const pct = (delta * 0.37).toFixed(2);
       const mode = delta > 0 ? 'BULL' : delta < 0 ? 'BEAR' : 'FLAT';
       const color = delta > 0 ? 'rgba(74, 222, 128, 0.95)' : delta < 0 ? 'rgba(248, 113, 113, 0.95)' : 'rgba(163, 184, 170, 0.95)';
+      const y = canvas.height - charH * 2;
 
       ctx.fillStyle = 'rgba(240, 250, 244, 0.9)';
-      ctx.fillText('FQE.TRD', charW, charH);
+      ctx.fillText('FQE.TRD', charW, y);
       ctx.fillStyle = color;
-      ctx.fillText(`${mode} ${delta >= 0 ? '+' : ''}${pct}%`, charW * 10, charH);
+      ctx.fillText(`${mode} ${delta >= 0 ? '+' : ''}${pct}%`, charW * 10, y);
     };
 
     const draw = () => {
