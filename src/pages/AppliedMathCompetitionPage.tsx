@@ -208,8 +208,8 @@ export default function AppliedMathCompetitionPage() {
         }
       }
 
-      A += 0.011;
-      B += 0.005;
+      A += 0.0055;
+      B += 0.0025;
       rafId = window.requestAnimationFrame(render);
     };
 
