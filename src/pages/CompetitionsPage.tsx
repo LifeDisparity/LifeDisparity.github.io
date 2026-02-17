@@ -96,7 +96,7 @@ export default function CompetitionsPage() {
       </div>
 
       <div className="fixed top-6 right-6 z-[200]">
-        <a href="#/competitions" className="text-link inline-flex items-center gap-2">
+        <a href="#competition" className="text-link inline-flex items-center gap-2">
           <ArrowLeft size={14} />
           <span>Back to Main Site</span>
         </a>
