@@ -100,7 +100,7 @@ function App() {
           layout="right-photo"
           microLabel="Events"
           headline="Join Us For"
-          body="Weekly builds, term-long research sprints, and open sessions for anyone curious."
+          body="Ongoing technical programming, collaborative research projects, and curated industry engagements."
           imageSrc="/events_group.jpg"
           imageAlt="Group collaboration"
           items={[
