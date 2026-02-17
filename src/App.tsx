@@ -45,6 +45,32 @@ function App() {
     }
   }, [competitionView]);
 
+  useEffect(() => {
+    if (competitionView !== 'main') return;
+
+    const hash = window.location.hash;
+    if (!hash || hash.startsWith('#/')) return;
+
+    const targetId = hash.slice(1);
+    if (!targetId) return;
+
+    const scrollToTarget = () => {
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
+    };
+
+    scrollToTarget();
+    const rafId = window.requestAnimationFrame(scrollToTarget);
+    const timeoutId = window.setTimeout(scrollToTarget, 60);
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      window.clearTimeout(timeoutId);
+    };
+  }, [competitionView]);
+
   if (competitionView === 'trading') {
     return <TradingCompetitionPage />;
   }
