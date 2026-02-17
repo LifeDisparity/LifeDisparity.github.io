@@ -14,14 +14,14 @@ export default function ClosingSection() {
         </div>
         <div className="photo-frame" style={{ width: '26vw', height: '38vh', marginTop: '-4vh' }}>
           <img
-            src="/closing_collage_02.jpg"
+            src="/alpha_cheese.png"
             alt="Campus architecture"
             className="w-full h-full object-cover"
           />
         </div>
         <div className="photo-frame" style={{ width: '26vw', height: '34vh' }}>
           <img
-            src="/alpha_cheese.jpg"
+            src="/alpha_cheese.png"
             alt="Group study"
             className="w-full h-full object-cover"
           />
