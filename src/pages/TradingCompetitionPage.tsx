@@ -118,63 +118,137 @@ export default function TradingCompetitionPage() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const fontSize = 12;
-    const bullSymbols = ['|', '!', 'I', ':', '+', '^', '/'];
-    const bearSymbols = ['|', '!', 'I', ':', '-', 'v', '\\'];
-    let isBullMarket = true;
-    let columns = 0;
-    let drops: number[] = [];
+    const charW = 10;
+    const charH = 12;
+    const wickChar = '|';
+    const bodyChar = '#';
+    const topPaddingRows = 3;
+    const bottomPaddingRows = 3;
+
+    type Candle = {
+      open: number;
+      close: number;
+      high: number;
+      low: number;
+      bull: boolean;
+    };
+
+    let rows = 0;
+    let cols = 0;
+    let offset = 0;
+    let priceRow = 0;
+    let candles: Candle[] = [];
+    let trend = -1; // -1 = bullish (up), +1 = bearish (down)
+    let candlesSinceSwitch = 0;
+    let switchAfter = 22 + Math.floor(Math.random() * 14);
+
+    const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
     const setCanvasSize = () => {
       canvas.width = section.offsetWidth;
       canvas.height = section.offsetHeight;
+      ctx.font = `${charH}px "IBM Plex Mono", monospace`;
+      ctx.textBaseline = 'top';
+      ctx.textAlign = 'left';
     };
 
-    const resetDrops = () => {
-      columns = Math.max(1, Math.floor(canvas.width / fontSize));
-      drops = Array.from({ length: columns }, () => Math.floor(Math.random() * (canvas.height / fontSize)));
+    const buildCandle = (): Candle => {
+      const minRow = topPaddingRows;
+      const maxRow = Math.max(minRow + 8, rows - bottomPaddingRows);
+
+      if (candlesSinceSwitch >= switchAfter) {
+        trend *= -1;
+        candlesSinceSwitch = 0;
+        switchAfter = 20 + Math.floor(Math.random() * 16);
+      }
+      candlesSinceSwitch += 1;
+
+      const open = priceRow;
+      const directional = trend * (Math.random() * 1.6 + 0.35);
+      const noise = (Math.random() - 0.5) * 2.6;
+      const close = clamp(Math.round(open + directional + noise), minRow, maxRow);
+      const wickAbove = 1 + Math.floor(Math.random() * 3);
+      const wickBelow = 1 + Math.floor(Math.random() * 3);
+      const high = clamp(Math.min(open, close) - wickAbove, minRow, maxRow);
+      const low = clamp(Math.max(open, close) + wickBelow, minRow, maxRow);
+
+      priceRow = close;
+      return {
+        open,
+        close,
+        high,
+        low,
+        bull: close < open,
+      };
     };
 
-    setCanvasSize();
-    ctx.font = `${fontSize}px "IBM Plex Mono", monospace`;
-    resetDrops();
-
-    const draw = () => {
-      ctx.fillStyle = 'rgba(5, 20, 10, 0.12)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const symbols = isBullMarket ? bullSymbols : bearSymbols;
-      ctx.fillStyle = isBullMarket ? 'rgba(74, 222, 128, 0.95)' : 'rgba(248, 113, 113, 0.95)';
-
-      for (let i = 0; i < drops.length; i += 1) {
-        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-        const x = i * fontSize;
-        const y = drops[i] * fontSize;
-        ctx.fillText(symbol, x, y);
-
-        drops[i] += 0.9 + Math.random() * 0.6;
-        if (y > canvas.height && Math.random() > 0.965) {
-          drops[i] = 0;
-        }
+    const initSeries = () => {
+      rows = Math.max(18, Math.floor(canvas.height / charH));
+      cols = Math.max(24, Math.ceil(canvas.width / charW) + 6);
+      priceRow = Math.floor(rows * 0.55);
+      candles = [];
+      offset = 0;
+      trend = -1;
+      candlesSinceSwitch = 0;
+      switchAfter = 22 + Math.floor(Math.random() * 14);
+      for (let i = 0; i < cols; i += 1) {
+        candles.push(buildCandle());
       }
     };
 
-    const drawIntervalId = window.setInterval(draw, 34);
-    const marketIntervalId = window.setInterval(() => {
-      isBullMarket = !isBullMarket;
-    }, 5000);
+    const drawCandle = (candle: Candle, x: number) => {
+      const wickColor = candle.bull ? 'rgba(74, 222, 128, 0.55)' : 'rgba(248, 113, 113, 0.55)';
+      const bodyColor = candle.bull ? 'rgba(74, 222, 128, 0.95)' : 'rgba(248, 113, 113, 0.95)';
+
+      ctx.fillStyle = wickColor;
+      for (let row = candle.high; row <= candle.low; row += 1) {
+        ctx.fillText(wickChar, x, row * charH);
+      }
+
+      ctx.fillStyle = bodyColor;
+      const bodyTop = Math.min(candle.open, candle.close);
+      const bodyBottom = Math.max(candle.open, candle.close);
+      for (let row = bodyTop; row <= bodyBottom; row += 1) {
+        ctx.fillText(bodyChar, x, row * charH);
+      }
+    };
+
+    setCanvasSize();
+    initSeries();
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(5, 20, 10, 0.16)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      offset += 1.25;
+      if (offset >= charW) {
+        offset -= charW;
+        candles.unshift(buildCandle());
+        if (candles.length > cols + 8) {
+          candles.pop();
+        }
+      }
+
+      for (let i = 0; i < candles.length; i += 1) {
+        const x = canvas.width - offset - i * charW;
+        if (x < -charW) {
+          break;
+        }
+        drawCandle(candles[i], x);
+      }
+    };
+
+    const drawIntervalId = window.setInterval(draw, 40);
 
     const handleResize = () => {
       setCanvasSize();
-      ctx.font = `${fontSize}px "IBM Plex Mono", monospace`;
-      resetDrops();
+      initSeries();
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.clearInterval(drawIntervalId);
-      window.clearInterval(marketIntervalId);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
