@@ -21,7 +21,7 @@ export default function ClosingSection() {
         </div>
         <div className="photo-frame" style={{ width: '26vw', height: '34vh' }}>
           <img
-            src="/closing_collage_03.jpg"
+            src="/alpha_cheese.jpg"
             alt="Group study"
             className="w-full h-full object-cover"
           />
