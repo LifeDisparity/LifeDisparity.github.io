@@ -104,9 +104,10 @@ function App() {
           imageSrc="/events_group.jpg"
           imageAlt="Group collaboration"
           items={[
-            { label: 'Quant Lab', description: 'Weekly coding and modeling sessions.' },
-            { label: 'Alumni Fireside', description: 'Career paths and interview prep.' },
-            { label: 'Case Competition', description: 'Team-based research and presentation.' },
+            { label: 'Workshops', description: 'Hackathons, resume reviews, LeetCode sessions, and more.' },
+            { label: 'Alumni & Networking', description: 'In-person bank visits, guest speakers, and industry connections.' },
+            { label: 'Team Bonding', description: 'Poker nights and social events that strengthen collaboration.' },
+            { label: 'Education Events', description: 'Math primers and technical learning sessions.' },
           ]}
           ctaText="See the Calendar"
         />
