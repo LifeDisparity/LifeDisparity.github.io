@@ -96,7 +96,7 @@ export default function CompetitionsPage() {
       </div>
 
       <div className="fixed top-6 right-6 z-[200]">
-        <a href="#" className="text-link inline-flex items-center gap-2">
+        <a href="#/competitions" className="text-link inline-flex items-center gap-2">
           <ArrowLeft size={14} />
           <span>Back to Main Site</span>
         </a>
@@ -126,13 +126,10 @@ export default function CompetitionsPage() {
                   <span>Apply to Compete</span>
                   <ArrowRight size={16} />
                 </a>
-                <button
-                  onClick={() => document.getElementById('deadlines')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="text-link inline-flex items-center gap-2 w-fit"
-                >
+                <a href="#deadlines" className="text-link inline-flex items-center gap-2">
                   <span>View Deadlines</span>
                   <ArrowRight size={14} />
-                </button>
+                </a>
               </div>
             </div>
           </div>
