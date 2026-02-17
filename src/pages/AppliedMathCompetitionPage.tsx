@@ -121,150 +121,99 @@ export default function AppliedMathCompetitionPage() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const cell = 16;
-    const fontSize = 12;
-    const waveChars = [' ', '.', ':', '-', '=', '+', '*', 'o', 'O', '@'];
-
-    type Drop = {
-      x: number;
-      y: number;
-      speed: number;
-      length: number;
-    };
-
-    type Ripple = {
-      x: number;
-      y: number;
-      radius: number;
-      speed: number;
-      life: number;
-      amplitude: number;
-    };
+    const cellW = 10;
+    const cellH = 13;
+    const R1 = 1;
+    const R2 = 2;
+    const K2 = 5;
 
     let cols = 0;
     let rows = 0;
-    let drops: Drop[] = [];
-    let ripples: Ripple[] = [];
+    let A = 0;
+    let B = 0;
     let rafId = 0;
-
-    const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
     const setCanvasSize = () => {
       canvas.width = section.offsetWidth;
       canvas.height = section.offsetHeight;
-      cols = Math.max(12, Math.ceil(canvas.width / cell));
-      rows = Math.max(8, Math.ceil(canvas.height / cell));
-      ctx.font = `${fontSize}px "IBM Plex Mono", monospace`;
+      cols = Math.max(24, Math.floor(canvas.width / cellW));
+      rows = Math.max(16, Math.floor(canvas.height / cellH));
+      ctx.font = `${cellH}px "IBM Plex Mono", monospace`;
       ctx.textBaseline = 'top';
       ctx.textAlign = 'left';
     };
 
-    const createDrop = (randomY: boolean): Drop => ({
-      x: Math.floor(Math.random() * cols) * cell,
-      y: randomY ? Math.random() * canvas.height : -Math.random() * canvas.height * 0.6 - cell,
-      speed: 1.7 + Math.random() * 2.4,
-      length: 1 + Math.floor(Math.random() * 2),
-    });
+    const render = () => {
+      const zBuffer = new Float32Array(cols * rows);
+      const charBuffer = new Array<string>(cols * rows).fill(' ');
+      const lightBuffer = new Float32Array(cols * rows);
 
-    const resetDrop = (drop: Drop, randomY: boolean) => {
-      const fresh = createDrop(randomY);
-      drop.x = fresh.x;
-      drop.y = fresh.y;
-      drop.speed = fresh.speed;
-      drop.length = fresh.length;
-    };
+      const cosA = Math.cos(A);
+      const sinA = Math.sin(A);
+      const cosB = Math.cos(B);
+      const sinB = Math.sin(B);
+      const K1 = (cols * K2 * 2.4) / (8 * (R1 + R2));
 
-    const spawnImpact = (x: number, y: number) => {
-      ripples.push({
-        x,
-        y,
-        radius: 0,
-        speed: 1.2 + Math.random() * 0.7,
-        life: 95 + Math.random() * 35,
-        amplitude: 1 + Math.random() * 0.5,
-      });
-      if (ripples.length > 28) {
-        ripples.shift();
-      }
-    };
+      for (let theta = 0; theta < Math.PI * 2; theta += 0.07) {
+        const costheta = Math.cos(theta);
+        const sintheta = Math.sin(theta);
 
-    const drawSurface = () => {
-      for (let row = 0; row < rows; row += 1) {
-        for (let col = 0; col < cols; col += 1) {
-          const x = col * cell;
-          const y = row * cell;
-          let wave = 0;
+        for (let phi = 0; phi < Math.PI * 2; phi += 0.02) {
+          const cosphi = Math.cos(phi);
+          const sinphi = Math.sin(phi);
 
-          for (const ripple of ripples) {
-            const dx = x - ripple.x;
-            const dy = y - ripple.y;
-            const dist = Math.hypot(dx, dy);
-            const phase = dist - ripple.radius;
-            if (Math.abs(phase) > 34) continue;
+          const circlex = R2 + R1 * costheta;
+          const circley = R1 * sintheta;
 
-            const envelope = Math.exp(-Math.abs(phase) * 0.08) * (ripple.life / 120);
-            wave += Math.sin(phase * 0.4) * envelope * ripple.amplitude;
+          const x = circlex * (cosB * cosphi + sinA * sinB * sinphi) - circley * cosA * sinB;
+          const y = circlex * (sinB * cosphi - sinA * cosB * sinphi) + circley * cosA * cosB;
+          const z = K2 + cosA * circlex * sinphi + circley * sinA;
+          const ooz = 1 / z;
+
+          const xp = Math.floor(cols * 0.5 + K1 * ooz * x);
+          const yp = Math.floor(rows * 0.5 - K1 * ooz * y * 0.55);
+
+          const L =
+            cosphi * costheta * sinB
+            - cosA * costheta * sinphi
+            - sinA * sintheta
+            + cosB * (cosA * sintheta - costheta * sinA * sinphi);
+
+          if (L <= 0 || xp < 0 || xp >= cols || yp < 0 || yp >= rows) continue;
+
+          const index = xp + yp * cols;
+          if (ooz > zBuffer[index]) {
+            zBuffer[index] = ooz;
+            charBuffer[index] = 'π';
+            lightBuffer[index] = L;
           }
-
-          const intensity = clamp((wave + 1) * 0.5, 0, 1);
-          const index = clamp(Math.floor(intensity * (waveChars.length - 1)), 0, waveChars.length - 1);
-          const alpha = 0.13 + intensity * 0.36;
-
-          ctx.fillStyle = `rgba(163, 184, 170, ${alpha})`;
-          ctx.fillText(waveChars[index], x, y);
         }
       }
-    };
 
-    const updateRipples = () => {
-      for (let i = ripples.length - 1; i >= 0; i -= 1) {
-        ripples[i].radius += ripples[i].speed;
-        ripples[i].life -= 1.2;
-        ripples[i].amplitude *= 0.996;
-        if (ripples[i].life <= 0) {
-          ripples.splice(i, 1);
-        }
-      }
-    };
-
-    const drawRain = () => {
-      ctx.fillStyle = 'rgba(167, 243, 208, 0.84)';
-      for (const drop of drops) {
-        ctx.fillText('|', drop.x, drop.y);
-        if (drop.length > 1) {
-          ctx.fillText('|', drop.x, drop.y - fontSize);
-        }
-
-        drop.y += drop.speed;
-        if (drop.y >= canvas.height - cell * 0.6) {
-          spawnImpact(drop.x, canvas.height - cell * 0.6);
-          resetDrop(drop, false);
-        }
-      }
-    };
-
-    const draw = () => {
       ctx.fillStyle = 'rgba(5, 20, 10, 0.22)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      drawSurface();
-      drawRain();
-      updateRipples();
+      for (let y = 0; y < rows; y += 1) {
+        for (let x = 0; x < cols; x += 1) {
+          const index = x + y * cols;
+          if (charBuffer[index] === ' ') continue;
 
-      rafId = window.requestAnimationFrame(draw);
+          const alpha = Math.min(1, 0.28 + lightBuffer[index] * 0.9);
+          ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`;
+          ctx.fillText(charBuffer[index], x * cellW, y * cellH);
+        }
+      }
+
+      A += 0.045;
+      B += 0.022;
+      rafId = window.requestAnimationFrame(render);
     };
 
-    const init = () => {
-      setCanvasSize();
-      drops = Array.from({ length: Math.max(10, Math.floor(cols * 0.45)) }, () => createDrop(true));
-      ripples = [];
-    };
-
-    init();
-    draw();
+    setCanvasSize();
+    render();
 
     const handleResize = () => {
-      init();
+      setCanvasSize();
     };
 
     window.addEventListener('resize', handleResize);
