@@ -18,9 +18,9 @@ const projects = [
   },
   {
     id: 3,
-    label: 'Another Project Placeholder',
-    shortDesc: 'Placeholder project summary.',
-    fullDesc: 'blah blah blah',
+    label: 'Kalshi Weather Contracts',
+    shortDesc: 'Using weather data to predict Kalshi event contract prices.',
+    fullDesc: 'We use weather data to build predictive models for Kalshi event contracts. This project explores the relationship between meteorological conditions and the pricing of event-based financial instruments.',
     slideshowLink: '#mlorderflow-slideshow',
   },
 ];
@@ -97,7 +97,7 @@ export default function ProjectsSection() {
 
             {/* Body */}
             <p className="body-text text-secondary-light mb-8">
-              From alpha research to execution systems. Our work is built to be tested, iterated, and shipped.
+              From alpha research to devlopment, we build applicable and relevant hands on projects.
             </p>
 
             {/* Projects List */}

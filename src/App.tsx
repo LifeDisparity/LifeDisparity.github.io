@@ -71,13 +71,13 @@ function App() {
           id="about"
           layout="right-photo"
           microLabel="About"
-          headline=" FQE @ Baruch College"
-          body="FQE is a student collective building at the intersection of quantitative finance and technology. We develop technical skill and professional network through hands-on research, data science, risk modeling, and algorithmic trading."
+          headline=" FQE @ Baruch"
+          body="The Financial Quants and Engineers (FQE) develops students' technical skills and network at the intersection of quantitative finance and technology. Members will work on a variety of projects within data science, risk analysis, quantitative modeling, and algorithmic trading. The main goal of the organization is to provide the necessary exposure and skills for students to gain roles in quantitative fields. FQE regularly hosts seminars, organizes discussions with leading professors, and offers opportunities for members to work on innovative projects, providing valuable hands-on experience. Our goal is to empower the next generation of quants to lead and innovate in the ever-evolving landscape of finance and technology. "
           imageSrc="/about_whiteboard.jpg"
           imageAlt="Student writing on whiteboard"
           items={[
-            { label: 'Workshops', description: 'Applied sessions in quantitative modeling, stochastic methods, and production-ready data pipelines.' },
-            { label: 'Projects', description: 'End-to-end research, backtests, and deployable trading systems.' },
+            { label: 'Workshops', description: 'Applied sessions in computer science, math, hackathons, and computer architecture.' },
+            { label: 'Projects', description: 'End-to-end research, backtests, and real world applications.' },
             { label: 'Mentorship', description: 'Direct access to alumni, faculty, and industry leaders shaping the future of finance.' },
           ]}
         />
@@ -96,10 +96,10 @@ function App() {
                 Competition
               </span>
               <h2 className="headline-lg text-primary-light mb-6" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
-                FQE Competition Tracks
+                Our Competitions
               </h2>
               <p className="body-text text-secondary-light mb-10">
-                FQE runs two competition tracks for undergraduates: Trading Competition and Applied Math Competition.
+                FQE runs two competition tracks for undergraduates at Baruch: FQE Trading Competition and FQE Applied Math Competition.
                 Explore each page for details, format, and deadlines.
               </p>
             </div>
@@ -119,7 +119,7 @@ function App() {
               <div className="border border-white/10 p-6">
                 <span className="micro-label text-accent-green mb-3 block">Applied Math</span>
                 <p className="body-text text-secondary-light mb-6">
-                  Solve quantitative math and modeling problems that emphasize rigor, logic, and problem-solving speed.
+                  Apply mathematics and modeling to problems that emphasize rigor, logic, and problem-solving speed.
                 </p>
                 <a href={APPLIED_MATH_COMP_HASH} className="cta-button w-fit">
                   <span>Applied Math Competition</span>
@@ -141,7 +141,7 @@ function App() {
           id="events"
           layout="right-photo"
           microLabel="Events"
-          headline="Join Us For"
+          headline="FQE Activities"
           body="Ongoing technical programming, collaborative research projects, and curated industry engagements."
           imageSrc="/events_group.jpg"
           imageAlt="Group collaboration"

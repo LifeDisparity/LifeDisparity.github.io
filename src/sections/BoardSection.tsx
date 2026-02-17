@@ -22,7 +22,7 @@ export default function LeadershipSection() {
             Leadership
           </span>
           <h2 className="headline-lg text-primary-light" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
-            Meet the Leadership
+            Meet our Leadership
           </h2>
           <p className="body-text text-secondary-light mt-4 max-w-xl">
             A team committed to excellence, innovation, and member success.

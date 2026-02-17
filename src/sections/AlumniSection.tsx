@@ -34,7 +34,7 @@ export default function AlumniSection() {
   return (
     <section
       id="alumni"
-      className="min-h-screen bg-secondary-dark relative flex items-center py-[12vh]"
+      className="min-h-screen bg-primary-dark relative flex items-center py-[12vh]"
     >
       <div className="w-full px-[6vw]">
         {/* Header */}

@@ -97,7 +97,7 @@ export default function HeroSection() {
 
           {/* Subheadline */}
           <p className="body-text text-secondary-light mb-8 max-w-md mx-auto" style={{ fontSize: '1.05rem' }}>
-            we focus on developing current undergraduate students at Baruch College to the become the next generation of quants through a series of interactive workshops, project experience, and more
+            We focus on developing current undergraduate students at Baruch College to the become the next generation of quants through a series of interactive workshops, project experience, and more
           </p>
 
           {/* CTAs */}
