@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { ExternalLink, X } from 'lucide-react';
+
 const companyLogos = [
   { name: 'American Express', image: '/logo_americanexpress.png' },
   { name: 'Bank of America', image: '/logo_bankofamerica.svg.png' },
@@ -27,7 +30,32 @@ const companyLogos = [
   { name: 'Wolfe Research', image: '/logo_wolferesearch.svg.png' },
 ];
 
+const alumniStories = [
+  {
+    name: 'Alumni Name 1',
+    company: 'Goldman Sachs',
+    testimonial:
+      'FQE gave me the technical foundation and confidence to break into quant-focused work. The project experience directly helped me in interviews.',
+    linkedin: 'https://www.linkedin.com/company/fqe-baruch/',
+  },
+  {
+    name: 'Alumni Name 2',
+    company: 'JPMorgan Chase',
+    testimonial:
+      'Working on collaborative projects at FQE improved my problem solving, communication, and ability to deliver under deadlines.',
+    linkedin: 'https://www.linkedin.com/company/fqe-baruch/',
+  },
+  {
+    name: 'Alumni Name 3',
+    company: 'Bloomberg',
+    testimonial:
+      'FQE connected me with a strong network of peers and mentors. The hands-on technical environment made a big difference in my career path.',
+    linkedin: 'https://www.linkedin.com/company/fqe-baruch/',
+  },
+];
+
 export default function AlumniSection() {
+  const [isStoriesOpen, setIsStoriesOpen] = useState(false);
   // Double the logos for seamless infinite scroll
   const allLogos = [...companyLogos, ...companyLogos];
 
@@ -100,11 +128,67 @@ export default function AlumniSection() {
 
         {/* CTA */}
         <div className="mt-12 text-center">
-          <a href="#" className="text-link inline-flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIsStoriesOpen(true)}
+            className="text-link inline-flex items-center gap-2"
+          >
             <span>Read Alumni Stories</span>
-          </a>
+          </button>
         </div>
       </div>
+
+      {isStoriesOpen && (
+        <div className="fixed inset-0 z-[300] bg-black/80 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="bg-secondary-dark max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-white/10">
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <h3 className="headline-lg text-primary-light" style={{ fontSize: '1.5rem' }}>
+                Alumni Stories
+              </h3>
+              <button
+                onClick={() => setIsStoriesOpen(false)}
+                className="text-secondary-light hover:text-accent-green transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {alumniStories.map((story, index) => (
+                <div
+                  key={`${story.name}-${story.company}`}
+                  className={`mb-8 pb-8 ${index !== alumniStories.length - 1 ? 'border-b border-white/10' : ''}`}
+                >
+                  <p className="micro-label text-accent-green mb-3">
+                    {story.name} - {story.company}
+                  </p>
+                  <p className="body-text text-secondary-light mb-4">
+                    {story.testimonial}
+                  </p>
+                  <a
+                    href={story.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-link inline-flex items-center gap-2"
+                  >
+                    <span>LinkedIn</span>
+                    <ExternalLink size={14} />
+                  </a>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-6 border-t border-white/10 flex justify-end">
+              <button
+                onClick={() => setIsStoriesOpen(false)}
+                className="cta-button"
+              >
+                <span>Close</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
