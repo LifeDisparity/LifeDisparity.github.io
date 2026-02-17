@@ -46,7 +46,7 @@ const incentives = [
 const rules = [
   'The use of Artificial Intelligence to generate code is strictly forbidden.',
   'Any AI-generated code use will immediately disqualify your team.',
-  'All submissions must be your team's original work.',
+  "All submissions must be your team's original work.",
   'Teams must follow the official deadlines and live trading windows.',
 ];
 
