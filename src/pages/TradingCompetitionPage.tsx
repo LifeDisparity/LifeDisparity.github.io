@@ -122,8 +122,8 @@ export default function TradingCompetitionPage() {
     const charH = 12;
     const wickChar = '|';
     const bodyChar = '#';
-    const topPaddingRows = 3;
-    const bottomPaddingRows = 3;
+    const topPaddingRows = 1;
+    const bottomPaddingRows = 1;
 
     type Candle = {
       open: number;
@@ -191,7 +191,7 @@ export default function TradingCompetitionPage() {
       trend = -1;
       candlesSinceSwitch = 0;
       switchAfter = 22 + Math.floor(Math.random() * 14);
-      for (let i = 0; i < cols; i += 1) {
+      for (let i = 0; i < cols + 4; i += 1) {
         candles.push(buildCandle());
       }
     };
@@ -220,19 +220,22 @@ export default function TradingCompetitionPage() {
       ctx.fillStyle = 'rgba(5, 20, 10, 0.16)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      offset += 1.25;
+      offset += 1.4;
       if (offset >= charW) {
         offset -= charW;
-        candles.unshift(buildCandle());
+        candles.push(buildCandle());
         if (candles.length > cols + 8) {
-          candles.pop();
+          candles.shift();
         }
       }
 
       for (let i = 0; i < candles.length; i += 1) {
-        const x = canvas.width - offset - i * charW;
-        if (x < -charW) {
+        const x = i * charW - offset;
+        if (x > canvas.width + charW) {
           break;
+        }
+        if (x < -charW) {
+          continue;
         }
         drawCandle(candles[i], x);
       }
