@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight, Calculator, Clock3, ShieldAlert, Sigma, Trophy, Users } from 'lucide-react';
 
 const focusAreas = [
@@ -76,6 +76,9 @@ const incentives = [
 ];
 
 export default function AppliedMathCompetitionPage() {
+  const heroSectionRef = useRef<HTMLElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   useLayoutEffect(() => {
     const previousRestoration = 'scrollRestoration' in window.history ? window.history.scrollRestoration : null;
     if ('scrollRestoration' in window.history) {
@@ -110,6 +113,145 @@ export default function AppliedMathCompetitionPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const section = heroSectionRef.current;
+    if (!canvas || !section) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const fontSize = 13;
+    const groundPadding = 10;
+    const constants = ['π', 'e', 'φ', 'τ', 'γ', '∞', 'Σ', '∫', 'Δ', 'λ'];
+
+    type Drop = {
+      x: number;
+      y: number;
+      speed: number;
+      char: string;
+    };
+
+    type Spinner = {
+      x: number;
+      y: number;
+      radius: number;
+      angle: number;
+      spin: number;
+      life: number;
+      symbol: string;
+    };
+
+    let columns = 0;
+    let drops: Drop[] = [];
+    let spinners: Spinner[] = [];
+    let rafId = 0;
+
+    const setCanvasSize = () => {
+      canvas.width = section.offsetWidth;
+      canvas.height = section.offsetHeight;
+      ctx.font = `${fontSize}px "IBM Plex Mono", monospace`;
+      ctx.textBaseline = 'top';
+      ctx.textAlign = 'left';
+    };
+
+    const resetDrop = (drop: Drop, randomY: boolean) => {
+      drop.x = Math.floor(Math.random() * Math.max(1, columns)) * fontSize;
+      drop.y = randomY
+        ? Math.random() * canvas.height
+        : -Math.random() * canvas.height * 0.8 - fontSize;
+      drop.speed = 1.1 + Math.random() * 2.0;
+      drop.char = Math.random() > 0.6 ? ':' : '|';
+    };
+
+    const initDrops = () => {
+      columns = Math.max(16, Math.floor(canvas.width / fontSize));
+      drops = Array.from({ length: columns }, () => {
+        const drop: Drop = { x: 0, y: 0, speed: 0, char: '|' };
+        resetDrop(drop, true);
+        return drop;
+      });
+      spinners = [];
+    };
+
+    const spawnSpinner = (x: number, y: number) => {
+      spinners.push({
+        x,
+        y,
+        radius: 6 + Math.random() * 6,
+        angle: Math.random() * Math.PI * 2,
+        spin: (Math.random() > 0.5 ? 1 : -1) * (0.045 + Math.random() * 0.06),
+        life: 70 + Math.random() * 30,
+        symbol: constants[Math.floor(Math.random() * constants.length)],
+      });
+
+      if (spinners.length > 90) {
+        spinners.shift();
+      }
+    };
+
+    const drawSpinner = (spinner: Spinner) => {
+      const points = 10;
+      const step = (Math.PI * 2) / points;
+      const alpha = Math.max(0, Math.min(1, spinner.life / 100));
+
+      ctx.fillStyle = `rgba(74, 222, 128, ${Math.min(0.9, alpha)})`;
+      for (let i = 0; i < points; i += 1) {
+        const a = spinner.angle + i * step;
+        const x = spinner.x + Math.cos(a) * spinner.radius;
+        const y = spinner.y + Math.sin(a) * spinner.radius * 0.58;
+        ctx.fillText(spinner.symbol, x, y);
+      }
+
+      ctx.fillStyle = `rgba(240, 250, 244, ${Math.min(0.92, alpha)})`;
+      ctx.fillText(spinner.symbol, spinner.x, spinner.y);
+
+      spinner.angle += spinner.spin;
+      spinner.radius += 0.03;
+      spinner.life -= 1;
+    };
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(5, 20, 10, 0.14)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = 'rgba(74, 222, 128, 0.92)';
+      for (const drop of drops) {
+        ctx.fillText(drop.char, drop.x, drop.y);
+        drop.y += drop.speed;
+
+        if (drop.y >= canvas.height - groundPadding) {
+          spawnSpinner(drop.x, canvas.height - groundPadding);
+          resetDrop(drop, false);
+        }
+      }
+
+      for (let i = spinners.length - 1; i >= 0; i -= 1) {
+        drawSpinner(spinners[i]);
+        if (spinners[i].life <= 0) {
+          spinners.splice(i, 1);
+        }
+      }
+
+      rafId = window.requestAnimationFrame(draw);
+    };
+
+    setCanvasSize();
+    initDrops();
+    draw();
+
+    const handleResize = () => {
+      setCanvasSize();
+      initDrops();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-primary-dark">
       <div className="grain-overlay" />
@@ -128,8 +270,15 @@ export default function AppliedMathCompetitionPage() {
       </div>
 
       <main>
-        <section className="min-h-screen bg-primary-dark relative flex items-center py-[12vh]">
-          <div className="w-full px-[6vw] flex justify-center">
+        <section ref={heroSectionRef} className="min-h-screen bg-primary-dark relative flex items-center py-[12vh]">
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0 z-10 w-full h-full pointer-events-none"
+            aria-hidden="true"
+          />
+          <div className="vignette" />
+
+          <div className="relative z-20 w-full px-[6vw] flex justify-center">
             <div className="flex flex-col justify-center items-center text-center max-w-3xl">
               <span className="micro-label text-secondary-light mb-6">Competition</span>
               <h1 className="headline-xl text-primary-light mb-6" style={{ fontSize: 'clamp(2.3rem, 5vw, 4.4rem)', lineHeight: 1.04 }}>
