@@ -120,27 +120,15 @@ export default function TradingCompetitionPage() {
 
     const charW = 10;
     const charH = 12;
-    const wickChar = '|';
-    const bodyChar = '#';
-    const topPaddingRows = 1;
-    const bottomPaddingRows = 1;
-
-    type Candle = {
-      open: number;
-      close: number;
-      high: number;
-      low: number;
-      bull: boolean;
-    };
+    const topPaddingRows = 2;
+    const bottomPaddingRows = 2;
 
     let rows = 0;
     let cols = 0;
-    let offset = 0;
-    let priceRow = 0;
-    let candles: Candle[] = [];
-    let trend = -1; // -1 = bullish (up), +1 = bearish (down)
-    let candlesSinceSwitch = 0;
-    let switchAfter = 22 + Math.floor(Math.random() * 14);
+    let prices: number[] = [];
+    let trend = -1; // -1 rising bias, +1 falling bias
+    let ticksSinceSwitch = 0;
+    let switchAfter = 18 + Math.floor(Math.random() * 16);
 
     const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
@@ -152,100 +140,130 @@ export default function TradingCompetitionPage() {
       ctx.textAlign = 'left';
     };
 
-    const buildCandle = (): Candle => {
+    const initSeries = () => {
+      rows = Math.max(16, Math.floor(canvas.height / charH));
+      cols = Math.max(28, Math.ceil(canvas.width / charW) + 4);
+      const startRow = Math.floor(rows * 0.55);
+      prices = Array.from({ length: cols + 2 }, () => startRow);
+      trend = -1;
+      ticksSinceSwitch = 0;
+      switchAfter = 18 + Math.floor(Math.random() * 16);
+    };
+
+    const nextPrice = (last: number) => {
       const minRow = topPaddingRows;
       const maxRow = Math.max(minRow + 8, rows - bottomPaddingRows);
 
-      if (candlesSinceSwitch >= switchAfter) {
+      if (ticksSinceSwitch >= switchAfter) {
         trend *= -1;
-        candlesSinceSwitch = 0;
-        switchAfter = 20 + Math.floor(Math.random() * 16);
+        ticksSinceSwitch = 0;
+        switchAfter = 14 + Math.floor(Math.random() * 22);
       }
-      candlesSinceSwitch += 1;
+      ticksSinceSwitch += 1;
 
-      const open = priceRow;
-      const directional = trend * (Math.random() * 1.6 + 0.35);
-      const noise = (Math.random() - 0.5) * 2.6;
-      const close = clamp(Math.round(open + directional + noise), minRow, maxRow);
-      const wickAbove = 1 + Math.floor(Math.random() * 3);
-      const wickBelow = 1 + Math.floor(Math.random() * 3);
-      const high = clamp(Math.min(open, close) - wickAbove, minRow, maxRow);
-      const low = clamp(Math.max(open, close) + wickBelow, minRow, maxRow);
-
-      priceRow = close;
-      return {
-        open,
-        close,
-        high,
-        low,
-        bull: close < open,
-      };
+      const drift = trend * (Math.random() * 1.2 + 0.25);
+      const noise = (Math.random() - 0.5) * 2.2;
+      return clamp(Math.round(last + drift + noise), minRow, maxRow);
     };
 
-    const initSeries = () => {
-      rows = Math.max(18, Math.floor(canvas.height / charH));
-      cols = Math.max(24, Math.ceil(canvas.width / charW) + 6);
-      priceRow = Math.floor(rows * 0.55);
-      candles = [];
-      offset = 0;
-      trend = -1;
-      candlesSinceSwitch = 0;
-      switchAfter = 22 + Math.floor(Math.random() * 14);
-      for (let i = 0; i < cols + 4; i += 1) {
-        candles.push(buildCandle());
+    const drawGrid = () => {
+      ctx.fillStyle = 'rgba(163, 184, 170, 0.13)';
+      for (let row = 2; row < rows; row += 4) {
+        for (let col = 0; col < cols; col += 3) {
+          ctx.fillText('.', col * charW, row * charH);
+        }
       }
     };
 
-    const drawCandle = (candle: Candle, x: number) => {
-      const wickColor = candle.bull ? 'rgba(74, 222, 128, 0.55)' : 'rgba(248, 113, 113, 0.55)';
-      const bodyColor = candle.bull ? 'rgba(74, 222, 128, 0.95)' : 'rgba(248, 113, 113, 0.95)';
+    const drawSeries = () => {
+      for (let i = 1; i < prices.length; i += 1) {
+        const prev = prices[i - 1];
+        const cur = prices[i];
+        const x = (i - 1) * charW;
 
-      ctx.fillStyle = wickColor;
-      for (let row = candle.high; row <= candle.low; row += 1) {
-        ctx.fillText(wickChar, x, row * charH);
+        let moveChar = '-';
+        let moveColor = 'rgba(163, 184, 170, 0.75)';
+        if (cur < prev) {
+          moveChar = '/';
+          moveColor = 'rgba(74, 222, 128, 0.95)';
+        } else if (cur > prev) {
+          moveChar = '\\';
+          moveColor = 'rgba(248, 113, 113, 0.95)';
+        }
+
+        ctx.fillStyle = moveColor;
+        ctx.fillText(moveChar, x, Math.min(prev, cur) * charH);
+
+        const bodyColor = cur < prev ? 'rgba(74, 222, 128, 0.95)' : cur > prev ? 'rgba(248, 113, 113, 0.95)' : 'rgba(163, 184, 170, 0.85)';
+        ctx.fillStyle = bodyColor;
+        ctx.fillText('#', x, cur * charH);
+      }
+    };
+
+    const drawLatestCandle = () => {
+      const recent = prices.slice(-6);
+      const high = Math.min(...recent);
+      const low = Math.max(...recent);
+      const open = prices[prices.length - 2];
+      const close = prices[prices.length - 1];
+      const x = (prices.length - 2) * charW;
+      const bull = close < open;
+
+      ctx.fillStyle = bull ? 'rgba(74, 222, 128, 0.45)' : 'rgba(248, 113, 113, 0.45)';
+      for (let row = high; row <= low; row += 1) {
+        ctx.fillText('|', x, row * charH);
       }
 
-      ctx.fillStyle = bodyColor;
-      const bodyTop = Math.min(candle.open, candle.close);
-      const bodyBottom = Math.max(candle.open, candle.close);
-      for (let row = bodyTop; row <= bodyBottom; row += 1) {
-        ctx.fillText(bodyChar, x, row * charH);
+      ctx.fillStyle = bull ? 'rgba(74, 222, 128, 0.98)' : 'rgba(248, 113, 113, 0.98)';
+      const top = Math.min(open, close);
+      const bottom = Math.max(open, close);
+      for (let row = top; row <= bottom; row += 1) {
+        ctx.fillText('#', x, row * charH);
       }
+    };
+
+    const drawTicker = () => {
+      const last = prices[prices.length - 1];
+      const prev = prices[prices.length - 2];
+      const delta = prev - last;
+      const pct = (delta * 0.37).toFixed(2);
+      const mode = delta > 0 ? 'BULL' : delta < 0 ? 'BEAR' : 'FLAT';
+      const color = delta > 0 ? 'rgba(74, 222, 128, 0.95)' : delta < 0 ? 'rgba(248, 113, 113, 0.95)' : 'rgba(163, 184, 170, 0.95)';
+
+      ctx.fillStyle = 'rgba(240, 250, 244, 0.9)';
+      ctx.fillText('FQE.TRD', charW, charH);
+      ctx.fillStyle = color;
+      ctx.fillText(`${mode} ${delta >= 0 ? '+' : ''}${pct}%`, charW * 10, charH);
+    };
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(5, 20, 10, 0.22)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawGrid();
+      drawSeries();
+      drawLatestCandle();
+      drawTicker();
     };
 
     setCanvasSize();
     initSeries();
+    draw();
 
-    const draw = () => {
-      ctx.fillStyle = 'rgba(5, 20, 10, 0.16)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      offset += 1.4;
-      if (offset >= charW) {
-        offset -= charW;
-        candles.push(buildCandle());
-        if (candles.length > cols + 8) {
-          candles.shift();
-        }
+    const update = () => {
+      const last = prices[prices.length - 1];
+      prices.push(nextPrice(last));
+      if (prices.length > cols + 2) {
+        prices.shift();
       }
-
-      for (let i = 0; i < candles.length; i += 1) {
-        const x = i * charW - offset;
-        if (x > canvas.width + charW) {
-          break;
-        }
-        if (x < -charW) {
-          continue;
-        }
-        drawCandle(candles[i], x);
-      }
+      draw();
     };
 
-    const drawIntervalId = window.setInterval(draw, 40);
+    const drawIntervalId = window.setInterval(update, 68);
 
     const handleResize = () => {
       setCanvasSize();
       initSeries();
+      draw();
     };
 
     window.addEventListener('resize', handleResize);
