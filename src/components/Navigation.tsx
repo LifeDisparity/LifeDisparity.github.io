@@ -7,6 +7,7 @@ const navLinks = [
   { label: 'Competitions', href: '#competition' },
   { label: 'Alumni', href: '#alumni' },
   { label: 'Leadership', href: '#leadership' },
+  { label: 'Events', href: '#events' },
   { label: 'Contact', href: '#contact' },
 ];
 

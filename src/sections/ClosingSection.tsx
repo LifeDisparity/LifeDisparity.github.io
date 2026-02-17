@@ -34,7 +34,7 @@ export default function ClosingSection() {
           className="headline-lg text-primary-light"
           style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)' }}
         >
-          Thanks for Stopping By
+          Alpha Cheese
         </h2>
       </div>
 

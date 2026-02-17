@@ -99,7 +99,7 @@ function App() {
           id="events"
           layout="right-photo"
           microLabel="Events"
-          headline="Events That Level You Up"
+          headline="Join Us For"
           body="Weekly builds, term-long research sprints, and open sessions for anyone curious."
           imageSrc="/events_group.jpg"
           imageAlt="Group collaboration"
