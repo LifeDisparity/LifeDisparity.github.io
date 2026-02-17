@@ -7,7 +7,7 @@ export default function ClosingSection() {
       <div className="flex justify-center gap-[3vw] px-[6vw] pb-[6vh]">
         <div className="photo-frame" style={{ width: '26vw', height: '34vh' }}>
           <img
-            src="/closing_collage_01.jpg"
+            src="/alpha_cheese.png"
             alt="Workspace"
             className="w-full h-full object-cover"
           />

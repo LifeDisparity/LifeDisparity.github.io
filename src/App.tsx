@@ -9,18 +9,30 @@ import AlumniSection from './sections/AlumniSection';
 import LeadershipSection from './sections/BoardSection';
 import ContactSection from './sections/ContactSection';
 import ClosingSection from './sections/ClosingSection';
-import CompetitionsPage from './pages/CompetitionsPage';
+import TradingCompetitionPage from './pages/TradingCompetitionPage';
+import AppliedMathCompetitionPage from './pages/AppliedMathCompetitionPage';
+import { ArrowRight } from 'lucide-react';
 
-const COMPETITIONS_HASH = '#/competitions';
+const TRADING_COMP_HASH = '#/trading-competition';
+const APPLIED_MATH_COMP_HASH = '#/applied-math-competition';
+const LEGACY_COMP_HASH = '#/competitions';
+
+type CompetitionView = 'main' | 'trading' | 'applied';
+
+function getCompetitionView(hash: string): CompetitionView {
+  if (hash === TRADING_COMP_HASH || hash === LEGACY_COMP_HASH) return 'trading';
+  if (hash === APPLIED_MATH_COMP_HASH) return 'applied';
+  return 'main';
+}
 
 function App() {
-  const [isCompetitionsPage, setIsCompetitionsPage] = useState(
-    () => window.location.hash === COMPETITIONS_HASH
+  const [competitionView, setCompetitionView] = useState<CompetitionView>(
+    () => getCompetitionView(window.location.hash)
   );
 
   useEffect(() => {
     const handleHashChange = () => {
-      setIsCompetitionsPage(window.location.hash === COMPETITIONS_HASH);
+      setCompetitionView(getCompetitionView(window.location.hash));
     };
 
     window.addEventListener('hashchange', handleHashChange);
@@ -28,13 +40,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (isCompetitionsPage) {
+    if (competitionView !== 'main') {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
-  }, [isCompetitionsPage]);
+  }, [competitionView]);
 
-  if (isCompetitionsPage) {
-    return <CompetitionsPage />;
+  if (competitionView === 'trading') {
+    return <TradingCompetitionPage />;
+  }
+
+  if (competitionView === 'applied') {
+    return <AppliedMathCompetitionPage />;
   }
 
   return (
@@ -70,23 +86,49 @@ function App() {
         <ProjectsSection />
 
         {/* Competition */}
-        <ContentSection
+        <section
           id="competition"
-          layout="right-photo"
-          microLabel="Competition"
-          headline="1st Annual Undergraduate Trading Competition"
-          body="FQE is hosting a trading competition for current Baruch undergraduates interested in building and testing a trading strategy in real time."
-          imageSrc="/resources_working.jpg"
-          imageAlt="Students working with laptops and notebooks"
-          items={[
-            { label: 'Eligibility', description: 'Current Baruch undergraduate students. Coding knowledge is strongly recommended.' },
-            { label: 'Key Dates', description: 'Application deadline: March 20th.' },
-            { label: 'Prizes', description: 'Prize pool: 300, 200, 100 for top 3 teams, plus recognition and resume-building exposure.' },
-          ]}
-          ctaText="Learn More"
-          ctaHref={COMPETITIONS_HASH}
-          ctaVariant="button"
-        />
+          className="min-h-screen bg-primary-dark relative flex items-center py-[12vh]"
+        >
+          <div className="w-full px-[6vw]">
+            <div className="max-w-4xl">
+              <span className="micro-label text-secondary-light mb-6 block">
+                Competition
+              </span>
+              <h2 className="headline-lg text-primary-light mb-6" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
+                FQE Competition Tracks
+              </h2>
+              <p className="body-text text-secondary-light mb-10">
+                FQE runs two competition tracks for undergraduates: Trading Competition and Applied Math Competition.
+                Explore each page for details, format, and deadlines.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="border border-white/10 p-6">
+                <span className="micro-label text-accent-green mb-3 block">Trading</span>
+                <p className="body-text text-secondary-light mb-6">
+                  Build and iterate on a live trading strategy with structured milestones and team-based execution.
+                </p>
+                <a href={TRADING_COMP_HASH} className="cta-button w-fit">
+                  <span>Trading Competition</span>
+                  <ArrowRight size={16} />
+                </a>
+              </div>
+
+              <div className="border border-white/10 p-6">
+                <span className="micro-label text-accent-green mb-3 block">Applied Math</span>
+                <p className="body-text text-secondary-light mb-6">
+                  Solve quantitative math and modeling problems that emphasize rigor, logic, and problem-solving speed.
+                </p>
+                <a href={APPLIED_MATH_COMP_HASH} className="cta-button w-fit">
+                  <span>Applied Math Competition</span>
+                  <ArrowRight size={16} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Alumni */}
         <AlumniSection />
