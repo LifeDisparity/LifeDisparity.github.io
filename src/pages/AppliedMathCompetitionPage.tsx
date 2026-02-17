@@ -126,7 +126,7 @@ export default function AppliedMathCompetitionPage() {
     const R1 = 1;
     const R2 = 2;
     const K2 = 5;
-    const shades = ['.', ',', '-', '~', ':', ';', '=', '*', 'o', 'O', '#', '@'];
+    const shades = ['e', 'i', 'pi', 'phi', 'tau', 'ln', 'sin', 'cos', 'sum', 'int', 'sqrt', 'inf'];
 
     let cols = 0;
     let rows = 0;
@@ -187,7 +187,7 @@ export default function AppliedMathCompetitionPage() {
           const index = xp + yp * cols;
           if (ooz > zBuffer[index]) {
             zBuffer[index] = ooz;
-            const shadeIndex = clamp(Math.floor(L * 11), 0, shades.length - 1);
+            const shadeIndex = clamp(Math.floor(L * (shades.length - 1)), 0, shades.length - 1);
             charBuffer[index] = shades[shadeIndex];
             lightBuffer[index] = L;
           }
@@ -208,8 +208,8 @@ export default function AppliedMathCompetitionPage() {
         }
       }
 
-      A += 0.02;
-      B += 0.01;
+      A += 0.011;
+      B += 0.005;
       rafId = window.requestAnimationFrame(render);
     };
 
