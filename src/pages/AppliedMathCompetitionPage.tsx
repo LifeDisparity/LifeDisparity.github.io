@@ -78,6 +78,9 @@ const incentives = [
 export default function AppliedMathCompetitionPage() {
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const handleViewStructure = () => {
+    document.getElementById('structure')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   useLayoutEffect(() => {
     const previousRestoration = 'scrollRestoration' in window.history ? window.history.scrollRestoration : null;
@@ -260,14 +263,19 @@ export default function AppliedMathCompetitionPage() {
                 FQE Undergraduate Applied Mathematics Competition
               </h1>
               <div className="flex flex-col gap-4 items-center">
-                <a href="mailto:baruchfqe@gmail.com?subject=Applied%20Mathematics%20Competition%20Application" className="cta-button w-fit">
+                <a
+                  href="https://linktr.ee/FQEBaruch"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cta-button w-fit"
+                >
                   <span>Apply to Compete</span>
                   <ArrowRight size={16} />
                 </a>
-                <a href="#structure" className="text-link inline-flex items-center gap-2">
+                <button type="button" onClick={handleViewStructure} className="text-link inline-flex items-center gap-2">
                   <span>View Structure</span>
                   <ArrowRight size={14} />
-                </a>
+                </button>
               </div>
             </div>
           </div>
