@@ -121,128 +121,199 @@ export default function AppliedMathCompetitionPage() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const fontSize = 13;
-    const groundPadding = 10;
-    const constants = ['π', 'e', 'φ', 'τ', 'γ', '∞', 'Σ', '∫', 'Δ', 'λ'];
+    const cell = 16;
+    const fontSize = 12;
+    const waveChars = [' ', '.', ':', '-', '=', '+', '*', 'o', 'O', '@'];
+    const constants = ['pi', 'e', 'phi', 'tau', 'sqrt2', 'ln2'];
 
     type Drop = {
       x: number;
       y: number;
       speed: number;
-      char: string;
+      length: number;
     };
 
-    type Spinner = {
+    type Ripple = {
       x: number;
       y: number;
       radius: number;
+      speed: number;
+      life: number;
+      amplitude: number;
+    };
+
+    type Donut = {
+      x: number;
+      y: number;
       angle: number;
       spin: number;
       life: number;
       symbol: string;
     };
 
-    let columns = 0;
+    let cols = 0;
+    let rows = 0;
     let drops: Drop[] = [];
-    let spinners: Spinner[] = [];
+    let ripples: Ripple[] = [];
+    let donuts: Donut[] = [];
     let rafId = 0;
+
+    const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
     const setCanvasSize = () => {
       canvas.width = section.offsetWidth;
       canvas.height = section.offsetHeight;
+      cols = Math.max(12, Math.ceil(canvas.width / cell));
+      rows = Math.max(8, Math.ceil(canvas.height / cell));
       ctx.font = `${fontSize}px "IBM Plex Mono", monospace`;
       ctx.textBaseline = 'top';
       ctx.textAlign = 'left';
     };
 
+    const createDrop = (randomY: boolean): Drop => ({
+      x: Math.floor(Math.random() * cols) * cell,
+      y: randomY ? Math.random() * canvas.height : -Math.random() * canvas.height * 0.6 - cell,
+      speed: 1.7 + Math.random() * 2.4,
+      length: 1 + Math.floor(Math.random() * 2),
+    });
+
     const resetDrop = (drop: Drop, randomY: boolean) => {
-      drop.x = Math.floor(Math.random() * Math.max(1, columns)) * fontSize;
-      drop.y = randomY
-        ? Math.random() * canvas.height
-        : -Math.random() * canvas.height * 0.8 - fontSize;
-      drop.speed = 1.1 + Math.random() * 2.0;
-      drop.char = Math.random() > 0.6 ? ':' : '|';
+      const fresh = createDrop(randomY);
+      drop.x = fresh.x;
+      drop.y = fresh.y;
+      drop.speed = fresh.speed;
+      drop.length = fresh.length;
     };
 
-    const initDrops = () => {
-      columns = Math.max(16, Math.floor(canvas.width / fontSize));
-      drops = Array.from({ length: columns }, () => {
-        const drop: Drop = { x: 0, y: 0, speed: 0, char: '|' };
-        resetDrop(drop, true);
-        return drop;
-      });
-      spinners = [];
-    };
-
-    const spawnSpinner = (x: number, y: number) => {
-      spinners.push({
+    const spawnImpact = (x: number, y: number) => {
+      ripples.push({
         x,
         y,
-        radius: 6 + Math.random() * 6,
+        radius: 0,
+        speed: 1.2 + Math.random() * 0.7,
+        life: 95 + Math.random() * 35,
+        amplitude: 1 + Math.random() * 0.5,
+      });
+      if (ripples.length > 28) {
+        ripples.shift();
+      }
+
+      donuts.push({
+        x,
+        y,
         angle: Math.random() * Math.PI * 2,
-        spin: (Math.random() > 0.5 ? 1 : -1) * (0.045 + Math.random() * 0.06),
-        life: 70 + Math.random() * 30,
+        spin: (Math.random() > 0.5 ? 1 : -1) * (0.05 + Math.random() * 0.08),
+        life: 70 + Math.random() * 28,
         symbol: constants[Math.floor(Math.random() * constants.length)],
       });
-
-      if (spinners.length > 90) {
-        spinners.shift();
+      if (donuts.length > 20) {
+        donuts.shift();
       }
     };
 
-    const drawSpinner = (spinner: Spinner) => {
-      const points = 10;
-      const step = (Math.PI * 2) / points;
-      const alpha = Math.max(0, Math.min(1, spinner.life / 100));
+    const drawSurface = () => {
+      for (let row = 0; row < rows; row += 1) {
+        for (let col = 0; col < cols; col += 1) {
+          const x = col * cell;
+          const y = row * cell;
+          let wave = 0;
 
-      ctx.fillStyle = `rgba(74, 222, 128, ${Math.min(0.9, alpha)})`;
-      for (let i = 0; i < points; i += 1) {
-        const a = spinner.angle + i * step;
-        const x = spinner.x + Math.cos(a) * spinner.radius;
-        const y = spinner.y + Math.sin(a) * spinner.radius * 0.58;
-        ctx.fillText(spinner.symbol, x, y);
+          for (const ripple of ripples) {
+            const dx = x - ripple.x;
+            const dy = y - ripple.y;
+            const dist = Math.hypot(dx, dy);
+            const phase = dist - ripple.radius;
+            if (Math.abs(phase) > 34) continue;
+
+            const envelope = Math.exp(-Math.abs(phase) * 0.08) * (ripple.life / 120);
+            wave += Math.sin(phase * 0.4) * envelope * ripple.amplitude;
+          }
+
+          const intensity = clamp((wave + 1) * 0.5, 0, 1);
+          const index = clamp(Math.floor(intensity * (waveChars.length - 1)), 0, waveChars.length - 1);
+          const alpha = 0.13 + intensity * 0.36;
+
+          ctx.fillStyle = `rgba(163, 184, 170, ${alpha})`;
+          ctx.fillText(waveChars[index], x, y);
+        }
       }
-
-      ctx.fillStyle = `rgba(240, 250, 244, ${Math.min(0.92, alpha)})`;
-      ctx.fillText(spinner.symbol, spinner.x, spinner.y);
-
-      spinner.angle += spinner.spin;
-      spinner.radius += 0.03;
-      spinner.life -= 1;
     };
 
-    const draw = () => {
-      ctx.fillStyle = 'rgba(5, 20, 10, 0.14)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const drawDonuts = () => {
+      for (let i = donuts.length - 1; i >= 0; i -= 1) {
+        const donut = donuts[i];
+        const alpha = clamp(donut.life / 95, 0, 1);
+        const points = 8;
+        const step = (Math.PI * 2) / points;
+        const ringRadius = 8 + (95 - donut.life) * 0.14;
 
-      ctx.fillStyle = 'rgba(74, 222, 128, 0.92)';
+        ctx.fillStyle = `rgba(74, 222, 128, ${0.25 + alpha * 0.65})`;
+        for (let p = 0; p < points; p += 1) {
+          const a = donut.angle + p * step;
+          const x = donut.x + Math.cos(a) * ringRadius;
+          const y = donut.y + Math.sin(a) * ringRadius * 0.58;
+          ctx.fillText(donut.symbol, x, y);
+        }
+
+        donut.angle += donut.spin;
+        donut.life -= 1.6;
+        if (donut.life <= 0) {
+          donuts.splice(i, 1);
+        }
+      }
+    };
+
+    const updateRipples = () => {
+      for (let i = ripples.length - 1; i >= 0; i -= 1) {
+        ripples[i].radius += ripples[i].speed;
+        ripples[i].life -= 1.2;
+        ripples[i].amplitude *= 0.996;
+        if (ripples[i].life <= 0) {
+          ripples.splice(i, 1);
+        }
+      }
+    };
+
+    const drawRain = () => {
+      ctx.fillStyle = 'rgba(167, 243, 208, 0.84)';
       for (const drop of drops) {
-        ctx.fillText(drop.char, drop.x, drop.y);
-        drop.y += drop.speed;
+        ctx.fillText('|', drop.x, drop.y);
+        if (drop.length > 1) {
+          ctx.fillText('|', drop.x, drop.y - fontSize);
+        }
 
-        if (drop.y >= canvas.height - groundPadding) {
-          spawnSpinner(drop.x, canvas.height - groundPadding);
+        drop.y += drop.speed;
+        if (drop.y >= canvas.height - cell * 0.6) {
+          spawnImpact(drop.x, canvas.height - cell * 0.6);
           resetDrop(drop, false);
         }
       }
+    };
 
-      for (let i = spinners.length - 1; i >= 0; i -= 1) {
-        drawSpinner(spinners[i]);
-        if (spinners[i].life <= 0) {
-          spinners.splice(i, 1);
-        }
-      }
+    const draw = () => {
+      ctx.fillStyle = 'rgba(5, 20, 10, 0.22)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      drawSurface();
+      drawDonuts();
+      drawRain();
+      updateRipples();
 
       rafId = window.requestAnimationFrame(draw);
     };
 
-    setCanvasSize();
-    initDrops();
+    const init = () => {
+      setCanvasSize();
+      drops = Array.from({ length: Math.max(10, Math.floor(cols * 0.45)) }, () => createDrop(true));
+      ripples = [];
+      donuts = [];
+    };
+
+    init();
     draw();
 
     const handleResize = () => {
-      setCanvasSize();
-      initDrops();
+      init();
     };
 
     window.addEventListener('resize', handleResize);
@@ -425,3 +496,4 @@ export default function AppliedMathCompetitionPage() {
     </div>
   );
 }
+
