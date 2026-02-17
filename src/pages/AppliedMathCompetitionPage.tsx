@@ -123,24 +123,18 @@ export default function AppliedMathCompetitionPage() {
 
     const cellW = 10;
     const cellH = 13;
-    const K2 = 7;
-    const glyphWidth = 17;
-    const glyphHeight = 15;
-    const depth = 4;
-    const pointStep = 0.42;
-
-    type Point3D = {
-      x: number;
-      y: number;
-      z: number;
-      shade: number;
-    };
+    const R1 = 1;
+    const R2 = 2;
+    const K2 = 5;
+    const shades = ['.', ',', '-', '~', ':', ';', '=', '*', 'o', 'O', '#', '@'];
 
     let cols = 0;
     let rows = 0;
     let A = 0;
     let B = 0;
     let rafId = 0;
+
+    const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
     const setCanvasSize = () => {
       canvas.width = section.offsetWidth;
@@ -152,37 +146,6 @@ export default function AppliedMathCompetitionPage() {
       ctx.textAlign = 'left';
     };
 
-    const buildPiPointCloud = (): Point3D[] => {
-      const points: Point3D[] = [];
-      const cx = (glyphWidth - 1) / 2;
-      const cy = (glyphHeight - 1) / 2;
-
-      const isTopBar = (gy: number) => gy <= 2;
-      const isLeftLeg = (gx: number) => gx <= 3;
-      const isRightLeg = (gx: number) => gx >= glyphWidth - 4;
-      const isCenterStem = (gx: number, gy: number) => gx >= cx - 1 && gx <= cx + 1 && gy >= 6;
-
-      for (let gy = 0; gy < glyphHeight; gy += 1) {
-        for (let gx = 0; gx < glyphWidth; gx += 1) {
-          const filled = isTopBar(gy) || isLeftLeg(gx) || isRightLeg(gx) || isCenterStem(gx, gy);
-          if (!filled) continue;
-
-          for (let gz = -depth; gz <= depth; gz += 1) {
-            points.push({
-              x: (gx - cx) * pointStep,
-              y: (gy - cy) * pointStep,
-              z: gz * pointStep * 0.45,
-              shade: (gz + depth) / (depth * 2),
-            });
-          }
-        }
-      }
-
-      return points;
-    };
-
-    const points = buildPiPointCloud();
-
     const render = () => {
       const zBuffer = new Float32Array(cols * rows);
       const charBuffer = new Array<string>(cols * rows).fill(' ');
@@ -192,25 +155,42 @@ export default function AppliedMathCompetitionPage() {
       const sinA = Math.sin(A);
       const cosB = Math.cos(B);
       const sinB = Math.sin(B);
-      const K1 = cols * 0.62;
+      const K1 = (cols * K2 * 2.4) / (8 * (R1 + R2));
 
-      for (const p of points) {
-        const x1 = p.x * cosA - p.z * sinA;
-        const z1 = p.x * sinA + p.z * cosA;
-        const y1 = p.y * cosB - z1 * sinB;
-        const z2 = K2 + p.y * sinB + z1 * cosB;
-        if (z2 <= 0) continue;
+      for (let theta = 0; theta < Math.PI * 2; theta += 0.07) {
+        const costheta = Math.cos(theta);
+        const sintheta = Math.sin(theta);
 
-        const ooz = 1 / z2;
-        const xp = Math.floor(cols * 0.5 + K1 * ooz * x1);
-        const yp = Math.floor(rows * 0.5 + K1 * ooz * y1 * 0.86);
-        if (xp < 0 || xp >= cols || yp < 0 || yp >= rows) continue;
+        for (let phi = 0; phi < Math.PI * 2; phi += 0.02) {
+          const cosphi = Math.cos(phi);
+          const sinphi = Math.sin(phi);
 
-        const index = xp + yp * cols;
-        if (ooz > zBuffer[index]) {
-          zBuffer[index] = ooz;
-          charBuffer[index] = '\u03C0';
-          lightBuffer[index] = p.shade;
+          const circlex = R2 + R1 * costheta;
+          const circley = R1 * sintheta;
+
+          const x = circlex * (cosB * cosphi + sinA * sinB * sinphi) - circley * cosA * sinB;
+          const y = circlex * (sinB * cosphi - sinA * cosB * sinphi) + circley * cosA * cosB;
+          const z = K2 + cosA * circlex * sinphi + circley * sinA;
+          const ooz = 1 / z;
+
+          const xp = Math.floor(cols * 0.5 + K1 * ooz * x);
+          const yp = Math.floor(rows * 0.5 - K1 * ooz * y * 0.58);
+
+          const L =
+            cosphi * costheta * sinB
+            - cosA * costheta * sinphi
+            - sinA * sintheta
+            + cosB * (cosA * sintheta - costheta * sinA * sinphi);
+
+          if (L <= 0 || xp < 0 || xp >= cols || yp < 0 || yp >= rows) continue;
+
+          const index = xp + yp * cols;
+          if (ooz > zBuffer[index]) {
+            zBuffer[index] = ooz;
+            const shadeIndex = clamp(Math.floor(L * 11), 0, shades.length - 1);
+            charBuffer[index] = shades[shadeIndex];
+            lightBuffer[index] = L;
+          }
         }
       }
 
@@ -222,14 +202,14 @@ export default function AppliedMathCompetitionPage() {
           const index = x + y * cols;
           if (charBuffer[index] === ' ') continue;
 
-          const alpha = Math.min(1, 0.34 + lightBuffer[index] * 0.62);
+          const alpha = Math.min(1, 0.2 + lightBuffer[index] * 0.82);
           ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`;
           ctx.fillText(charBuffer[index], x * cellW, y * cellH);
         }
       }
 
-      A += 0.012;
-      B += 0.008;
+      A += 0.02;
+      B += 0.01;
       rafId = window.requestAnimationFrame(render);
     };
 
@@ -420,5 +400,6 @@ export default function AppliedMathCompetitionPage() {
     </div>
   );
 }
+
 
 
