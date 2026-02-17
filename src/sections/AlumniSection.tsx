@@ -1,30 +1,30 @@
 const companyLogos = [
-  { name: 'American Express', image: '/logo_americanexpress.jpg' },
-  { name: 'Bank of America', image: '/logo_bankofamerica.jpg' },
-  { name: 'Bloomberg', image: '/logo_bloomberg.jpg' },
-  { name: 'BNY Mellon', image: '/logo_bnymellon.jpg' },
-  { name: 'Cargill', image: '/logo_cargill.jpg' },
-  { name: 'Chimera', image: '/logo_chimera.jpg' },
-  { name: 'Citi', image: '/logo_citi.jpg' },
-  { name: 'Credit Agricole CIB', image: '/logo_creditagricolecib.jpg' },
-  { name: 'Deloitte', image: '/logo_deloitte.jpg' },
-  { name: 'Deutsche Bank', image: '/logo_deutschebank.jpg' },
-  { name: 'EY', image: '/logo_ey.jpg' },
-  { name: 'Fidelity', image: '/logo_fidelity.jpg' },
-  { name: 'FTI Consulting', image: '/logo_fticonsulting.jpg' },
-  { name: 'Goldman Sachs', image: '/logo_goldman.jpg' },
-  { name: 'Intel', image: '/logo_intel.jpg' },
-  { name: 'JPMorgan Chase', image: '/logo_jpmorganchase.jpg' },
-  { name: 'Marex Solutions', image: '/logo_marexsolutions.jpg' },
-  { name: 'Meta', image: '/logo_meta.jpg' },
-  { name: 'MUFG', image: '/logo_mufg.jpg' },
-  { name: 'PwC', image: '/logo_pwc.jpg' },
-  { name: 'Raymond James', image: '/logo_raymondjames.jpg' },
-  { name: 'State Street', image: '/logo_statestreet.jpg' },
-  { name: 'The Depository Trust & Clearing Corporation (DTCC)', image: '/logo_dtcc.jpg' },
-  { name: 'VanEck', image: '/logo_vaneck.jpg' },
-  { name: 'Wells Fargo', image: '/logo_wellsfargo.jpg' },
-  { name: 'Wolfe Research', image: '/logo_wolferesearch.jpg' },
+  { name: 'American Express', image: '/logo_americanexpress.png' },
+  { name: 'Bank of America', image: '/logo_bankofamerica.svg.png' },
+  { name: 'Bloomberg', image: '/logo_bloomberg.svg.png' },
+  { name: 'BNY Mellon', image: '/logo_bnymellon.svg.png' },
+  { name: 'Cargill', image: '/logo_cargill.svg.png' },
+  { name: 'Chimera', image: '/logo_chimera.svg.svg' },
+  { name: 'Citi', image: '/logo_citi.svg.svg' },
+  { name: 'Credit Agricole CIB', image: '/logo_creditagricolecib.svg.png' },
+  { name: 'Deloitte', image: '/logo_deloitte.svg.png' },
+  { name: 'Deutsche Bank', image: '/logo_deutschebank.svg.png' },
+  { name: 'EY', image: '/logo_ey.svg.png' },
+  { name: 'Fidelity', image: '/logo_fidelity.svg.svg' },
+  { name: 'FTI Consulting', image: '/logo_fticonsulting.png.png' },
+  { name: 'Goldman Sachs', image: '/logo_goldman.svg.svg' },
+  { name: 'Intel', image: '/logo_intel.svg.svg' },
+  { name: 'JPMorgan Chase', image: '/logo_jpmorganchase.svg.png' },
+  { name: 'Marex Solutions', image: '/logo_marexsolutions.svg' },
+  { name: 'Meta', image: '/logo_meta.svg.svg' },
+  { name: 'MUFG', image: '/logo_mufg.svg' },
+  { name: 'PwC', image: '/logo_pwc.svg' },
+  { name: 'Raymond James', image: '/logo_raymondjames.svg.svg' },
+  { name: 'State Street', image: '/logo_statestreet.svg' },
+  { name: 'The Depository Trust & Clearing Corporation (DTCC)', image: '/logo_dtcc.svg' },
+  { name: 'VanEck', image: '/logo_vaneck.svg' },
+  { name: 'Wells Fargo', image: '/logo_wellsfargo.svg' },
+  { name: 'Wolfe Research', image: '/logo_wolferesearch.svg.png' },
 ];
 
 export default function AlumniSection() {
@@ -82,16 +82,16 @@ export default function AlumniSection() {
 
         {/* Logo Carousel */}
         <div className="relative overflow-hidden">
-          <div className="logo-carousel flex gap-8">
+          <div className="logo-carousel flex w-max gap-8">
             {allLogos.map((company, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 w-48 h-32 photo-frame overflow-hidden hover:opacity-80 transition-opacity"
+                className="flex-shrink-0 w-48 h-32 photo-frame bg-[#F6FFF6] overflow-hidden p-3 flex items-center justify-center hover:opacity-80 transition-opacity"
               >
                 <img
                   src={company.image}
                   alt={company.name}
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain"
                 />
               </div>
             ))}
