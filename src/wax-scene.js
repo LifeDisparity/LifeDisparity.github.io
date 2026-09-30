@@ -275,7 +275,7 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
   const stage=new THREE.Group();stage.rotation.set(0,-.22,-.035);scene.add(stage);
   const stamp=makeStamp(),rind=makeRindTextures();
   const pristine={wax:new THREE.MeshPhysicalMaterial(WAX_DEFAULTS),edge:new THREE.MeshPhysicalMaterial(EDGE_DEFAULTS),core:new THREE.MeshPhysicalMaterial(CORE_DEFAULTS)};
-  const wax=pristine.wax.clone(),top=pristine.wax.clone(),edge=pristine.edge.clone(),coreMaterial=pristine.core.clone();
+  const wax=pristine.wax.clone(),top=pristine.wax.clone(),edge=pristine.edge.clone(),coreMaterial=pristine.core.clone(),coreSideMaterial=pristine.core.clone();
   const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.ShadowMaterial({color:0x5a4034,opacity:.13}));
   ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
   // Soft blurred contact shadow that follows the toy's footprint and squash.
@@ -349,7 +349,9 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
       pos[i]=surf.point.x;pos[i+1]=surf.point.y;pos[i+2]=surf.point.z;
     }
     coreGeo.computeVertexNormals();coreBase=pos.slice();coreNormals=coreGeo.attributes.normal.array.slice();
-    core=new THREE.Mesh(coreGeo,coreMaterial);core.castShadow=true;core.receiveShadow=true;core.frustumCulled=false;toy.add(core);
+    // A rounded-box core can keep its bare-toy texture on the top face only (box groups: +x,-x,+y,-y,+z,-z).
+    const topOnly=spec.shape!=='ellipsoid'&&toyTextures?.core?.topOnly,side=coreSideMaterial;
+    core=new THREE.Mesh(coreGeo,topOnly?[side,side,coreMaterial,side,side,side]:coreMaterial);core.castShadow=true;core.receiveShadow=true;core.frustumCulled=false;toy.add(core);
     const extra=createAccessories(id);extra.updateMatrixWorld(true);accessories=[];
     extra.traverse(obj=>{
       if(!obj.isMesh)return;const geo=obj.geometry.clone();geo.applyMatrix4(obj.matrixWorld);
@@ -408,6 +410,9 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
     const bare=!waxEnabled&&toyTextures?.core;
     if(bare){coreMaterial.map=bare.map||null;coreMaterial.bumpMap=bare.bumpMap||null;coreMaterial.bumpScale=bare.bumpScale??.6;}
     coreMaterial.needsUpdate=true;
+    coreSideMaterial.copy(coreMaterial);
+    if(bare){coreSideMaterial.map=toyTextures.map||null;coreSideMaterial.bumpMap=toyTextures.bumpMap||null;coreSideMaterial.bumpScale=toyTextures.bumpScale??1;}
+    coreSideMaterial.needsUpdate=true;
   }
   function setWaxEnabled(value) {
     waxEnabled=Boolean(value);
@@ -623,7 +628,7 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
       alive=false;cancelAnimationFrame(raf);resizeObserver.disconnect();disposeToy();
       renderer.domElement.removeEventListener('pointermove',onPointerMove);renderer.domElement.removeEventListener('pointerleave',onPointerLeave);
       [ground.geometry,contact.geometry,fleckGeometry].forEach(g=>g.dispose());flecks.dispose();
-      [wax,top,edge,coreMaterial,ground.material,contact.material,fleckMaterial,...Object.values(pristine)].forEach(m=>m.dispose());
+      [wax,top,edge,coreMaterial,coreSideMaterial,ground.material,contact.material,fleckMaterial,...Object.values(pristine)].forEach(m=>m.dispose());
       [stamp.map,stamp.bumpMap,rind.bump,rind.map,contactTexture].forEach(t=>t.dispose());envTarget.dispose();
       renderer.dispose();renderer.domElement.remove();
     },

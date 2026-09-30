@@ -294,7 +294,7 @@ export default {
     return {
       map: canvasTexture(side.color, true), bumpMap: canvasTexture(side.bump, false), bumpScale: 0.25,
       top: { map: topMap, bumpMap: topBump, bumpScale: 5 },
-      core: { map: topMap, bumpMap: topBump, bumpScale: 5 },
+      core: { map: topMap, bumpMap: topBump, bumpScale: 5, topOnly: true },
     };
   },
   accessories(root, size) {

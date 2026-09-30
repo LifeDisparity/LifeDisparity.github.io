@@ -2,9 +2,9 @@
 
 GitHub Pages target: [lifedisparity.github.io](https://lifedisparity.github.io/)
 
-A browser-based wax-cracking squishy inspired by the supplied Blender video. Close your hand on camera to compress a butter bar, platypus, lychee, or mangosteen and crack its wax shell; open your hand to let it recover. The UI has a soft pixel-art style; the toys remain smooth 3D objects.
+A browser-based wax-cracking squishy inspired by the supplied Blender video. Close your hand on camera to compress a butter bar, platypus, lychee, mangosteen, chocolate bar, snail, or chubby teddy bear and crack its wax shell; open your hand to let it recover. The UI has a soft pixel-art style; the toys remain smooth 3D objects.
 
-The simulation uses a damped pressure spring, volume-preserving deformation, earlier local fracture thresholds, and thin wax plates that remain close to the soft center. Butter uses a localized pinch and slow recovery; platypus has a softer asymmetric belly and bouncier response; lychee has a radial squash with quick recovery; mangosteen compresses less and returns more slowly.
+The simulation uses a damped pressure spring, volume-preserving deformation, earlier local fracture thresholds, and thin wax plates that remain close to the soft center. Butter uses a localized pinch and slow recovery; platypus has a softer asymmetric belly and bouncier response; lychee has a radial squash with quick recovery; mangosteen compresses less and returns more slowly; chocolate has a firm, springy snap; the snail and teddy squash deep and rise back slowly. New toys are self-contained plug-ins in `src/squishies/` (see its README).
 
 Cracks persist during a squeeze and heal after release for repeatable play. This is a real-time visual approximation, not a finite-element material simulation or the original Blender model.
 
