@@ -7,13 +7,13 @@ import * as THREE from 'three';
  * See src/squishies/README.md for the plug-in contract.
  */
 
-const PLUSH = '#f3eee7';        // warm off-white that survives the tone mapping
+const PLUSH = '#f4f0ea';        // warm off-white that survives the tone mapping
 const INNER = '#ead3c3';        // inner ears and foot pads, a touch warmer
 const MUZZLE = '#f6efe5';
 const THREAD = '#4a3129';       // embroidered nose / stitch
 const BODY = [1.0, 0.86, 1.0];  // x == z so the bear can face any way
 // The face turns toward the camera a little (+z rotated toward +x).
-const FACE = THREE.MathUtils.degToRad(28);
+const FACE = THREE.MathUtils.degToRad(40);
 const FUR_REPEAT = 2;           // fur tiles per shell face (~2 world units)
 
 const smoothstep = THREE.MathUtils.smoothstep;
@@ -197,46 +197,46 @@ function addHead(bear, mats) {
       p.setZ(i, z > 0 ? z - .5 * Math.max(0, 1 - r2 * 1.4) * z : z);
     }
     addMesh(ear, weldNormals(cup), mats.fur, [0, 0, 0], [.27, .25, .15]);
-    addMesh(ear, sphere(28, 18, Z, .16), mats.inner, [0, -.015, .035], [.165, .15, .045]);
+    addMesh(ear, sphere(28, 18, Z, .16), mats.inner, [0, -.012, .062], [.16, .145, .04]);
   }
 
   // Muzzle: a softly raised oval on the lower front.
   const muzzle = onEllipsoid(HEAD_C, HEAD_R, [0, -.36, 1], -.075);
   const mq = facing(muzzle.normal);
-  addMesh(bear, sphere(40, 26, Z, .3), mats.muzzle, muzzle.point.toArray(), [.31, .225, .2], mq);
-  const muzzleFront = muzzle.point.clone().addScaledVector(muzzle.normal, .2);
+  const MZ = [.31, .23, .22];
+  addMesh(bear, sphere(40, 26, Z, .3), mats.muzzle, muzzle.point.toArray(), MZ, mq);
+  const muzzleFront = muzzle.point.clone().addScaledVector(muzzle.normal, MZ[2]);
   const up = new THREE.Vector3(0, 1, 0).applyQuaternion(mq);
 
   // Embroidered nose: satin stitches laid across a rounded triangle over a dark base.
-  const noseCentre = muzzleFront.clone().addScaledVector(up, .05).addScaledVector(muzzle.normal, -.022);
-  const nq = facing(muzzle.normal);
+  const noseCentre = muzzleFront.clone().addScaledVector(up, .045).addScaledVector(muzzle.normal, -.024);
   const nose = new THREE.Group();
-  nose.position.copy(noseCentre); nose.quaternion.copy(nq); bear.add(nose);
-  const halfWidth = t => .085 * Math.pow(Math.max(0, (t + 1) / 2), .6) * (1 - .25 * Math.max(0, t) ** 2);
+  nose.position.copy(noseCentre); nose.quaternion.copy(mq); bear.add(nose);
+  const NW = .112, NH = .076;
+  const halfWidth = t => NW * Math.pow(Math.max(0, (t + 1) / 2), .6) * (1 - .25 * Math.max(0, t) ** 2);
   const baseShape = sphere(32, 18, Z, .08);
   const bp = baseShape.attributes.position;
   for (let i = 0; i < bp.count; i++) {
     const x = bp.getX(i), y = bp.getY(i), z = bp.getZ(i);
-    const t = y, w = halfWidth(t) / .085;
-    bp.setXYZ(i, x * .085 * (.25 + .75 * w), y * .058, z * .03 + .004);
+    const t = y, w = halfWidth(t) / NW;
+    bp.setXYZ(i, x * NW * (.25 + .75 * w), y * NH, z * .03 + .004);
   }
   addMesh(nose, weldNormals(baseShape), mats.threadBase);
-  const rows = 10;
+  const rows = 11;
   for (let r = 0; r < rows; r++) {
-    const t = -.92 + r / (rows - 1) * 1.84, y = t * .056, w = Math.max(.012, halfWidth(t) * .9);
+    const t = -.92 + r / (rows - 1) * 1.84, y = t * NH * .97, w = Math.max(.012, halfWidth(t) * .9);
     const pts = [];
     for (let k = 0; k <= 8; k++) {
       const s = k / 8 * 2 - 1, x = s * w;
       const dome = .03 * Math.sqrt(Math.max(0, 1 - s * s * .9 - t * t * .6)) + .01;
       pts.push(new THREE.Vector3(x, y, dome));
     }
-    tube(nose, mats.thread, pts, .0068, 5);
+    tube(nose, mats.thread, pts, .0074, 5);
   }
-  // A single short stitch dropping from the nose (no smile).
-  const stitchTop = noseCentre.clone().addScaledVector(up, -.05).addScaledVector(muzzle.normal, .012);
+  // A single short stitch dropping from the nose (no smile), lying on the muzzle.
   const stitchPts = [0, .5, 1].map(k => {
-    const p = stitchTop.clone().addScaledVector(up, -.06 * k);
-    return p.addScaledVector(muzzle.normal, -.012 * k * k);
+    const u = .045 - NH * .8 - .055 * k, depth = MZ[2] * Math.sqrt(Math.max(0, 1 - (u / MZ[1]) ** 2));
+    return muzzle.point.clone().addScaledVector(up, u).addScaledVector(muzzle.normal, depth + .002);
   });
   tube(bear, mats.thread, stitchPts, .0065, 5);
 
@@ -263,40 +263,45 @@ function addEye(bear, point, normal, radius, mats, mirror) {
   group.userData.eyeGroup = true;
 }
 
-/** Stubby limb: a fat capsule-like ellipsoid along `axis`, sunk partly into the body. */
-function limb(parent, material, centre, axis, radius, halfLength) {
+/**
+ * Stubby limb: a fat, tube-like ellipsoid along `axis`. `flat` squares off the
+ * +axis end into a sole; returns the distance from the centre to that end.
+ */
+function limb(parent, material, centre, axis, radius, halfLength, flat = 0) {
   const q = new THREE.Quaternion().setFromUnitVectors(Z, axis.clone().normalize());
   const geometry = sphere(40, 28, Z, (radius + halfLength) / 2);
-  const p = geometry.attributes.position;
+  const p = geometry.attributes.position, f = 1 - flat;
   for (let i = 0; i < p.count; i++) {
     const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
     // Squarer ends than an ellipse: plush limbs are sewn tubes with round caps.
     const k = 1 + .14 * (1 - z * z);
-    p.setXYZ(i, x * k, y * k, z);
+    p.setXYZ(i, x * k, y * k, flat && z > f ? f + (z - f) * .3 : z);
   }
-  return addMesh(parent, weldNormals(geometry), material, centre.toArray(), [radius, radius, halfLength], q);
+  addMesh(parent, weldNormals(geometry), material, centre.toArray(), [radius, radius, halfLength], q);
+  return (flat ? f + flat * .3 : 1) * halfLength;
 }
 
 function addBody(bear, mats) {
   const origin = [0, 0, 0];
-  // Arms rest on the upper belly, angled forward and down.
+  // Arms: from the shoulders, reaching forward and down so the paws rest on the belly.
   for (const side of [-1, 1]) {
-    const { point, normal } = onEllipsoid(origin, BODY, [side * .84, .22, .5], .02);
-    const axis = new THREE.Vector3(-side * .32, -.55, .78).normalize();
-    // Keep the arm tangent to the belly so it lies along it.
-    axis.addScaledVector(normal, -axis.dot(normal) * .8).normalize();
-    limb(bear, mats.fur, point.addScaledVector(normal, .03), axis, .215, .4);
+    const shoulder = onEllipsoid(origin, BODY, [side * .92, .42, .12], -.1).point;
+    const paw = onEllipsoid(origin, BODY, [side * .56, -.12, .82], .09).point;
+    const axis = paw.clone().sub(shoulder);
+    const half = axis.length() / 2 + .1;
+    const centre = shoulder.clone().add(paw).multiplyScalar(.5);
+    limb(bear, mats.fur, centre, axis.normalize(), .205, half);
   }
-  // Legs stick straight out in a sitting pose; the soles face the viewer.
+  // Legs stick out in a sitting pose; the soles face forward and a little up.
   for (const side of [-1, 1]) {
-    const yaw = side * .3;
-    const axis = new THREE.Vector3(Math.sin(yaw), .12, Math.cos(yaw)).normalize();
-    const centre = new THREE.Vector3(side * .44, -BODY[1] + .27, .62);
-    limb(bear, mats.fur, centre, axis, .27, .4);
-    const sole = centre.clone().addScaledVector(axis, .4 * .9);
+    const yaw = side * .34;
+    const axis = new THREE.Vector3(Math.sin(yaw), .2, Math.cos(yaw)).normalize();
+    const centre = new THREE.Vector3(side * .44, -BODY[1] + .28, .6);
+    const end = limb(bear, mats.fur, centre, axis, .28, .44, .4);
     const foot = new THREE.Group();
-    foot.position.copy(sole); foot.quaternion.copy(facing(axis)); bear.add(foot);
-    addMesh(foot, sphere(32, 20, Z, .18), mats.inner, [0, .01, 0], [.18, .185, .05]);
+    foot.position.copy(centre.clone().addScaledVector(axis, end - .012));
+    foot.quaternion.copy(facing(axis)); bear.add(foot);
+    addMesh(foot, sphere(32, 20, Z, .18), mats.inner, [0, .005, 0], [.19, .2, .035]);
   }
   // A small round tail, low at the back.
   const tail = onEllipsoid(origin, BODY, [0, -.35, -1], -.02);
@@ -335,31 +340,31 @@ function makeTeddy(root) {
 // 24x24 icon drawn as the left half and mirrored.
 const ICON_HALF = [
   '............',
-  '..oooo......',
-  '.owwwwo.....',
-  '.owppwwooooo',
-  '.owppwwwwwww',
+  '.oooo.......',
+  'owwwwo.ooooo',
+  'owppwoowwwww',
+  'owppwwwwwwww',
+  'owwwwwwwwwww',
   '.owwwwwwwwww',
-  '..owwwwwwwww',
-  '..owwwwwwwww',
   '.owwwwwwwwww',
   '.owwwwweewww',
   '.owwwwweewww',
-  '.owwwwwwwmmm',
-  '.owwwwwwmmnn',
-  '..owwwwwmmmn',
-  '..oowwwwwmmm',
-  '.owwoowwwwww',
-  'owwwwwowwwww',
-  'owwwwwwowwww',
-  'owwwwwwowwww',
+  '.owwwwwwsmmm',
+  '.owwwwwsmmnn',
+  '..owwwwsmmmn',
+  '..owwwwwwmmm',
+  '...oowwwwwww',
+  '..owssssswww',
+  '.owwwwwswwww',
+  '.owwwwwswwww',
+  'owwwwwswwwww',
   'owwoooowwwww',
   'owoppppowwww',
   'owoppppowwww',
   '.ooooooooooo',
   '............',
 ];
-const ICON_COLORS = { o: '#bba793', w: '#f7f2eb', p: '#e6c3ad', m: '#fffbf5', e: '#3a2822', n: '#5d3c31' };
+const ICON_COLORS = { o: '#b9a591', w: '#f6f0e8', s: '#e2d6c8', p: '#e6c3ad', m: '#fffdf9', e: '#3a2822', n: '#5d3c31' };
 
 function pixelIcon(half, colors) {
   const paths = {};
@@ -389,7 +394,7 @@ export default {
   core: { roughness: .8, clearcoat: 0, specularIntensity: .3,
     sheen: .9, sheenColor: '#fff8ee', sheenRoughness: .6 },
   // Deep, pillowy radial squash with a slow, gentle rise back.
-  profile: { mode: 'radial', compression: .46, exponent: .82, pressSpeed: 13, releaseSpeed: 5.5, damping: 2.15 },
+  profile: { mode: 'radial', compression: .44, exponent: .82, pressSpeed: 13, releaseSpeed: 5.5, damping: 2.15 },
   wobble: { omega: 7.5, zeta: .24, gain: .3 },
   ui: {
     detail: 'a chubby cuddle',
