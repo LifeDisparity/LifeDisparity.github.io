@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 /**
  * Snail squishy: a round, sideways-flattened spiral shell in peach-caramel wax
@@ -17,18 +16,17 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 const SIZE = [1.02, 1.0, 0.66];
 const SHELL = '#e8a67d';
 const COLORS = {
-  band: '#fbe9d2', body: '#a8b98c', sole: '#d8dfbf', knob: '#9aad80',
+  band: '#fbe9d2', body: '#9dac8b', sole: '#d4d9c0', knob: '#8c9c7b',
   eye: '#2a2120', glint: '#f6efe8',
 };
 // The shell's underside is lifted into the body so it rests on the foot.
-const CUT = -2.6, CUT_SOFT = 0.06;
+const CUT = -0.6, CUT_SOFT = 0.06;
 // Side spiral in normalized shell coordinates, winding clockwise (seen from
 // +z) outward from a centre a little up and back to the front-bottom.
 const SPIRAL = { cx: -0.07, cy: 0.1, R: 0.8, turns: 2.35, power: 1.2, end: -1.15 };
 const TURN = Math.PI * 2, SWEEP = SPIRAL.turns * TURN;
 
 const smoothstep = THREE.MathUtils.smoothstep;
-const clamp01 = t => Math.min(1, Math.max(0, t));
 
 function randomGenerator(seed) {
   return () => {
@@ -89,24 +87,39 @@ function whorlPhase(X, Y) {
   return { phase, outer: Math.max(0, (radial - last) / TURN), r };
 }
 
-function finish(positions, indices, colors) {
+/**
+ * An indexed ring-grid mesh. Rings already share their wrap-around seam; the
+ * first and last rings collapse to a point, so their normals are averaged
+ * into one smooth pole normal.
+ */
+function finish(positions, indices, colors, radial) {
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   if (colors) geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   geometry.setIndex(indices);
-  const merged = mergeVertices(geometry, 1e-5);
-  geometry.dispose();
-  merged.computeVertexNormals();
-  return merged;
+  geometry.computeVertexNormals();
+  const normal = geometry.attributes.normal, count = normal.count, sum = new THREE.Vector3();
+  for (const start of [0, count - radial]) {
+    sum.set(0, 0, 0);
+    for (let i = start; i < start + radial; i++) sum.x += normal.getX(i), sum.y += normal.getY(i), sum.z += normal.getZ(i);
+    sum.normalize();
+    for (let i = start; i < start + radial; i++) normal.setXYZ(i, sum.x, sum.y, sum.z);
+  }
+  return geometry;
 }
 
-/** Index a (rows+1) x radial grid of closed rings. */
-function ringIndices(rows, radial) {
+/**
+ * Index a (rows+1) x radial grid of closed rings. Rings must turn
+ * counter-clockwise about the direction of travel for outward faces;
+ * `flip` handles rings that turn the other way.
+ */
+function ringIndices(rows, radial, flip = false) {
   const indices = [];
   for (let i = 0; i < rows; i++) for (let j = 0; j < radial; j++) {
     const a = i * radial + j, b = (i + 1) * radial + j;
     const c = (i + 1) * radial + (j + 1) % radial, d = i * radial + (j + 1) % radial;
-    indices.push(a, d, b, b, d, c);
+    if (flip) indices.push(a, b, d, b, c, d);
+    else indices.push(a, d, b, b, d, c);
   }
   return indices;
 }
@@ -155,14 +168,13 @@ function spiralBand(side) {
         point.z + across.z * x + normal.z * (h * up + 0.003));
     }
   }
-  const indices = ringIndices(rows, radial);
-  if (side < 0) for (let i = 0; i < indices.length; i += 3) [indices[i + 1], indices[i + 2]] = [indices[i + 2], indices[i + 1]];
-  return finish(positions, indices);
+  // across x normal = tangent on both sides, so the rings always turn the right way.
+  return finish(positions, ringIndices(rows, radial), null, radial);
 }
 
 // Foot spine (xy plane) from tail tip to the top of the head.
 const SPINE = [[-1.68, -0.94], [-1.28, -0.89], [-0.62, -0.83], [0.2, -0.815], [0.86, -0.815],
-  [1.2, -0.76], [1.47, -0.57], [1.66, -0.27], [1.78, 0.05], [1.83, 0.34]];
+  [1.2, -0.77], [1.48, -0.6], [1.68, -0.32], [1.82, -0.04], [1.95, 0.28]];
 
 /**
  * The soft body: a swept, superelliptic foot with a flat sole that runs under
@@ -172,23 +184,24 @@ function bodyGeometry() {
   const spine = new THREE.CatmullRomCurve3(SPINE.map(([x, y]) => new THREE.Vector3(x, y, 0)), false, 'centripetal');
   const length = spine.getLength();
   const width = keyed([[0, 0.1], [0.1, 0.25], [0.28, 0.42], [0.48, 0.47], [0.64, 0.45], [0.74, 0.36],
-    [0.84, 0.3], [0.93, 0.31], [1, 0.31]]);
+    [0.83, 0.28], [0.94, 0.33], [1, 0.33]]);
   const top = keyed([[0, 0.06], [0.1, 0.15], [0.28, 0.31], [0.48, 0.37], [0.64, 0.34], [0.74, 0.27],
-    [0.84, 0.26], [0.93, 0.29], [1, 0.3]]);
+    [0.83, 0.25], [0.94, 0.31], [1, 0.31]]);
   const rows = 150, radial = 40, positions = [], colors = [];
   const sole = new THREE.Color(COLORS.sole), body = new THREE.Color(COLORS.body), color = new THREE.Color();
-  const tailCap = 0.12 / length, headCap = 0.3 / length;
+  const tailCap = 0.12 / length, headCap = 0.32 / length;
   for (let i = 0; i <= rows; i++) {
     const u = i / rows, c = spine.getPointAt(u), t = spine.getTangentAt(u);
     const nx = -t.y, ny = t.x;
     // Along the ground the sole sits on the table; up the neck it rounds out.
     const rise = smoothstep(u, 0.66, 0.86);
-    const bottom = THREE.MathUtils.lerp(c.y + 1 - 0.004, top(u) * 0.95, rise);
+    const bottom = THREE.MathUtils.lerp(c.y + 1 - 0.004, top(u), rise);
     const cap = roundCap(u, tailCap) * roundCap(1 - u, headCap);
     const w = width(u) * cap, ht = top(u) * cap, hb = bottom * cap;
     for (let j = 0; j < radial; j++) {
       const a = j / radial * TURN, ca = Math.cos(a), sa = Math.sin(a);
-      const exponent = sa >= 0 ? 2 / 2.3 : 2 / THREE.MathUtils.lerp(3.4, 2.2, rise);
+      // Plump and boxy along the ground, a round head up front.
+      const exponent = 2 / THREE.MathUtils.lerp(sa >= 0 ? 2.3 : 3.4, 2, rise);
       const lateral = w * Math.sign(ca) * Math.pow(Math.abs(ca), exponent);
       const vertical = (sa >= 0 ? ht : hb) * Math.sign(sa) * Math.pow(Math.abs(sa), exponent);
       positions.push(c.x + nx * vertical, c.y + ny * vertical, lateral);
@@ -196,7 +209,8 @@ function bodyGeometry() {
       colors.push(color.r, color.g, color.b);
     }
   }
-  return finish(positions, ringIndices(rows, radial), colors);
+  // The ring runs from +z up over the back (clockwise about the spine).
+  return finish(positions, ringIndices(rows, radial, true), colors, radial);
 }
 
 /** A tapered tube along points with rounded ends; `radius(u)` sets the profile. */
@@ -212,7 +226,7 @@ function tube(points, radius, { tubular = 32, radial = 14, cap = 0.12 } = {}) {
       positions.push(p.x + n.x * r, p.y + n.y * r, p.z + n.z * r);
     }
   }
-  return { geometry: finish(positions, ringIndices(tubular, radial)), curve };
+  return { geometry: finish(positions, ringIndices(tubular, radial), null, radial), curve };
 }
 
 function mesh(root, geometry, material, role, pivot) {
@@ -240,8 +254,8 @@ function makeSnail(root) {
   for (const side of [1, -1]) {
     // Upper stalks: out of the top of the head, leaning forward and apart.
     const { curve } = (() => {
-      const result = tube([[1.76, 0.24, side * 0.1], [1.82, 0.5, side * 0.17], [1.91, 0.74, side * 0.25],
-        [1.99, 0.9, side * 0.3]], u => THREE.MathUtils.lerp(0.056, 0.038, u), { tubular: 30, radial: 14, cap: 0.05 });
+      const result = tube([[1.83, 0.24, side * 0.1], [1.89, 0.52, side * 0.17], [1.97, 0.76, side * 0.24],
+        [2.05, 0.92, side * 0.29]], u => THREE.MathUtils.lerp(0.056, 0.038, u), { tubular: 30, radial: 14, cap: 0.05 });
       mesh(root, result.geometry, stalk);
       return result;
     })();
@@ -264,8 +278,8 @@ function makeSnail(root) {
     g.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), gdir);
 
     // Lower feelers: short soft nubs at the front of the head.
-    mesh(root, tube([[1.96, 0.1, side * 0.1], [2.04, 0.07, side * 0.13], [2.1, 0.02, side * 0.155]],
-      u => THREE.MathUtils.lerp(0.046, 0.034, u), { tubular: 14, radial: 12, cap: 0.3 }).geometry, stalk);
+    mesh(root, tube([[2.02, 0.03, side * 0.09], [2.1, 0.0, side * 0.13], [2.17, -0.04, side * 0.165]],
+      u => THREE.MathUtils.lerp(0.05, 0.036, u), { tubular: 16, radial: 12, cap: 0.3 }).geometry, stalk);
   }
 }
 
@@ -276,13 +290,15 @@ function canvasTexture(canvas, srgb) {
   return texture;
 }
 
-function fill(size, [w, h], shade) {
+/** A canvas painted per pixel: `shade(u, v, rgb)` writes 0..255 into rgb. */
+function fill([w, h], shade) {
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext('2d'), image = ctx.createImageData(w, h);
+  const ctx = canvas.getContext('2d'), image = ctx.createImageData(w, h), rgb = [0, 0, 0];
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-    const [r, g, b] = shade(x / w, y / h), o = (y * w + x) * 4;
-    image.data[o] = r; image.data[o + 1] = g; image.data[o + 2] = b; image.data[o + 3] = 255;
+    shade(x / w, y / h, rgb);
+    const o = (y * w + x) * 4;
+    image.data[o] = rgb[0]; image.data[o + 1] = rgb[1]; image.data[o + 2] = rgb[2]; image.data[o + 3] = 255;
   }
   ctx.putImageData(image, 0, 0);
   return canvas;
@@ -295,32 +311,30 @@ function fill(size, [w, h], shade) {
  */
 function makeTextures() {
   const blotch = valueNoise(11, 5), mottle = valueNoise(23, 12), grain = valueNoise(37, 64);
-  const wax = fill(0, [256, 256], (u, v) => {
-    const m = 0.62 * blotch(u, v) + 0.38 * mottle(u, v);
-    const k = 0.9 + 0.1 * m;
-    return [255 * k, 255 * (k - 0.012 * (1 - m)), 255 * (k - 0.03 * (1 - m))];
+  const wax = fill([256, 256], (u, v, rgb) => {
+    const m = 0.62 * blotch(u, v) + 0.38 * mottle(u, v), k = 0.9 + 0.1 * m;
+    rgb[0] = 255 * k; rgb[1] = 255 * (k - 0.012 * (1 - m)); rgb[2] = 255 * (k - 0.03 * (1 - m));
   });
-  const waxBump = fill(0, [256, 256], (u, v) => {
-    const g = 0.55 * grain(u, v) + 0.45 * mottle(u, v), c = 200 + 55 * g;
-    return [c, c, c];
+  const waxBump = fill([256, 256], (u, v, rgb) => {
+    rgb[0] = rgb[1] = rgb[2] = 200 + 55 * (0.55 * grain(u, v) + 0.45 * mottle(u, v));
   });
-  const whorl = (u, v) => {
-    const phi = u * TURN, theta = v * Math.PI;
-    const X = -Math.cos(phi) * Math.sin(theta), Y = Math.cos(theta), Z = Math.sin(phi) * Math.sin(theta);
-    const side = smoothstep(Math.abs(Z), 0.15, 0.45);
-    const { phase, outer } = whorlPhase(X, Y);
+  // Whorl shading on the sphere UVs, computed once for both core maps.
+  const W = 384, H = 192, whorl = new Float32Array(W * H).fill(1);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const phi = (x + 0.5) / W * TURN, theta = (y + 0.5) / H * Math.PI;
+    const Z = Math.sin(phi) * Math.sin(theta), side = smoothstep(Math.abs(Z), 0.15, 0.45);
+    if (!side) continue;
+    const { phase, outer } = whorlPhase(-Math.cos(phi) * Math.sin(theta), Math.cos(theta));
     // Crest of each whorl is light, the suture tucks in darker.
     const crest = outer > 0 ? Math.min(1, 0.55 + outer * 2.2) : Math.sin(Math.PI * phase) ** 0.7;
-    return { value: 1 - side * (1 - crest), side };
-  };
-  const coreMap = fill(0, [1024, 512], (u, v) => {
-    const { value } = whorl(u, v), k = 0.84 + 0.16 * value, m = 0.96 + 0.04 * blotch(u * 2 % 1, v);
-    return [255 * k * m, 255 * (k * m - 0.02 * (1 - value)), 255 * (k * m - 0.05 * (1 - value))];
+    whorl[y * W + x] = 1 - side * (1 - crest);
+  }
+  const at = (u, v) => whorl[Math.floor(v * H) * W + Math.floor(u * W)];
+  const coreMap = fill([W, H], (u, v, rgb) => {
+    const value = at(u, v), k = (0.84 + 0.16 * value) * (0.96 + 0.04 * blotch(u * 2 % 1, v));
+    rgb[0] = 255 * k; rgb[1] = 255 * (k - 0.02 * (1 - value)); rgb[2] = 255 * (k - 0.05 * (1 - value));
   });
-  const coreBump = fill(0, [512, 256], (u, v) => {
-    const c = 120 + 135 * whorl(u, v).value;
-    return [c, c, c];
-  });
+  const coreBump = fill([W, H], (u, v, rgb) => { rgb[0] = rgb[1] = rgb[2] = 120 + 135 * at(u, v); });
   return {
     map: canvasTexture(wax, true), bumpMap: canvasTexture(waxBump), bumpScale: 0.35,
     core: { map: canvasTexture(coreMap, true), bumpMap: canvasTexture(coreBump), bumpScale: 1.4 },
@@ -341,7 +355,8 @@ export default {
   ui: {
     detail: 'slow and spiral',
     colors: '--toy:#e8a67d;--toy-soft:#fbeadc;--toy-edge:#cf8a62;--toy-ink:#7d5238',
-    icon: '<path fill="#e8a67d" d="M5 5h14v14H5Z"/>',
+    // 24x24 pixel art: spiral shell on a sage foot, two eye stalks.
+    icon: '<path fill="#e8a67d" d="M7 2h5v1H7ZM5 3h9v1H5ZM4 4h11v1H4ZM3 5h13v1H3ZM2 6h5v1H2ZM14 6h3v1H14ZM2 7h4v1H2ZM7 7h7v1H7ZM15 7h2v1H15ZM1 8h4v1H1ZM6 8h2v1H6ZM12 8h3v1H12ZM16 8h1v1H16ZM1 9h4v1H1ZM6 9h1v1H6ZM8 9h4v1H8ZM13 9h2v1H13ZM16 9h1v1H16ZM1 10h4v1H1ZM6 10h1v1H6ZM8 10h1v1H8ZM11 10h2v1H11ZM14 10h1v1H14ZM16 10h1v1H16ZM1 11h4v1H1ZM6 11h1v1H6ZM8 11h3v1H8ZM12 11h1v1H12ZM14 11h1v1H14ZM16 11h1v1H16ZM1 12h4v1H1ZM6 12h2v1H6ZM11 12h2v1H11ZM14 12h1v1H14ZM16 12h1v1H16ZM2 13h4v1H2ZM7 13h5v1H7ZM13 13h2v1H13ZM2 14h5v1H2ZM12 14h4v1H12ZM3 15h12v1H3ZM4 16h10v1H4ZM5 17h7v1H5Z"/><path fill="#cf8a62" d="M17 8h1v1H17ZM17 9h1v1H17ZM17 10h1v1H17ZM17 11h1v1H17ZM17 12h1v1H17ZM16 13h1v1H16ZM16 14h1v1H16ZM15 15h1v1H15ZM14 16h1v1H14ZM12 17h2v1H12ZM7 18h5v1H7Z"/><path fill="#fbe6c8" d="M7 6h7v1H7ZM6 7h1v1H6ZM14 7h1v1H14ZM5 8h1v1H5ZM8 8h4v1H8ZM15 8h1v1H15ZM5 9h1v1H5ZM7 9h1v1H7ZM12 9h1v1H12ZM15 9h1v1H15ZM5 10h1v1H5ZM7 10h1v1H7ZM9 10h2v1H9ZM13 10h1v1H13ZM15 10h1v1H15ZM5 11h1v1H5ZM7 11h1v1H7ZM11 11h1v1H11ZM13 11h1v1H13ZM15 11h1v1H15ZM5 12h1v1H5ZM8 12h3v1H8ZM13 12h1v1H13ZM15 12h1v1H15ZM6 13h1v1H6ZM12 13h1v1H12ZM15 13h1v1H15ZM7 14h5v1H7Z"/><path fill="#a9b894" d="M21 4h1v1H21ZM18 5h1v1H18ZM21 5h1v1H21ZM18 6h1v1H18ZM21 6h1v1H21ZM18 7h1v1H18ZM21 7h1v1H21ZM18 8h1v1H18ZM21 8h1v1H21ZM18 9h1v1H18ZM21 9h1v1H21ZM18 10h1v1H18ZM21 10h1v1H21ZM18 11h3v1H18ZM18 12h4v1H18ZM17 13h6v1H17ZM17 14h6v1H17ZM17 15h6v1H17ZM17 16h7v1H17ZM17 17h5v1H17ZM2 18h5v1H2ZM12 18h10v1H12ZM0 19h21v1H0Z"/><path fill="#8c9c7b" d="M2 20h18v1H2Z"/><path fill="#5b4843" d="M21 2h2v1H21ZM17 3h2v1H17ZM21 3h2v1H21ZM17 4h2v1H17Z"/>',
     glow: '#fcefe3', glowTint: '#e6c9ad',
   },
   displace: shellLift,
