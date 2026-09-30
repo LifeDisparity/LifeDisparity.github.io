@@ -35,7 +35,11 @@ export function renderUI(icon) {
   return `
   <header class="site-header">
     <a class="brand" href="./" aria-label="Wax Room home"><span class="brand-mark">${pixelHeart}</span>wax room<span class="brand-spark">✦</span></a>
-    <button class="sound-button" id="sound-toggle" aria-pressed="true" aria-label="Sound on; click to mute">${icon('sound')}<span>Sound on</span></button>
+    <div class="wip-note">
+      <button class="sound-button" id="sound-toggle" aria-pressed="true" aria-label="Sound on; click to mute" aria-describedby="sound-wip">${icon('sound')}<span>Sound on</span></button>
+      <svg class="wip-circle" viewBox="0 0 200 80" preserveAspectRatio="none" aria-hidden="true"><path d="M104 7C58 4 13 14 9 38c-4 25 43 37 95 36 52-1 90-13 88-36C190 15 150 5 96 9 80 10 66 13 57 17"/></svg>
+      <span class="wip-label" id="sound-wip"><svg class="wip-arrow" viewBox="0 0 80 40" aria-hidden="true"><path d="M4 32C24 34 46 28 64 12M52 10l13 1-3 13"/></svg>work in progress</span>
+    </div>
   </header>
   <main>
     <div class="intro"><div><p class="eyebrow"><span class="pixel-spark">${pixelSpark}</span> A POCKET OF PEACE</p><h1>A little squish.<br class="mobile-break"> <em>A softer day.</em></h1></div></div>

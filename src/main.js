@@ -25,6 +25,7 @@ const pressureSection = $('.pressure-section');
 const pressureInput = $('#pressure');
 const pressureValue = $('#pressure-value');
 const sound = createCrackle();
+sound.setToy('butter');
 let targetPressure = 0;
 let currentPressure = 0;
 let held = false;
@@ -196,6 +197,7 @@ document.querySelectorAll('.squishy-choice').forEach((button) => {
     void playArea.offsetWidth;
     playArea.classList.add('is-switching');
     const spec = getSquishySpec(id);
+    sound.setToy(id, spec.sound);
     for (const [name, value] of [['--glow', spec.ui?.glow], ['--glow-tint', spec.ui?.glowTint]]) {
       if (value) playArea.style.setProperty(name, value); else playArea.style.removeProperty(name);
     }
@@ -229,7 +231,7 @@ function animate(now) {
   currentPressure += (targetPressure - currentPressure) * (1 - Math.exp(-dt * 12));
   if (currentPressure < 0.001) currentPressure = 0;
   visual?.setPressure(currentPressure);
-  sound.update(waxEnabled ? currentPressure : 0);
+  sound.update(currentPressure, dt);
   const percent = Math.round(currentPressure * 100);
   if (percent !== lastPercent) {
     pressureValue.textContent = percent;
