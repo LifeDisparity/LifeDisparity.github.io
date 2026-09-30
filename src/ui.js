@@ -6,6 +6,22 @@ const toyIcons = {
   lychee: '<path fill="#9aa76e" d="M11 2h2v5h-2Zm2 1h6v2h-6Z"/><path fill="#e8a4a3" d="M7 5h10v2h3v3h2v9h-3v3H5v-3H2v-9h2V7h3Z"/><path fill="#f7c5b8" d="M7 8h2v2H7Zm7 0h2v2h-2ZM4 13h2v2H4Zm7-1h2v2h-2Zm7 1h2v2h-2ZM7 18h2v2H7Zm8 0h2v2h-2Z"/>',
   mangosteen: '<path fill="#9777a8" d="M6 7h12v2h3v10h-3v3H6v-3H3V9h3Z"/><path fill="#b799c4" d="M6 11h3v7H6Z"/><path fill="#96a773" d="M10 1h4v4h5v4h-5v2h-4V9H5V5h5Z"/><path fill="#74875a" d="M11 4h2v4h-2Z"/>',
 };
+// Per-toy accent colours for the shelf buttons: body, soft tint, and pixel edge.
+const toyChoices = [
+  ['butter', 'Butter', 'the original', '--toy:#f5d477;--toy-soft:#fdf0c8;--toy-edge:#d9b25a;--toy-ink:#8a6a2c'],
+  ['platypus', 'Platypus', 'little paddle pal', '--toy:#c8a58a;--toy-soft:#f4e6d9;--toy-edge:#b58f72;--toy-ink:#7a5a45'],
+  ['lychee', 'Lychee', 'sweet & bumpy', '--toy:#eaa6a5;--toy-soft:#fce3df;--toy-edge:#d68d8c;--toy-ink:#98585a'],
+  ['mangosteen', 'Mangosteen', 'a purple treasure', '--toy:#a585b6;--toy-soft:#efe4f5;--toy-edge:#9d80b0;--toy-ink:#6c5280'],
+];
+// 8x8 pixel bubble: tinted ring, translucent body, one bright highlight pixel.
+const pixelBubble = '<svg viewBox="0 0 8 8" aria-hidden="true" shape-rendering="crispEdges"><path fill="#fffdf8" fill-opacity=".45" d="M2 1h4v1h1v4H6v1H2V6H1V2h1Z"/><path fill="currentColor" d="M2 0h4v1H2Zm4 1h1v1H6Zm1 1h1v4H7ZM6 6h1v1H6ZM2 7h4v1H2ZM1 6h1v1H1ZM0 2h1v4H0Zm1-1h1v1H1Z"/><path fill="#fff" d="M2 2h1v1H2Z"/></svg>';
+// Decorative stage behind the transparent WebGL canvas. Purely visual.
+const stageBackdrop = `<div class="stage-backdrop" aria-hidden="true">
+            <div class="stage-wall"></div><div class="stage-floor"></div><div class="stage-beam"></div>
+            <div class="stage-glow"></div><div class="stage-pool"></div><div class="stage-vignette"></div>
+            <span class="stage-spark stage-spark-one">${pixelSpark}</span><span class="stage-spark stage-spark-two">${pixelSpark}</span><span class="stage-spark stage-spark-three">${pixelSpark}</span>
+            <span class="stage-bubble stage-bubble-one">${pixelBubble}</span><span class="stage-bubble stage-bubble-two">${pixelBubble}</span><span class="stage-bubble stage-bubble-three">${pixelBubble}</span><span class="stage-bubble stage-bubble-four">${pixelBubble}</span>
+          </div>`;
 const toyIcon = (name) => `<svg class="toy-icon" viewBox="0 0 24 24" aria-hidden="true" shape-rendering="crispEdges">${toyIcons[name]}</svg>`;
 
 export function renderUI(icon) {
@@ -18,18 +34,16 @@ export function renderUI(icon) {
     <div class="intro"><div><p class="eyebrow"><span class="pixel-spark">${pixelSpark}</span> A POCKET OF PEACE</p><h1>A little squish.<br class="mobile-break"> <em>A softer day.</em></h1></div></div>
     <div class="workspace">
       <div class="toy-room">
-        <section class="play-area" aria-label="Interactive wax squishy">
+        <section class="play-area" data-toy="butter" aria-label="Interactive wax squishy">
+          ${stageBackdrop}
           <div class="stage-top"><button id="wax-toggle" class="wax-toggle" role="switch" aria-checked="true" aria-label="Wax shell"><span class="wax-switch-track" aria-hidden="true"><span></span></span><span id="wax-label">Wax on</span></button><button id="reset" class="text-button">${icon('reset')} Start fresh</button></div>
-          <span class="stage-spark stage-spark-one" aria-hidden="true">${pixelSpark}</span><span class="stage-spark stage-spark-two" aria-hidden="true">${pixelSpark}</span>
           <div id="scene" role="button" tabindex="0" aria-label="Wax squishy. Hold mouse, touch, or Space to squeeze; release to relax."></div>
           <div class="scene-error" id="scene-error" hidden><h2>3D needs a little help</h2><p>Your browser couldn’t start WebGL. Try an up-to-date browser with hardware acceleration enabled.</p></div>
-          <div class="material-label"><span class="material-number" id="squishy-number">01</span><div><strong id="material-name">Butter yellow</strong></div></div>
-          <div class="stage-hint" id="stage-hint">${icon('pointer')} Hold to squeeze <span>·</span> Release to relax</div>
-          <div class="stage-bottom"><span class="studio-label">FRESHLY SQUISHED, WITH LOVE <span class="mini-heart">${pixelHeart}</span></span><div class="swatches" role="group" aria-label="Wax color"><button class="swatch active" data-color="#f0d77e" data-name="Butter yellow" style="--swatch:#ead17c" aria-label="Butter yellow" aria-pressed="true">${icon('check')}</button><button class="swatch" data-color="#adc3a1" data-name="Garden sage" style="--swatch:#a5bd99" aria-label="Garden sage" aria-pressed="false">${icon('check')}</button><button class="swatch" data-color="#c0afdc" data-name="Soft lavender" style="--swatch:#bbaad0" aria-label="Soft lavender" aria-pressed="false">${icon('check')}</button><button class="swatch" data-color="#e5a58e" data-name="Peach sorbet" style="--swatch:#dfa18c" aria-label="Peach sorbet" aria-pressed="false">${icon('check')}</button></div></div>
+          <div class="stage-bottom"><div class="material-label"><span class="material-number" id="squishy-number">01</span><div><strong id="material-name">Butter yellow</strong></div></div><div class="stage-hint" id="stage-hint">${icon('pointer')} Hold to squeeze <span class="hint-rest"><span>·</span> Release to relax</span></div><div class="swatches" role="group" aria-label="Wax color"><button class="swatch active" data-color="#f0d77e" data-name="Butter yellow" style="--swatch:#ead17c" aria-label="Butter yellow" aria-pressed="true">${icon('check')}</button><button class="swatch" data-color="#adc3a1" data-name="Garden sage" style="--swatch:#a5bd99" aria-label="Garden sage" aria-pressed="false">${icon('check')}</button><button class="swatch" data-color="#c0afdc" data-name="Soft lavender" style="--swatch:#bbaad0" aria-label="Soft lavender" aria-pressed="false">${icon('check')}</button><button class="swatch" data-color="#e5a58e" data-name="Peach sorbet" style="--swatch:#dfa18c" aria-label="Peach sorbet" aria-pressed="false">${icon('check')}</button></div><span class="studio-label">FRESHLY SQUISHED, WITH LOVE <span class="mini-heart">${pixelHeart}</span></span></div>
         </section>
         <section class="squishy-shelf" aria-label="Choose your squishy">
           <div class="shelf-heading"><span class="eyebrow">THE LITTLE COLLECTION</span><span>pick your squishy ↓</span></div>
-          <div class="squishy-choices" role="group" aria-label="Squishy shape">${[['butter', 'Butter', 'the original'], ['platypus', 'Platypus', 'little paddle pal'], ['lychee', 'Lychee', 'sweet & bumpy'], ['mangosteen', 'Mangosteen', 'a purple treasure']].map(([id, name, detail]) => `<button class="squishy-choice" data-squishy="${id}" aria-pressed="${id === 'butter'}">${toyIcon(id)}<span><strong>${name}</strong><small>${detail}</small></span><span class="choice-check">${icon('check')}</span></button>`).join('')}</div>
+          <div class="squishy-choices" role="group" aria-label="Squishy shape">${toyChoices.map(([id, name, detail, colors]) => `<button class="squishy-choice${id === 'butter' ? ' active' : ''}" data-squishy="${id}" aria-pressed="${id === 'butter'}" style="${colors}"><span class="toy-tile">${toyIcon(id)}</span><span class="choice-text"><strong>${name}</strong><small>${detail}</small></span><span class="choice-check">${icon('check')}</span></button>`).join('')}</div>
         </section>
       </div>
       <aside class="controls" aria-label="Experience controls">

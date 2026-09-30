@@ -20,6 +20,10 @@ const icon = (name, cls = '') => `<svg class="icon ${cls}" viewBox="0 0 24 24" f
 document.querySelector('#app').innerHTML = renderUI(icon);
 
 const $ = (selector) => document.querySelector(selector);
+const playArea = $('.play-area');
+const pressureSection = $('.pressure-section');
+const pressureInput = $('#pressure');
+const pressureValue = $('#pressure-value');
 const sound = createCrackle();
 let targetPressure = 0;
 let currentPressure = 0;
@@ -186,6 +190,11 @@ document.querySelectorAll('.squishy-choice').forEach((button) => {
     targetPressure = 0;
     sound.reset();
     visual?.setSquishy(id);
+    // Restart the stage's little welcome glow and retint it for the new toy.
+    playArea.dataset.toy = id;
+    playArea.classList.remove('is-switching');
+    void playArea.offsetWidth;
+    playArea.classList.add('is-switching');
     const spec = getSquishySpec(id);
     $('#material-name').textContent = spec.name;
     $('#squishy-number').textContent = String(SQUISHY_TYPES.findIndex((toy) => toy.id === id) + 1).padStart(2, '0');
@@ -204,6 +213,10 @@ document.querySelectorAll('.squishy-choice').forEach((button) => {
   });
 });
 
+playArea.addEventListener('animationend', (event) => {
+  if (event.animationName === 'stage-welcome') playArea.classList.remove('is-switching');
+});
+
 let previousTime = performance.now();
 let lastPercent = -1;
 function animate(now) {
@@ -216,9 +229,13 @@ function animate(now) {
   sound.update(waxEnabled ? currentPressure : 0);
   const percent = Math.round(currentPressure * 100);
   if (percent !== lastPercent) {
-    $('#pressure-value').textContent = percent;
-    if (!sliderActive) $('#pressure').value = percent;
-    $('#pressure').style.setProperty('--progress', `${percent}%`);
+    pressureValue.textContent = percent;
+    if (!sliderActive) pressureInput.value = percent;
+    pressureInput.style.setProperty('--progress', `${percent}%`);
+    // The stage and meter react through one scoped CSS variable, written only when the rounded value changes.
+    const squeeze = String(percent / 100);
+    playArea.style.setProperty('--squeeze', squeeze);
+    pressureSection.style.setProperty('--squeeze', squeeze);
     lastPercent = percent;
   }
   requestAnimationFrame(animate);
