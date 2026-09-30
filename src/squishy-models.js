@@ -68,17 +68,6 @@ function soft(color, options = {}) {
     sheenColor: new THREE.Color(color).lerp(WHITE, 0.55), ...options });
 }
 
-function faceMaterials(mouthColor = '#4a2b27', blushColor = '#f39aa4') {
-  return {
-    eye: material('#1c1311', { roughness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03,
-      specularIntensity: 1, sheen: 0.2, sheenColor: '#6a5a66', sheenRoughness: 0.3 }),
-    glint: new THREE.MeshBasicMaterial({ color: '#fffdf8', toneMapped: false }),
-    mouth: material(mouthColor, { roughness: 0.4, clearcoat: 0.5, clearcoatRoughness: 0.2 }),
-    blush: soft(blushColor, { roughness: 0.72, clearcoat: 0.05, sheen: 0.8,
-      sheenColor: new THREE.Color(blushColor).lerp(WHITE, 0.7) }),
-  };
-}
-
 function addMesh(parent, geometry, mat, position = [0, 0, 0], scale = [1, 1, 1]) {
   const mesh = new THREE.Mesh(geometry, mat);
   mesh.position.set(...position);
@@ -139,9 +128,6 @@ function surfaceFrame(size, dir, lift = 0) {
   return { position: point, normal, quaternion };
 }
 
-const angleDir = (azimuth, elevation) => [Math.cos(elevation) * Math.cos(azimuth),
-  Math.sin(elevation), Math.cos(elevation) * Math.sin(azimuth)];
-
 function anchor(parent, frame) {
   const group = new THREE.Group();
   group.position.copy(frame.position);
@@ -150,53 +136,23 @@ function anchor(parent, frame) {
   return group;
 }
 
-/** Glossy bead eye with two painted glints; every part blinks about its centre. */
-function addEye(root, frame, radius, mats, { depth = 0.5, mirror = 1 } = {}) {
+/**
+ * A small glossy safety-bead eye, set slightly into the plush, with one soft
+ * reflected highlight. Both parts blink about the eye's centre.
+ */
+function addEye(root, frame, radius, mats, { depth = 0.6, mirror = 1 } = {}) {
   const group = anchor(root, frame);
   const pivot = frame.position.toArray();
-  const rx = radius, ry = radius * 1.2, rz = radius * depth;
-  tag(oval(group, mats.eye, [0, 0, 0], [rx, ry, rz], 40, 28), 'eye', pivot);
-  for (const [gx, gy, s] of [[-0.3 * mirror, 0.4, 0.4], [0.36 * mirror, -0.34, 0.17]]) {
-    const z = rz * Math.sqrt(Math.max(0, 1 - gx * gx - gy * gy));
-    const glint = oval(group, mats.glint, [gx * rx, gy * ry, z],
-      [s * rx, s * rx * 1.12, s * rx * 0.3], 16, 10);
-    const n = new THREE.Vector3(gx / rx, gy / ry, z / (rz * rz)).normalize();
-    glint.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), n);
-    tag(glint, 'eye', pivot);
-  }
+  const rz = radius * depth;
+  tag(oval(group, mats.eye, [0, 0, 0], [radius, radius * 1.06, rz], 32, 22), 'eye', pivot);
+  const gx = -0.32 * mirror, gy = 0.36, s = 0.2;
+  const z = rz * Math.sqrt(Math.max(0, 1 - gx * gx - gy * gy));
+  const glint = oval(group, mats.glint, [gx * radius, gy * radius, z],
+    [s * radius, s * radius, s * radius * 0.3], 12, 8);
+  glint.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1),
+    new THREE.Vector3(gx / radius, gy / radius, z / (rz * rz)).normalize());
+  tag(glint, 'eye', pivot);
   return group;
-}
-
-function addBlush(root, frame, rx, ry, mat) {
-  const group = anchor(root, frame);
-  return tag(oval(group, mat, [0, 0, 0], [rx, ry, 0.014], 28, 16), 'blush');
-}
-
-/** A small curved smile drawn over the ellipsoid surface. */
-function addSmile(root, size, azimuth, elevation, width, curve, lift, mat, radius = 0.012) {
-  const points = [];
-  for (let i = 0; i <= 10; i++) {
-    const k = i / 5 - 1;
-    points.push(surfaceFrame(size, angleDir(azimuth + k * width, elevation + curve * k * k), lift)
-      .position.toArray());
-  }
-  const mouth = line(root, mat, points, radius, 8);
-  mouth.userData.role = 'mouth';
-  for (const end of [points[0], points[points.length - 1]]) oval(root, mat, end, [radius, radius, radius], 10, 6);
-  return mouth;
-}
-
-/** A cute face on the ellipsoid, centred at an azimuth/elevation facing the camera. */
-function addFace(root, size, { azimuth = Math.PI / 4, elevation = 0.06, spread = 0.2, eye = 0.08,
-  lift = 0.004, mouthColor, blushColor, blush = [0.1, 0.06] } = {}) {
-  const mats = faceMaterials(mouthColor, blushColor);
-  for (const side of [-1, 1]) {
-    addEye(root, surfaceFrame(size, angleDir(azimuth + side * spread, elevation + 0.1), lift - eye * 0.12),
-      eye, mats);
-    addBlush(root, surfaceFrame(size, angleDir(azimuth + side * spread * 1.62, elevation - 0.005), lift),
-      blush[0], blush[1], mats.blush);
-  }
-  addSmile(root, size, azimuth, elevation - 0.04, spread * 0.22, 0.028, lift + 0.004, mats.mouth);
 }
 
 /**
@@ -311,11 +267,13 @@ function makePlatypus(root, size) {
     hole.rotation.set(0, side * 0.35, -0.42);
   }
 
-  const face = faceMaterials('#5a3526', '#f3999a');
+  const eyes = {
+    eye: material('#1a1210', { roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.04,
+      specularIntensity: 1 }),
+    glint: new THREE.MeshBasicMaterial({ color: '#f4ece6', transparent: true, opacity: 0.7 }),
+  };
   for (const side of [-1, 1]) {
-    const eyeFrame = surfaceFrame(size, [0.9, 0.39, side * 0.57], -0.012);
-    addEye(root, eyeFrame, 0.098, face, { depth: 0.55, mirror: side });
-    addBlush(root, surfaceFrame(size, [1.0, 0.13, side * 0.66], 0.002), 0.115, 0.07, face.blush);
+    addEye(root, surfaceFrame(size, [0.9, 0.39, side * 0.57], -0.01), 0.066, eyes, { mirror: side });
 
     // Four webbed flippers with three rounded toes each.
     for (const x of [-0.73, 0.62]) {
@@ -355,7 +313,7 @@ function makePlatypus(root, size) {
   }
 }
 
-function makeLychee(root, size) {
+function makeLychee(root) {
   const bark = soft('#8b6a47', { roughness: 0.72, clearcoat: 0.12, sheen: 0.35 });
   const leaf = soft('#ffffff', { vertexColors: true, roughness: 0.46, clearcoat: 0.35,
     clearcoatRoughness: 0.3, sheen: 0.35, sheenColor: '#e8f5cf' });
@@ -366,8 +324,6 @@ function makeLychee(root, size) {
     { arch: 0.1, droop: 0.26, bend: -0.05 });
   addLeaf(root, leaf, [-0.05, 1.29, -0.02], 0.64, 0.25, [-0.15, -2.55, -0.08],
     { arch: 0.08, droop: 0.2, bend: 0.05, colors: ['#577f3c', '#7fa855', '#bdd38e', '#9fbd7c'] });
-  addFace(root, size, { eye: 0.078, spread: 0.2, elevation: 0.03, lift: 0.02,
-    mouthColor: '#5b2b2d', blushColor: '#ff8f9b', blush: [0.1, 0.06] });
 }
 
 /** A rounded, fleshy calyx sepal that hugs the top of the fruit. */
@@ -438,9 +394,6 @@ function makeMangosteen(root, size) {
     petal.rotation.y = -angle;
   }
   oval(scar, scarMaterial, [0, -0.015, 0], [0.045, 0.025, 0.045], 16);
-
-  addFace(root, size, { eye: 0.082, spread: 0.19, elevation: 0.02, lift: 0.004,
-    mouthColor: '#2c1426', blushColor: '#f58fb2', blush: [0.105, 0.062] });
 }
 
 /** All geometry/materials are owned by this group and may be disposed by traversal. */
@@ -449,7 +402,7 @@ export function createAccessories(type = 'butter') {
   group.name = `${type}-accessories`;
   const { size } = getSquishySpec(type);
   if (type === 'platypus') makePlatypus(group, size);
-  else if (type === 'lychee') makeLychee(group, size);
+  else if (type === 'lychee') makeLychee(group);
   else if (type === 'mangosteen') makeMangosteen(group, size);
   else SQUISHY_TYPES.find(item => item.id === type)?.accessories?.(group, [...size]);
   return group;

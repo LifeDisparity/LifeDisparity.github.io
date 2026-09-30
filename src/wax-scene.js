@@ -47,24 +47,22 @@ function clipPolygon(polygon, nx, ny, limit) {
 const makeCanvas = (w, h = w) => { const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h; return canvas; };
 
 // The top face maps x→u, z→v; its flat area is roughly x 67–957, y 67–253 of 1024×320.
-function drawStampArt(ctx, ink, soft) {
+// A butter-wrapper deboss: double rounded border, spaced lettering and small diamond ornaments.
+function drawStampArt(ctx, ink) {
   ctx.save(); ctx.strokeStyle = ink; ctx.fillStyle = ink; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   const rounded = (x, y, w, h, r) => { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); };
-  ctx.lineWidth = 7; rounded(104, 90, 816, 140, 46); ctx.stroke();
-  ctx.lineWidth = 4; ctx.setLineDash([1, 13]); rounded(122, 107, 780, 106, 32); ctx.stroke(); ctx.setLineDash([]);
-  // Little face: oval eyes, a tiny ω mouth, and soft cheeks.
-  const fx = 238, fy = 160;
-  for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(fx + s * 36, fy - 10, 12, 17, 0, 0, Math.PI * 2); ctx.fill(); }
-  ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(fx - 19, fy + 14);
-  ctx.quadraticCurveTo(fx - 9.5, fy + 29, fx, fy + 14); ctx.quadraticCurveTo(fx + 9.5, fy + 29, fx + 19, fy + 14); ctx.stroke();
-  ctx.fillStyle = soft;
-  for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(fx + s * 62, fy + 14, 17, 10, 0, 0, Math.PI * 2); ctx.fill(); }
-  ctx.fillStyle = ink; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.font = `700 90px ${STAMP_FONT}`; if ('letterSpacing' in ctx) ctx.letterSpacing = '12px';
-  ctx.fillText('BUTTER', 598, 166);
-  // A small heart to balance the face.
-  ctx.beginPath(); const hx = 850, hy = 158;
-  ctx.moveTo(hx, hy + 20); ctx.bezierCurveTo(hx - 30, hy, hx - 20, hy - 22, hx, hy - 8); ctx.bezierCurveTo(hx + 20, hy - 22, hx + 30, hy, hx, hy + 20); ctx.fill();
+  const cx = 512, cy = 160;
+  ctx.lineWidth = 7; rounded(cx - 408, cy - 70, 816, 140, 46); ctx.stroke();
+  ctx.lineWidth = 3; rounded(cx - 390, cy - 52, 780, 104, 30); ctx.stroke();
+  for (const s of [-1, 1]) {
+    const x = cx + s * 300;
+    ctx.beginPath(); ctx.moveTo(x, cy - 11); ctx.lineTo(x + 11, cy); ctx.lineTo(x, cy + 11); ctx.lineTo(x - 11, cy); ctx.closePath(); ctx.fill();
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x + s * 24, cy); ctx.lineTo(x + s * 56, cy); ctx.stroke();
+  }
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `700 84px ${STAMP_FONT}`; if ('letterSpacing' in ctx) ctx.letterSpacing = '16px';
+  // Trailing letter spacing shifts the visual centre left; nudge it back.
+  ctx.fillText('BUTTER', cx + 8, cy + 5);
   ctx.restore();
 }
 
@@ -73,12 +71,12 @@ function makeStamp() {
   const draw = () => {
     let ctx = color.getContext('2d');
     ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 1024, 320);
-    drawStampArt(ctx, '#d3c6ae', '#f2d2c6');
+    drawStampArt(ctx, '#d3c6ae');
     // Height: white is the wax surface, dark is pressed in.
     ctx = bump.getContext('2d');
     ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 512, 160);
     ctx.save(); ctx.scale(.5, .5); if ('filter' in ctx) ctx.filter = 'blur(2px)';
-    drawStampArt(ctx, '#1c1c1c', '#c8c8c8'); ctx.restore();
+    drawStampArt(ctx, '#1c1c1c'); ctx.restore();
   };
   draw();
   const map = new THREE.CanvasTexture(color), bumpMap = new THREE.CanvasTexture(bump);
