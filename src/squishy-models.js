@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import chocolate from './squishies/chocolate.js';
+import snail from './squishies/snail.js';
+import teddy from './squishies/teddy.js';
 
 /**
  * Dimensions are half extents. Every accessory is in the shell's local space.
@@ -35,6 +38,8 @@ export const SQUISHY_TYPES = [
       sheen: 0.35, sheenColor: '#dcb6e6', sheenRoughness: 0.45, specularIntensity: 1 },
     core: { roughness: 0.3, clearcoat: 0.6, clearcoatRoughness: 0.2,
       sheen: 0.2, sheenColor: '#ffffff', sheenRoughness: 0.4 } },
+  // Plug-in squishies: see src/squishies/README.md.
+  chocolate, snail, teddy,
 ];
 
 export function getSquishySpec(type = 'butter') {
@@ -42,6 +47,8 @@ export function getSquishySpec(type = 'butter') {
   const copy = { ...spec, size: [...spec.size] };
   if (spec.wax) copy.wax = { ...spec.wax };
   if (spec.core) copy.core = { ...spec.core };
+  if (spec.profile) copy.profile = { ...spec.profile };
+  if (spec.wobble) copy.wobble = { ...spec.wobble };
   return copy;
 }
 
@@ -444,5 +451,6 @@ export function createAccessories(type = 'butter') {
   if (type === 'platypus') makePlatypus(group, size);
   else if (type === 'lychee') makeLychee(group, size);
   else if (type === 'mangosteen') makeMangosteen(group, size);
+  else SQUISHY_TYPES.find(item => item.id === type)?.accessories?.(group, [...size]);
   return group;
 }

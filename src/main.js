@@ -196,6 +196,9 @@ document.querySelectorAll('.squishy-choice').forEach((button) => {
     void playArea.offsetWidth;
     playArea.classList.add('is-switching');
     const spec = getSquishySpec(id);
+    for (const [name, value] of [['--glow', spec.ui?.glow], ['--glow-tint', spec.ui?.glowTint]]) {
+      if (value) playArea.style.setProperty(name, value); else playArea.style.removeProperty(name);
+    }
     $('#material-name').textContent = spec.name;
     $('#squishy-number').textContent = String(SQUISHY_TYPES.findIndex((toy) => toy.id === id) + 1).padStart(2, '0');
     $('#scene').setAttribute('aria-label', `${spec.name} ${waxEnabled ? 'wax-coated' : 'soft'} squishy. Hold mouse, touch, or Space to squeeze; release to relax.`);

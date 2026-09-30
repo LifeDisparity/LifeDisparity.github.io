@@ -147,6 +147,7 @@ function surfacePoint(point, spec) {
     normal = point.clone().sub(inside).normalize();
     point.copy(inside).addScaledVector(normal, radius);
   }
+  if (spec.displace) point.addScaledVector(normal, spec.displace(point, normal) || 0);
   return {point, normal};
 }
 
@@ -293,7 +294,7 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
   const tmpMatrix=new THREE.Matrix4(),tmpQuat=new THREE.Quaternion(),tmpScale=new THREE.Vector3(),tmpVec=new THREE.Vector3(),tmpDir=new THREE.Vector3();
   const zeroMatrix=new THREE.Matrix4().makeScale(0,0,0);for(let i=0;i<FLECKS;i++)flecks.setMatrixAt(i,zeroMatrix);
   let framePoints=new Float32Array(0),spec,profile,cells=[],core,coreBase,coreBareBase,coreNormals,accessories=[],toy,footprint={x:1,z:1,cx:0,cz:0};
-  let waxEnabled=true,firstLoad=true;
+  let waxEnabled=true,firstLoad=true,toyTextures=null;
   const physics=createPressureState();let target=0,alive=true,raf,lastTime=0,width=0,height=0;
   // Secondary animation state.
   let follow=0,followVelocity=0,enterTime=Infinity,landed=true,eyeOpen=1,appliedEye=1,blinkStart=-1,nextBlink=2.5,doubleBlink=false,clock=0;
@@ -305,13 +306,24 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
   function disposeToy() {
     if(!toy)return;
     toy.traverse(obj=>{obj.geometry?.dispose();if(obj.userData.accessory&&obj.material) for(const material of [].concat(obj.material))material.dispose();});
-    stage.remove(toy);
+    stage.remove(toy);disposeToyTextures();
+  }
+  // Plug-in squishies may bring their own shell/top/core textures.
+  function disposeToyTextures() {
+    if(!toyTextures)return;
+    const all=[toyTextures,toyTextures.top,toyTextures.core].filter(Boolean).flatMap(t=>[t.map,t.bumpMap]);
+    new Set(all.filter(Boolean)).forEach(t=>t.dispose());toyTextures=null;
   }
   function resetMaterials() {
     wax.copy(pristine.wax);top.copy(pristine.wax);edge.copy(pristine.edge);coreMaterial.copy(pristine.core);
     const lychee=spec.surface==='lychee';
     wax.bumpMap=lychee?rind.bump:null;wax.map=lychee?rind.map:null;wax.bumpScale=1.1;
     top.map=stamp.map;top.bumpMap=stamp.bumpMap;top.bumpScale=1.6;
+    if(toyTextures) {
+      wax.map=toyTextures.map||null;wax.bumpMap=toyTextures.bumpMap||null;wax.bumpScale=toyTextures.bumpScale??1;
+      const face=toyTextures.top||toyTextures;
+      top.map=face.map||null;top.bumpMap=face.bumpMap||null;top.bumpScale=face.bumpScale??1;
+    }
     applyOverrides(wax,spec.wax,['color','map','bumpMap']);applyOverrides(top,spec.wax,['color','map','bumpMap']);
     // Fissure walls stay matte whatever the surface gloss.
     applyOverrides(edge,spec.wax,['color','map','bumpMap','roughness','emissive','emissiveIntensity','clearcoat','clearcoatRoughness','specularIntensity']);
@@ -319,7 +331,8 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
     for(const m of [wax,top,edge,coreMaterial])m.needsUpdate=true;
   }
   function setSquishy(id) {
-    disposeToy();spec=getSquishySpec(id);profile=getSquishProfile(spec.id);toy=new THREE.Group();stage.add(toy);
+    disposeToy();spec=getSquishySpec(id);profile=spec.profile||getSquishProfile(spec.id);toy=new THREE.Group();stage.add(toy);
+    toyTextures=spec.textures?.()||null;
     resetMaterials();
     cells=buildShell(toy,{wax,top,edge},spec);
     cells.forEach(cell=>{cell.mesh.visible=waxEnabled;});
@@ -394,6 +407,8 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
     coreMaterial.bumpMap=!waxEnabled&&spec.surface==='lychee'?rind.bump:null;
     coreMaterial.map=!waxEnabled&&spec.surface==='lychee'?rind.map:null;
     coreMaterial.bumpScale=.6;
+    const bare=!waxEnabled&&toyTextures?.core;
+    if(bare){coreMaterial.map=bare.map||null;coreMaterial.bumpMap=bare.bumpMap||null;coreMaterial.bumpScale=bare.bumpScale??.6;}
     coreMaterial.needsUpdate=true;
   }
   function setWaxEnabled(value) {
@@ -521,7 +536,7 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
     return low;
   }
   function placeToy(dt) {
-    const motion=!reducedMotion.matches,w=WOBBLE[spec.id]||WOBBLE.butter,p=physics.pressure;
+    const motion=!reducedMotion.matches,w=spec.wobble||WOBBLE[spec.id]||WOBBLE.butter,p=physics.pressure;
     // Lagging spring: overshoot relative to the pressure field becomes squash & stretch.
     if(motion&&dt>0) {
       let remaining=dt;
