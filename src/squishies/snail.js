@@ -21,7 +21,7 @@ const COLORS = {
   eye: '#2a2120', glint: '#f6efe8',
 };
 // The shell's underside is lifted into the body so it rests on the foot.
-const CUT = -0.6, CUT_SOFT = 0.06;
+const CUT = -2.6, CUT_SOFT = 0.06;
 // Side spiral in normalized shell coordinates, winding clockwise (seen from
 // +z) outward from a centre a little up and back to the front-bottom.
 const SPIRAL = { cx: -0.07, cy: 0.1, R: 0.8, turns: 2.35, power: 1.2, end: -1.15 };
