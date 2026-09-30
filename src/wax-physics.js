@@ -25,7 +25,11 @@ export function stepPressure(state, target, delta, profile = SQUISH_PROFILES.but
   while (remaining > 1e-8) {
     const dt = Math.min(remaining, 1 / 180);
     const omega = state.target < state.pressure ? profile.releaseSpeed : profile.pressSpeed;
-    state.velocity += (omega * omega * (state.target - state.pressure) - profile.damping * omega * state.velocity) * dt;
+    // While a squeeze is held the spring is at least critically damped, so the
+    // squish never overshoots; each toy's own bounce only plays once let go.
+    const released = state.target < .05 && state.target < state.pressure;
+    const damping = released ? profile.damping : Math.max(2, profile.damping);
+    state.velocity += (omega * omega * (state.target - state.pressure) - damping * omega * state.velocity) * dt;
     state.pressure = clamp01(state.pressure + state.velocity * dt);
     if ((state.pressure === 0 && state.velocity < 0) || (state.pressure === 1 && state.velocity > 0)) state.velocity = 0;
     remaining -= dt;

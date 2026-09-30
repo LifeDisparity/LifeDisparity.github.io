@@ -527,7 +527,6 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
     if(newCracks) {
       onCrack?.({count:newCracks,strength:Math.min(1,.25+p*.65+newCracks*.018)});
       if(!reducedMotion.matches&&dt>0) {
-        followVelocity+=Math.min(5,newCracks)*.28;
         for(const cell of cracked.slice(0,10))spawnFlecks(cell);
       }
     }
@@ -541,10 +540,12 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
   function placeToy(dt) {
     const motion=!reducedMotion.matches,w=spec.wobble||WOBBLE[spec.id]||WOBBLE.butter,p=physics.pressure;
     // Lagging spring: overshoot relative to the pressure field becomes squash & stretch.
-    if(motion&&dt>0) {
+    // It only wobbles once the toy is let go; while squeezed any leftover wobble eases out.
+    if(motion&&dt>0&&target<.05) {
       let remaining=dt;
       while(remaining>1e-6){const h=Math.min(remaining,1/240);followVelocity+=(w.omega*w.omega*(p-follow)-2*w.zeta*w.omega*followVelocity)*h;follow+=followVelocity*h;remaining-=h;}
-    } else {follow=p;followVelocity=0;}
+    } else if(motion&&dt>0) {follow=p+(follow-p)*Math.exp(-dt*18);followVelocity=0;}
+    else {follow=p;followVelocity=0;}
     let squash=clamp((follow-p)*w.gain,-.2,.24);
     if(motion)squash+=Math.sin(clock*1.9)*.009*(1-p);
     let enterScale=1,drop=0;

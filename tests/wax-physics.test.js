@@ -80,3 +80,27 @@ test('fractures persist during release, open gradually and heal at rest', () => 
   assert.equal(cell.damage, 0);
   assert.ok(cell.opening < 1e-6);
 });
+
+test('squeezing never overshoots or bounces for any toy', async () => {
+  const { SQUISHY_TYPES } = await import('../src/squishy-models.js');
+  for (const toy of SQUISHY_TYPES) {
+    const profile = toy.profile || SQUISH_PROFILES[toy.id];
+    assert.ok(profile, `${toy.id} has a squish profile`);
+    for (const goal of [.35, .7, 1]) {
+      // A steady hold, then a slow hand-style ramp that eases back a little.
+      const state = createPressureState();
+      let previous = 0;
+      for (let i = 0; i < 240; i++) {
+        stepPressure(state, goal, 1/60, profile);
+        assert.ok(state.pressure <= goal + 1e-6, `${toy.id} overshoots ${goal}`);
+        assert.ok(state.pressure >= previous - 1e-9, `${toy.id} dips while squeezing to ${goal}`);
+        previous = state.pressure;
+      }
+      for (let i = 0; i < 120; i++) {
+        const before = state.pressure;
+        stepPressure(state, goal * .8, 1/60, profile);
+        assert.ok(state.pressure >= goal * .8 - 1e-6 && state.pressure <= before + 1e-9, `${toy.id} bounces while easing off`);
+      }
+    }
+  }
+});
