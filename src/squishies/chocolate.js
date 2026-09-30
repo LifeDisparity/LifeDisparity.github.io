@@ -64,31 +64,41 @@ function moulding(x, z) {
 }
 
 let gridCache = null;
+/** Mould colour (AO) and height canvases for the top face; built once, then cached. */
 function gridCanvases() {
   if (gridCache) return gridCache;
-  const W = 2048, H = Math.round(W * SIZE[2] / SIZE[0]);
+  const W = 2048, H = 2 * Math.round(W * SIZE[2] / SIZE[0] / 2), hw = W / 2, hh = H / 2;
   const color = document.createElement('canvas'), bump = document.createElement('canvas');
   color.width = bump.width = W; color.height = bump.height = H;
   const cctx = color.getContext('2d'), bctx = bump.getContext('2d');
   const cimg = cctx.createImageData(W, H), bimg = bctx.createImageData(W, H);
-  const mottle = valueNoise(417, 18), grain = valueNoise(91, 160);
-  for (let py = 0; py < H; py++) {
-    // CanvasTexture flips Y: canvas row 0 is v = 1, i.e. z = -size z.
+  const c = cimg.data, b = bimg.data;
+  const write = (k, tone, h) => {
+    const i = k * 4;
+    c[i] = tone; c[i + 1] = tone * 0.985; c[i + 2] = tone * 0.965; c[i + 3] = 255;
+    b[i] = b[i + 1] = b[i + 2] = h; b[i + 3] = 255;
+  };
+  // The mould is mirror-symmetric in x and z: evaluate one quadrant, write four.
+  for (let py = 0; py < hh; py++) {
     const z = SIZE[2] * (2 * (py + 0.5) / H - 1);
-    for (let px = 0; px < W; px++) {
-      const x = SIZE[0] * (2 * (px + 0.5) / W - 1), u = px / W, v = py / H;
-      const { height, shade } = moulding(x, z);
-      const tone = shade * (0.975 + 0.035 * mottle(u, v) + 0.012 * grain(u, v));
-      const k = (py * W + px) * 4;
-      cimg.data[k] = 255 * Math.min(1, tone);
-      cimg.data[k + 1] = 255 * Math.min(1, tone * 0.985);
-      cimg.data[k + 2] = 255 * Math.min(1, tone * 0.965);
-      cimg.data[k + 3] = 255;
-      const h = 255 * Math.min(1, height / 1.02 + 0.006 * (grain(u, v) - 0.5));
-      bimg.data[k] = bimg.data[k + 1] = bimg.data[k + 2] = h; bimg.data[k + 3] = 255;
+    for (let px = 0; px < hw; px++) {
+      const { height, shade } = moulding(SIZE[0] * (2 * (px + 0.5) / W - 1), z);
+      const tone = 255 * Math.min(1, shade), h = 255 * Math.min(1, height / 1.02);
+      const r0 = py * W, r1 = (H - 1 - py) * W;
+      write(r0 + px, tone, h); write(r0 + W - 1 - px, tone, h); write(r1 + px, tone, h); write(r1 + W - 1 - px, tone, h);
     }
   }
   cctx.putImageData(cimg, 0, 0); bctx.putImageData(bimg, 0, 0);
+  // Soft tempering mottle, multiplied in from a tiny smoothed noise canvas.
+  const noise = document.createElement('canvas'), mottle = randomGenerator(417);
+  noise.width = 40; noise.height = 22;
+  const nctx = noise.getContext('2d'), nimg = nctx.createImageData(40, 22);
+  for (let i = 0; i < nimg.data.length; i += 4) {
+    nimg.data[i] = nimg.data[i + 1] = nimg.data[i + 2] = 255 * (0.955 + 0.045 * mottle()); nimg.data[i + 3] = 255;
+  }
+  nctx.putImageData(nimg, 0, 0);
+  cctx.globalCompositeOperation = 'multiply'; cctx.imageSmoothingEnabled = true; cctx.imageSmoothingQuality = 'high';
+  cctx.drawImage(noise, 0, 0, W, H); cctx.globalCompositeOperation = 'source-over';
   gridCache = { color, bump };
   return gridCache;
 }
