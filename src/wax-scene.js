@@ -1,7 +1,24 @@
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { getSquishySpec, createAccessories } from './squishy-models.js';
 import { createPressureState, stepPressure, deformPoint, localStress, advanceFracture, getSquishProfile, deformationFrame } from './wax-physics.js';
-const clamp = THREE.MathUtils.clamp;
+const clamp = THREE.MathUtils.clamp, smoothstep = THREE.MathUtils.smoothstep;
+
+// Secondary motion per toy: a lagging spring whose overshoot squashes/stretches the toy.
+const WOBBLE = {
+  butter: {omega:15, zeta:.2, gain:.36},
+  platypus: {omega:10.5, zeta:.13, gain:.44},
+  lychee: {omega:21, zeta:.17, gain:.42},
+  mangosteen: {omega:8.5, zeta:.3, gain:.3},
+};
+const WAX_DEFAULTS = {roughness:.4, metalness:0, clearcoat:.38, clearcoatRoughness:.42, sheen:.45, sheenRoughness:.55,
+  sheenColor:new THREE.Color('#fff3e6'), specularIntensity:.55, side:THREE.DoubleSide};
+const EDGE_DEFAULTS = {roughness:.64, metalness:0, clearcoat:.08, clearcoatRoughness:.6, sheen:.85, sheenRoughness:.8,
+  sheenColor:new THREE.Color('#fffaf2'), specularIntensity:.35, side:THREE.DoubleSide};
+const CORE_DEFAULTS = {roughness:.46, metalness:0, clearcoat:.28, clearcoatRoughness:.4, sheen:.3, sheenRoughness:.6,
+  sheenColor:new THREE.Color('#ffffff'), specularIntensity:.5};
+const FLECKS = 40;
+const STAMP_FONT = '"DM Sans", "Arial Rounded MT Bold", "Nunito", system-ui, sans-serif';
 
 function randomGenerator(seed) {
   return () => {
@@ -27,56 +44,89 @@ function clipPolygon(polygon, nx, ny, limit) {
   return output;
 }
 
-function makeStamp() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024; canvas.height = 320;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 1024, 320);
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.font = '600 97px Georgia, serif';
-  ctx.fillStyle = '#d6cfb2';
-  ctx.fillText('BUTTER', 570, 171);
-  ctx.strokeStyle = '#d6cfb2'; ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.ellipse(202, 170, 39, 31, 0, 0, Math.PI * 2); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(178, 159); ctx.lineTo(165, 120); ctx.lineTo(197, 141);
-  ctx.moveTo(218, 146); ctx.lineTo(242, 125); ctx.lineTo(235, 167); ctx.stroke();
-  ctx.beginPath(); ctx.arc(187, 169, 3, 0, Math.PI * 2); ctx.arc(216, 169, 3, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(197, 183); ctx.quadraticCurveTo(203, 190, 209, 182); ctx.stroke();
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 4;
-  return texture;
+const makeCanvas = (w, h = w) => { const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h; return canvas; };
+
+// The top face maps x→u, z→v; its flat area is roughly x 67–957, y 67–253 of 1024×320.
+function drawStampArt(ctx, ink, soft) {
+  ctx.save(); ctx.strokeStyle = ink; ctx.fillStyle = ink; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const rounded = (x, y, w, h, r) => { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); };
+  ctx.lineWidth = 7; rounded(104, 90, 816, 140, 46); ctx.stroke();
+  ctx.lineWidth = 4; ctx.setLineDash([1, 13]); rounded(122, 107, 780, 106, 32); ctx.stroke(); ctx.setLineDash([]);
+  // Little face: oval eyes, a tiny ω mouth, and soft cheeks.
+  const fx = 238, fy = 160;
+  for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(fx + s * 36, fy - 10, 12, 17, 0, 0, Math.PI * 2); ctx.fill(); }
+  ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(fx - 19, fy + 14);
+  ctx.quadraticCurveTo(fx - 9.5, fy + 29, fx, fy + 14); ctx.quadraticCurveTo(fx + 9.5, fy + 29, fx + 19, fy + 14); ctx.stroke();
+  ctx.fillStyle = soft;
+  for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(fx + s * 62, fy + 14, 17, 10, 0, 0, Math.PI * 2); ctx.fill(); }
+  ctx.fillStyle = ink; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `700 90px ${STAMP_FONT}`; if ('letterSpacing' in ctx) ctx.letterSpacing = '12px';
+  ctx.fillText('BUTTER', 598, 166);
+  // A small heart to balance the face.
+  ctx.beginPath(); const hx = 850, hy = 158;
+  ctx.moveTo(hx, hy + 20); ctx.bezierCurveTo(hx - 30, hy, hx - 20, hy - 22, hx, hy - 8); ctx.bezierCurveTo(hx + 20, hy - 22, hx + 30, hy, hx, hy + 20); ctx.fill();
+  ctx.restore();
 }
 
-function makeRindTexture() {
-  const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;
-  const ctx=canvas.getContext('2d');ctx.fillStyle='#292929';ctx.fillRect(0,0,256,256);
-  const random=randomGenerator(6192);
-  for(let row=0;row<8;row++)for(let col=0;col<8;col++) {
-    const x=(col+(row%2)*.5)*32+(random()-.5)*8,y=row*32+(random()-.5)*8;
-    const radius=13+random()*5;
-    for(const dx of [-256,0,256])for(const dy of [-256,0,256]) {
-      const gradient=ctx.createRadialGradient(x+dx-2,y+dy-2,1,x+dx,y+dy,radius);
-      gradient.addColorStop(0,'#ededed');gradient.addColorStop(.35,'#b5b5b5');gradient.addColorStop(.75,'#666666');gradient.addColorStop(1,'#292929');
-      ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(x+dx,y+dy,radius,0,Math.PI*2);ctx.fill();
+function makeStamp() {
+  const color = makeCanvas(1024, 320), bump = makeCanvas(512, 160);
+  const draw = () => {
+    let ctx = color.getContext('2d');
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 1024, 320);
+    drawStampArt(ctx, '#d3c6ae', '#f2d2c6');
+    // Height: white is the wax surface, dark is pressed in.
+    ctx = bump.getContext('2d');
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 512, 160);
+    ctx.save(); ctx.scale(.5, .5); if ('filter' in ctx) ctx.filter = 'blur(2px)';
+    drawStampArt(ctx, '#1c1c1c', '#c8c8c8'); ctx.restore();
+  };
+  draw();
+  const map = new THREE.CanvasTexture(color), bumpMap = new THREE.CanvasTexture(bump);
+  map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = bumpMap.anisotropy = 4;
+  return {map, bumpMap, redraw() { draw(); map.needsUpdate = true; bumpMap.needsUpdate = true; }};
+}
+
+// Tileable lychee tubercles: domed bumps with a tiny spike, darker rosy crevices.
+function makeRindTextures() {
+  const S = 512, random = randomGenerator(6192);
+  const height = makeCanvas(S), color = makeCanvas(S);
+  const h = height.getContext('2d'), c = color.getContext('2d');
+  h.fillStyle = '#161616'; h.fillRect(0, 0, S, S);
+  c.fillStyle = '#c99697'; c.fillRect(0, 0, S, S);
+  const cell = S / 8;
+  for (let row = 0; row < 8; row++) for (let col = 0; col < 8; col++) {
+    const x = (col + (row % 2) * .5) * cell + (random() - .5) * 10, y = row * cell + (random() - .5) * 10;
+    const radius = cell * (.44 + random() * .12), tone = .9 + random() * .1, warm = random();
+    const top = `rgb(255,${Math.round(236 + warm * 14)},${Math.round(222 + warm * 18)})`;
+    const mid = `rgb(${Math.round(244 * tone)},${Math.round(206 * tone)},${Math.round(200 * tone)})`;
+    for (const dx of [-S, 0, S]) for (const dy of [-S, 0, S]) {
+      const px = x + dx, py = y + dy;
+      if (px < -cell || px > S + cell || py < -cell || py > S + cell) continue;
+      let g = h.createRadialGradient(px - 3, py - 3, 1, px, py, radius);
+      g.addColorStop(0, '#e6e6e6'); g.addColorStop(.4, '#b0b0b0'); g.addColorStop(.8, '#5a5a5a'); g.addColorStop(1, '#161616');
+      h.fillStyle = g; h.beginPath(); h.arc(px, py, radius, 0, Math.PI * 2); h.fill();
+      h.fillStyle = '#ffffff'; h.beginPath(); h.arc(px - 1, py - 1, 3.2, 0, Math.PI * 2); h.fill();
+      g = c.createRadialGradient(px - 4, py - 4, 1, px, py, radius);
+      g.addColorStop(0, top); g.addColorStop(.45, mid); g.addColorStop(1, '#c99697');
+      c.fillStyle = g; c.beginPath(); c.arc(px, py, radius, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#fff6ea'; c.beginPath(); c.arc(px - 1, py - 1, 2.4, 0, Math.PI * 2); c.fill();
     }
   }
-  const texture=new THREE.CanvasTexture(canvas);texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.repeat.set(2.2,2.2);texture.anisotropy=4;
-  return texture;
+  const bump = new THREE.CanvasTexture(height), map = new THREE.CanvasTexture(color);
+  map.colorSpace = THREE.SRGBColorSpace;
+  for (const t of [bump, map]) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2.2, 2.2); t.anisotropy = 4; }
+  return {bump, map};
 }
 
-function makeRindColorTexture(heightTexture) {
-  const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;
-  const ctx=canvas.getContext('2d');ctx.drawImage(heightTexture.image,0,0);
-  const pixels=ctx.getImageData(0,0,256,256);
-  for(let i=0;i<pixels.data.length;i+=4){
-    const value=Math.round(153+pixels.data[i]*.40);
-    pixels.data[i]=value;pixels.data[i+1]=value;pixels.data[i+2]=value;
-  }
-  ctx.putImageData(pixels,0,0);
-  const texture=new THREE.CanvasTexture(canvas);
-  texture.colorSpace=THREE.SRGBColorSpace;texture.wrapS=texture.wrapT=THREE.RepeatWrapping;
-  texture.repeat.copy(heightTexture.repeat);texture.anisotropy=4;return texture;
+function makeContactShadowTexture() {
+  const canvas = makeCanvas(128), ctx = canvas.getContext('2d');
+  const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  // Dense core where the toy touches, feathering into a wide penumbra.
+  g.addColorStop(0, 'rgba(92,62,52,.78)'); g.addColorStop(.5, 'rgba(92,62,52,.6)'); g.addColorStop(.6, 'rgba(92,62,52,.4)');
+  g.addColorStop(.78, 'rgba(92,62,52,.13)'); g.addColorStop(1, 'rgba(92,62,52,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 128, 128);
+  const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
 }
 
 function surfacePoint(point, spec) {
@@ -148,10 +198,13 @@ function buildShell(group, materials, spec) {
         push(center);push(outward?a:b);push(outward?b:a);
       }
       const frontCount=positions.length/3;
+      // Thick fissure walls; the outer rim shades like a rounded, softened wax lip.
+      const depth=.046;
       for(let i=0;i<boundary.length;i++) {
         const a=toSurface(boundary[i]),b=toSurface(boundary[(i+1)%boundary.length]);
         const n=b.point.clone().sub(a.point).cross(a.normal).normalize();
-        push(a,0,n);push(a,.035,n);push(b,0,n);push(b,0,n);push(a,.035,n);push(b,.035,n);
+        const la=n.clone().add(a.normal).normalize(),lb=n.clone().add(b.normal).normalize();
+        push(a,0,la);push(a,depth,n);push(b,0,lb);push(b,0,lb);push(a,depth,n);push(b,depth,n);
       }
       const geometry=new THREE.BufferGeometry();
       geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
@@ -184,45 +237,90 @@ function normalUnderPressure(nx,ny,nz,x,y,z,p,halfX,out,index,profile) {
   const inverse=1/length;out[index]=a*inverse;out[index+1]=b*inverse;out[index+2]=c*inverse;
 }
 
+// Copies optional MeshPhysicalMaterial params from a toy spec, ignoring anything unknown.
+function applyOverrides(material,params,skip=[]) {
+  if(!params||typeof params!=='object')return;
+  for(const [key,value] of Object.entries(params)) {
+    if(skip.includes(key)||!(key in material)||value==null)continue;
+    const current=material[key];
+    if(current?.isColor){if(typeof value==='string'||typeof value==='number'||value?.isColor)current.set(value);}
+    else if(typeof current==='number'&&Number.isFinite(Number(value)))material[key]=Number(value);
+    else if(typeof current==='boolean')material[key]=Boolean(value);
+    else if(Array.isArray(current)&&Array.isArray(value))material[key]=[...value];
+  }
+  material.needsUpdate=true;
+}
+
+const backOut=t=>{const c=1.9;return 1+(c+1)*(t-1)**3+c*(t-1)**2;};
+
 export function createWaxScene(container,{onReady,onError,onCrack}={}) {
   let renderer;
   try {renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});}
   catch(error) {onError?.(error);return {setPressure(){},setColor(){},setSquishy(){},setWaxEnabled(){},reset(){},resize(){},dispose(){},getStats:()=>({available:false})};}
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.setClearColor(0x000000,0);
-  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;
+  let pixelRatio=Math.min(window.devicePixelRatio||1,2);renderer.setPixelRatio(pixelRatio);renderer.setClearColor(0x000000,0);
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;
+  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NeutralToneMapping;renderer.toneMappingExposure=.95;
   renderer.domElement.setAttribute('role','img');renderer.domElement.style.cssText='display:block;width:100%;height:100%;touch-action:none';container.appendChild(renderer.domElement);
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(34,1,.1,80);
   camera.position.set(5.4,6.5,8.6);camera.lookAt(0,0,0);
-  scene.add(new THREE.HemisphereLight(0xfff9ed,0xa49ca6,2));
-  const key=new THREE.DirectionalLight(0xfff5e4,3.1);key.position.set(-3,7,5);key.castShadow=true;
+  // Soft studio reflections for wax, clearcoat and sheen; the page background stays CSS.
+  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();
+  const envTarget=pmrem.fromScene(room,.04);room.dispose();pmrem.dispose();
+  scene.environment=envTarget.texture;scene.environmentIntensity=.62;scene.environmentRotation.y=-.5;
+  scene.add(new THREE.HemisphereLight(0xfff6ea,0xd8c2bd,.75));
+  const key=new THREE.DirectionalLight(0xffeedb,2.15);key.position.set(-3,7,5);key.castShadow=true;
   key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-5;key.shadow.camera.right=5;key.shadow.camera.top=5;key.shadow.camera.bottom=-5;
-  key.shadow.normalBias=.025;key.shadow.bias=-.00015;key.shadow.radius=4;scene.add(key);
-  const rim=new THREE.DirectionalLight(0xffffff,1.5);rim.position.set(4,3,-5);scene.add(rim);
-  const fill=new THREE.DirectionalLight(0xe5e5ff,.6);fill.position.set(-4,0,-2);scene.add(fill);
+  key.shadow.normalBias=.03;key.shadow.bias=-.0002;key.shadow.radius=6;scene.add(key);
+  const rim=new THREE.DirectionalLight(0xffcfe2,1.7);rim.position.set(4,3.5,-5);scene.add(rim);
+  const fill=new THREE.DirectionalLight(0xdfe5ff,.45);fill.position.set(-5,1,-2);scene.add(fill);
   const stage=new THREE.Group();stage.rotation.set(0,-.22,-.035);scene.add(stage);
-  const stampTexture=makeStamp(),rindTexture=makeRindTexture();
-  const rindColorTexture=makeRindColorTexture(rindTexture);
-  const wax=new THREE.MeshPhysicalMaterial({roughness:.48,metalness:0,clearcoat:.13,clearcoatRoughness:.5,side:THREE.DoubleSide});
-  const top= wax.clone();top.map=stampTexture;
-  const edge=wax.clone();edge.roughness=.78;
-  const coreMaterial=new THREE.MeshPhysicalMaterial({roughness:.5,clearcoat:.2,clearcoatRoughness:.45});
-  const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.ShadowMaterial({opacity:.13}));
-  ground.rotation.x=-Math.PI/2;ground.position.y=-1.43;ground.receiveShadow=true;scene.add(ground);
-  let spec,profile,cells=[],core,coreBase,coreBareBase,coreNormals,accessories=[],toy;
-  let waxEnabled=true;
+  const stamp=makeStamp(),rind=makeRindTextures();
+  const pristine={wax:new THREE.MeshPhysicalMaterial(WAX_DEFAULTS),edge:new THREE.MeshPhysicalMaterial(EDGE_DEFAULTS),core:new THREE.MeshPhysicalMaterial(CORE_DEFAULTS)};
+  const wax=pristine.wax.clone(),top=pristine.wax.clone(),edge=pristine.edge.clone(),coreMaterial=pristine.core.clone();
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.ShadowMaterial({color:0x5a4034,opacity:.13}));
+  ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+  // Soft blurred contact shadow that follows the toy's footprint and squash.
+  const contactTexture=makeContactShadowTexture();
+  const contactRoot=new THREE.Group();scene.add(contactRoot);
+  const contact=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:contactTexture,transparent:true,depthWrite:false,toneMapped:false}));
+  contact.rotation.x=-Math.PI/2;contact.renderOrder=1;contactRoot.add(contact);
+  // Pooled wax flecks that pop off newly cracked plates.
+  const fleckGeometry=new THREE.IcosahedronGeometry(1,0);fleckGeometry.scale(1,.42,.78);
+  const fleckMaterial=new THREE.MeshStandardMaterial({roughness:.55,flatShading:true});
+  const flecks=new THREE.InstancedMesh(fleckGeometry,fleckMaterial,FLECKS);flecks.frustumCulled=false;flecks.visible=false;scene.add(flecks);
+  const particles=Array.from({length:FLECKS},()=>({life:0,max:1,size:.04,pos:new THREE.Vector3(),vel:new THREE.Vector3(),rot:new THREE.Euler(),spin:new THREE.Vector3()}));
+  let nextParticle=0;
+  const tmpMatrix=new THREE.Matrix4(),tmpQuat=new THREE.Quaternion(),tmpScale=new THREE.Vector3(),tmpVec=new THREE.Vector3(),tmpDir=new THREE.Vector3();
+  const zeroMatrix=new THREE.Matrix4().makeScale(0,0,0);for(let i=0;i<FLECKS;i++)flecks.setMatrixAt(i,zeroMatrix);
+  let framePoints=new Float32Array(0),spec,profile,cells=[],core,coreBase,coreBareBase,coreNormals,accessories=[],toy,footprint={x:1,z:1,cx:0,cz:0};
+  let waxEnabled=true,firstLoad=true;
   const physics=createPressureState();let target=0,alive=true,raf,lastTime=0,width=0,height=0;
+  // Secondary animation state.
+  let follow=0,followVelocity=0,enterTime=Infinity,landed=true,eyeOpen=1,appliedEye=1,blinkStart=-1,nextBlink=2.5,doubleBlink=false,clock=0;
+  const tilt={x:0,y:0,tx:0,ty:0};
   const initialCamera=camera.position.clone().normalize();
+  const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const random=Math.random;
 
   function disposeToy() {
     if(!toy)return;
     toy.traverse(obj=>{obj.geometry?.dispose();if(obj.userData.accessory&&obj.material) for(const material of [].concat(obj.material))material.dispose();});
     stage.remove(toy);
   }
+  function resetMaterials() {
+    wax.copy(pristine.wax);top.copy(pristine.wax);edge.copy(pristine.edge);coreMaterial.copy(pristine.core);
+    const lychee=spec.surface==='lychee';
+    wax.bumpMap=lychee?rind.bump:null;wax.map=lychee?rind.map:null;wax.bumpScale=1.1;
+    top.map=stamp.map;top.bumpMap=stamp.bumpMap;top.bumpScale=1.6;
+    applyOverrides(wax,spec.wax,['color','map','bumpMap']);applyOverrides(top,spec.wax,['color','map','bumpMap']);
+    // Fissure walls stay matte whatever the surface gloss.
+    applyOverrides(edge,spec.wax,['color','map','bumpMap','roughness','emissive','emissiveIntensity','clearcoat','clearcoatRoughness','specularIntensity']);
+    applyOverrides(coreMaterial,spec.core,['color','map','bumpMap']);
+    for(const m of [wax,top,edge,coreMaterial])m.needsUpdate=true;
+  }
   function setSquishy(id) {
     disposeToy();spec=getSquishySpec(id);profile=getSquishProfile(spec.id);toy=new THREE.Group();stage.add(toy);
-    wax.bumpMap=spec.surface==='lychee'?rindTexture:null;
-    wax.map=spec.surface==='lychee'?rindColorTexture:null;wax.bumpScale=.10;wax.needsUpdate=true;
+    resetMaterials();
     cells=buildShell(toy,{wax,top,edge},spec);
     cells.forEach(cell=>{cell.mesh.visible=waxEnabled;});
     const geo=new THREE.SphereGeometry(1,64,40);
@@ -242,23 +340,60 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
     coreGeo.computeVertexNormals();coreBase=pos.slice();coreNormals=coreGeo.attributes.normal.array.slice();
     core=new THREE.Mesh(coreGeo,coreMaterial);core.castShadow=true;core.receiveShadow=true;core.frustumCulled=false;toy.add(core);
     const extra=createAccessories(id);extra.updateMatrixWorld(true);accessories=[];
-    extra.traverse(obj=>{if(!obj.isMesh)return;const geo=obj.geometry.clone();geo.applyMatrix4(obj.matrixWorld);const mesh=new THREE.Mesh(geo,obj.material);mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.userData.accessory=true;toy.add(mesh);accessories.push({mesh,base:geo.attributes.position.array.slice(),normals:geo.attributes.normal.array.slice()});});
+    extra.traverse(obj=>{
+      if(!obj.isMesh)return;const geo=obj.geometry.clone();geo.applyMatrix4(obj.matrixWorld);
+      const mesh=new THREE.Mesh(geo,obj.material);mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;
+      mesh.userData={...obj.userData,accessory:true};toy.add(mesh);
+      accessories.push({mesh,base:geo.attributes.position.array.slice(),normals:geo.attributes.normal.array.slice(),role:obj.userData?.role,pivot:obj.userData?.pivot});
+    });
     extra.traverse(obj=>obj.geometry?.dispose());
+    setupEyes();measureFootprint();
+    // A thinned point cloud of the resting toy for camera framing.
+    const cloud=[];const addPoints=(array,stride)=>{for(let i=0;i<array.length;i+=3*stride)cloud.push(array[i],array[i+1],array[i+2]);};
+    addPoints(coreBareBase,4);for(const a of accessories)addPoints(a.base,Math.max(1,Math.round(a.base.length/600)));
+    framePoints=Float32Array.from(cloud);
     setColor(spec.color);
-    Object.assign(physics,createPressureState());target=0;
+    Object.assign(physics,createPressureState());target=0;follow=0;followVelocity=0;eyeOpen=appliedEye=1;blinkStart=-1;
     renderer.domElement.setAttribute('aria-label',`Interactive 3D wax-coated ${spec.name.toLowerCase()} squishy`);
-    ground.position.y=-spec.size[1]-.36;
-    updateGeometry(0);resize();
+    ground.position.y=-spec.size[1]-.02;contactRoot.position.y=ground.position.y+.004;
+    for(const particle of particles)particle.life=0;
+    // Pop in with a little drop and landing squash (not on the very first load).
+    if(!firstLoad&&!reducedMotion.matches){enterTime=0;landed=false;}else{enterTime=Infinity;landed=true;}
+    firstLoad=false;
+    updateGeometry(0);placeToy(0);resize();
+  }
+  // Eye-like accessories blink and squint about their own pivot (toy space).
+  function setupEyes() {
+    const isEye=role=>typeof role==='string'&&/^(eye|pupil|glint)/i.test(role);
+    const pivots=[];
+    for(const a of accessories) {
+      if(!isEye(a.role)){a.eye=null;continue;}
+      const p=a.pivot;
+      if(Array.isArray(p)&&p.length>=3&&p.every(Number.isFinite)){a.eye=[p[0],p[1],p[2]];pivots.push(a.eye);}
+      else a.eye='pending';
+    }
+    for(const a of accessories) if(a.eye==='pending') {
+      a.mesh.geometry.computeBoundingBox();const c=a.mesh.geometry.boundingBox.getCenter(new THREE.Vector3());
+      a.eye=pivots.length?pivots.reduce((best,p)=>Math.hypot(p[0]-c.x,p[1]-c.y,p[2]-c.z)<Math.hypot(best[0]-c.x,best[1]-c.y,best[2]-c.z)?p:best):[c.x,c.y,c.z];
+    }
+  }
+  function measureFootprint() {
+    const box=new THREE.Box3();box.expandByPoint(tmpVec.set(...spec.size));box.expandByPoint(tmpVec.set(-spec.size[0],-spec.size[1],-spec.size[2]));
+    for(const a of accessories){const b=a.base;for(let i=0;i<b.length;i+=3)if(b[i+1]<spec.size[1]*.2)box.expandByPoint(tmpVec.set(b[i],b[i+1],b[i+2]));}
+    footprint={x:box.max.x-box.min.x,z:box.max.z-box.min.z,cx:(box.max.x+box.min.x)/2,cz:(box.max.z+box.min.z)/2};
   }
   function setColor(hex) {
-    const color=new THREE.Color(hex);wax.color.copy(color);top.color.copy(color);edge.color.copy(color).multiplyScalar(.88);
+    const color=new THREE.Color(hex);wax.color.copy(color);top.color.copy(color);
+    // Exposed plate edges read as thicker, lighter, slightly translucent wax.
+    edge.color.copy(color).lerp(new THREE.Color('#fff7ea'),.3);edge.emissive.copy(color).multiplyScalar(.09);
+    fleckMaterial.color.copy(edge.color);
     updateCoreMaterial();
   }
   function updateCoreMaterial() {
     coreMaterial.color.copy(waxEnabled ? new THREE.Color(spec.coreColor) : wax.color);
-    coreMaterial.bumpMap=!waxEnabled&&spec.surface==='lychee'?rindTexture:null;
-    coreMaterial.map=!waxEnabled&&spec.surface==='lychee'?rindColorTexture:null;
-    coreMaterial.bumpScale=.035;
+    coreMaterial.bumpMap=!waxEnabled&&spec.surface==='lychee'?rind.bump:null;
+    coreMaterial.map=!waxEnabled&&spec.surface==='lychee'?rind.map:null;
+    coreMaterial.bumpScale=.6;
     coreMaterial.needsUpdate=true;
   }
   function setWaxEnabled(value) {
@@ -271,27 +406,84 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
   function resize() {
     const rect=container.getBoundingClientRect();width=Math.max(1,rect.width);height=Math.max(1,rect.height);
     renderer.setSize(width,height,false);camera.aspect=width/height;
-    const wide=spec?.id==='butter'||spec?.id==='platypus';
-    const extent=wide?6.2:4.9;
-    camera.position.copy(initialCamera).multiplyScalar(Math.max(wide?7.2:6.0,extent/camera.aspect));
-    camera.lookAt(0,0,0);camera.updateProjectionMatrix();
+    if(spec)fitCamera();
   }
-  function deformGeometry(mesh,base,normals) {
+  // Fit the toy (body + accessories, with room for stretch/bulge) into the view, both ways.
+  function fitCamera() {
+    const d=initialCamera,right=tmpVec.set(0,1,0).cross(d).normalize().clone(),up=d.clone().cross(right).normalize();
+    // Respect UI overlays: the page may declare safe insets on the container.
+    const style=getComputedStyle(container),inset=name=>Math.max(0,parseFloat(style.getPropertyValue(name))||0);
+    let safeTop=inset('--scene-safe-top'),safeBottom=inset('--scene-safe-bottom');
+    const shrink=Math.min(1,height*.6/Math.max(1,safeTop+safeBottom));safeTop*=shrink;safeBottom*=shrink;
+    const usable=(height-safeTop-safeBottom)/height,tanFull=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+    const tanV=tanFull*usable*.97,tanH=tanFull*camera.aspect*.92;
+    const shift=(safeTop-safeBottom)/2;
+    if(Math.abs(shift)>.5)camera.setViewOffset(width,height,0,-shift,width,height);else camera.clearViewOffset();
+    const rotation=new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(0,-.22,-.035)),h=spec.size[1];
+    const box=new THREE.Box3(),points=[],pressed=.95,drop=-h-(-h+(lowestPoint(pressed)+h)*.7);
+    for(let i=0;i<framePoints.length;i+=3) {
+      // Resting pose with stretch headroom, and the planted, bulging full squeeze.
+      const x=framePoints[i],y=framePoints[i+1],z=framePoints[i+2],sq=deformPoint(x,y,z,pressed,spec.size[0],profile);
+      for(const q of [new THREE.Vector3(x*1.04,-h+(y+h)*1.12,z*1.04),new THREE.Vector3(sq[0]*1.04,sq[1]+drop,sq[2]*1.04)]) {
+        q.applyMatrix4(rotation);points.push(q);box.expandByPoint(q);
+      }
+    }
+    const target=box.getCenter(new THREE.Vector3());let distance=0;
+    for(const q of points) {
+      const rel=q.sub(target),along=rel.dot(d);
+      distance=Math.max(distance,along+Math.abs(rel.dot(up))/tanV,along+Math.abs(rel.dot(right))/tanH);
+    }
+    camera.position.copy(target).addScaledVector(d,distance);camera.lookAt(target);camera.updateProjectionMatrix();
+  }
+  function deformGeometry(mesh,base,normals,eye) {
     const positions=mesh.geometry.attributes.position.array,normalArray=mesh.geometry.attributes.normal.array,p=physics.pressure;
+    const s=eye?eyeOpen:1,py=eye?eye[1]:0;
     for(let i=0;i<base.length;i+=3) {
-      const x=base[i],y=base[i+1],z=base[i+2],d=deformPoint(x,y,z,p,spec.size[0],profile);
+      const x=base[i],y=s===1?base[i+1]:py+(base[i+1]-py)*s,z=base[i+2],d=deformPoint(x,y,z,p,spec.size[0],profile);
       positions[i]=d[0];positions[i+1]=d[1];positions[i+2]=d[2];
-      normalUnderPressure(normals[i],normals[i+1],normals[i+2],x,y,z,p,spec.size[0],normalArray,i,profile);
+      normalUnderPressure(normals[i]*s,normals[i+1],normals[i+2]*s,x,y,z,p,spec.size[0],normalArray,i,profile);
     }
     mesh.geometry.attributes.position.needsUpdate=true;mesh.geometry.attributes.normal.needsUpdate=true;
   }
+  function deformAccessories(onlyEyes) {
+    for(const a of accessories) if(!onlyEyes||a.eye)deformGeometry(a.mesh,a.base,a.normals,a.eye);
+    appliedEye=eyeOpen;
+  }
+  function spawnFlecks(cell) {
+    const p=physics.pressure,n=cell.normal,o=cell.origin;
+    const d=deformPoint(o.x+n.x*.03,o.y+n.y*.03,o.z+n.z*.03,p,spec.size[0],profile);
+    tmpDir.copy(n).transformDirection(toy.matrixWorld);
+    const count=1+(random()<.45?1:0);
+    for(let k=0;k<count;k++) {
+      const q=particles[nextParticle];nextParticle=(nextParticle+1)%FLECKS;
+      q.pos.set(d[0],d[1],d[2]);toy.localToWorld(q.pos);
+      q.vel.copy(tmpDir).multiplyScalar(1+random()*1.3).add(tmpVec.set((random()-.5)*1.1,1.3+random()*1.4,(random()-.5)*1.1));
+      q.rot.set(random()*6,random()*6,random()*6);q.spin.set((random()-.5)*16,(random()-.5)*16,(random()-.5)*16);
+      q.size=.028+random()*.03;q.max=1+random()*.6;q.life=q.max;
+    }
+  }
+  function updateFlecks(dt) {
+    let any=false;const floor=ground.position.y;
+    for(let i=0;i<FLECKS;i++) {
+      const q=particles[i];
+      if(q.life<=0){if(q.max>0){flecks.setMatrixAt(i,zeroMatrix);q.max=0;any=true;}continue;}
+      any=true;q.life-=dt;
+      q.vel.y-=7.5*dt;q.pos.addScaledVector(q.vel,dt);
+      if(q.pos.y<floor+q.size*.45){q.pos.y=floor+q.size*.45;if(q.vel.y<0)q.vel.y*=-.3;q.vel.x*=.72;q.vel.z*=.72;q.spin.multiplyScalar(.6);}
+      q.rot.x+=q.spin.x*dt;q.rot.y+=q.spin.y*dt;q.rot.z+=q.spin.z*dt;
+      const age=q.max-q.life,fade=Math.min(1,age/.06)*Math.min(1,Math.max(0,q.life)/(q.max*.35));
+      tmpScale.setScalar(q.size*fade);tmpMatrix.compose(q.pos,tmpQuat.setFromEuler(q.rot),tmpScale);flecks.setMatrixAt(i,tmpMatrix);
+    }
+    flecks.visible=particles.some(q=>q.life>0);
+    if(any)flecks.instanceMatrix.needsUpdate=true;
+  }
   function updateGeometry(dt) {
-    const p=physics.pressure;let newCracks=0;
+    const p=physics.pressure;let newCracks=0;const cracked=[];
     for(const cell of cells) {
       if(!waxEnabled)continue;
       const transmitted=cell.neighbors.reduce((n,c)=>n+c.damage,0)/cell.neighbors.length*.085;
       const stress=localStress(cell.origin.x,cell.origin.y,cell.origin.z,spec.size,p)+transmitted*p;
-      if(advanceFracture(cell,stress,p,physics.restTime>.16,dt))newCracks++;
+      if(advanceFracture(cell,stress,p,physics.restTime>.16,dt)){newCracks++;cracked.push(cell);}
       const positions=cell.mesh.geometry.attributes.position.array,normalArray=cell.mesh.geometry.attributes.normal.array;
       const open=cell.opening,base=cell.base,n=cell.normal,origin=cell.origin;
       for(let i=0;i<base.length;i+=3) {
@@ -299,7 +491,7 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
         // Every resulting vertex follows the core field; no plate floats away.
         const dx=base[i]-origin.x,dy=base[i+1]-origin.y,dz=base[i+2]-origin.z;
         const radial=dx*n.x+dy*n.y+dz*n.z;
-        const buckle=THREE.MathUtils.smoothstep(p,.52,1)*cell.damage*cell.tilt;
+        const buckle=smoothstep(p,.52,1)*cell.damage*cell.tilt;
         const hingeDistance=dx*cell.hinge.x+dy*cell.hinge.y+dz*cell.hinge.z;
         const lift=open*.13+clamp(hingeDistance*buckle,-.014,.055);
         const x=base[i]-(dx-radial*n.x)*open+n.x*lift;
@@ -313,25 +505,114 @@ export function createWaxScene(container,{onReady,onError,onCrack}={}) {
       }
       cell.mesh.geometry.attributes.position.needsUpdate=true;cell.mesh.geometry.attributes.normal.needsUpdate=true;
     }
-    deformGeometry(core,waxEnabled?coreBase:coreBareBase,coreNormals);for(const accessory of accessories)deformGeometry(accessory.mesh,accessory.base,accessory.normals);
-    if(newCracks)onCrack?.({count:newCracks,strength:Math.min(1,.25+p*.65+newCracks*.018)});
+    deformGeometry(core,waxEnabled?coreBase:coreBareBase,coreNormals);deformAccessories(false);
+    if(newCracks) {
+      onCrack?.({count:newCracks,strength:Math.min(1,.25+p*.65+newCracks*.018)});
+      if(!reducedMotion.matches&&dt>0) {
+        followVelocity+=Math.min(5,newCracks)*.28;
+        for(const cell of cracked.slice(0,10))spawnFlecks(cell);
+      }
+    }
   }
-  const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+  // Lowest deformed point of the base, so squeezes press down onto the table.
+  function lowestPoint(p) {
+    const h=spec.size[1],hx=spec.size[0];let low=Infinity;
+    for(const u of [-.85,-.4,0,.4,.85])low=Math.min(low,deformPoint(u*hx,-h,0,p,hx,profile)[1]);
+    return low;
+  }
+  function placeToy(dt) {
+    const motion=!reducedMotion.matches,w=WOBBLE[spec.id]||WOBBLE.butter,p=physics.pressure;
+    // Lagging spring: overshoot relative to the pressure field becomes squash & stretch.
+    if(motion&&dt>0) {
+      let remaining=dt;
+      while(remaining>1e-6){const h=Math.min(remaining,1/240);followVelocity+=(w.omega*w.omega*(p-follow)-2*w.zeta*w.omega*followVelocity)*h;follow+=followVelocity*h;remaining-=h;}
+    } else {follow=p;followVelocity=0;}
+    let squash=clamp((follow-p)*w.gain,-.2,.24);
+    if(motion)squash+=Math.sin(clock*1.9)*.009*(1-p);
+    let enterScale=1,drop=0;
+    if(enterTime<Infinity) {
+      enterTime+=dt;const fall=.27;
+      drop=enterTime<fall?1.5*(1-(enterTime/fall)**2):0;
+      if(!landed&&enterTime>=fall){landed=true;followVelocity+=w.omega*.36;}
+      enterScale=.25+.75*backOut(Math.min(1,enterTime/.5));
+      if(enterTime>1.4)enterTime=Infinity;
+    }
+    const sy=(1-squash)*enterScale,sxz=enterScale/Math.sqrt(1-squash);
+    toy.scale.set(sxz,sy,sxz);
+    // Mostly planted: the squeeze presses down onto the table, leaving a small lift.
+    const h=spec.size[1],low=-h+(lowestPoint(p)+h)*.7;
+    toy.position.y=-h-sy*low+drop;
+    // Contact shadow widens with the squeeze, fades as the toy lifts off.
+    const frame=deformationFrame(0,p,spec.size[0],profile),lift=Math.max(0,drop+stage.position.y+(low+h)*.43*sy);
+    const spread=(1+(frame.sx-1)*.8)*sxz*(1+lift*.35),z=(1+(frame.sz-1)*.6)*sxz*(1+lift*.35);
+    contact.scale.set(footprint.x*1.62*spread,footprint.z*1.75*z,1);contact.position.set(footprint.cx*sxz,0,footprint.cz*sxz);
+    contact.material.opacity=clamp((1+p*.25)/(1+lift*3.2),0,1.25)*.95;
+    contactRoot.rotation.y=stage.rotation.y;
+  }
+  function updateBlink(dt) {
+    if(!accessories.some(a=>a.eye)){eyeOpen=1;return;}
+    let blink=1;
+    if(!reducedMotion.matches) {
+      if(blinkStart<0&&clock>=nextBlink){blinkStart=clock;doubleBlink=random()<.2;}
+      if(blinkStart>=0) {
+        const t=clock-blinkStart,dur=.13,total=doubleBlink?dur*2+.09:dur;
+        const phase=t<dur?t/dur:doubleBlink&&t>dur+.09&&t<total?(t-dur-.09)/dur:-1;
+        if(phase>=0)blink=1-.9*Math.sin(Math.PI*phase);
+        if(t>=total){blinkStart=-1;nextBlink=clock+3+random()*3;}
+      }
+    }
+    // Squint a little under a big squeeze (>_<).
+    const squint=1-.62*smoothstep(physics.pressure,.45,.95);
+    eyeOpen=Math.min(blink,squint);
+  }
+  function onPointerMove(event) {
+    const rect=renderer.domElement.getBoundingClientRect();
+    tilt.tx=clamp((event.clientX-rect.left)/rect.width*2-1,-1,1);tilt.ty=clamp((event.clientY-rect.top)/rect.height*2-1,-1,1);
+  }
+  function onPointerLeave(){tilt.tx=0;tilt.ty=0;}
+  renderer.domElement.addEventListener('pointermove',onPointerMove);
+  renderer.domElement.addEventListener('pointerleave',onPointerLeave);
+  // Weak GPUs: step the pixel ratio down while frames stay slow.
+  let slowFrames=0,sampledFrames=0;
+  function adaptQuality(ms) {
+    if(ms>100||pixelRatio<=1)return;
+    sampledFrames++;if(ms>24)slowFrames++;
+    if(sampledFrames<90)return;
+    if(slowFrames>60){pixelRatio=Math.max(1,pixelRatio-.25);renderer.setPixelRatio(pixelRatio);resize();}
+    slowFrames=sampledFrames=0;
+  }
   function frame(time) {
     if(!alive)return;
-    const dt=Math.min(.05,(time-lastTime)/1000||.016);lastTime=time;
+    if(lastTime)adaptQuality(time-lastTime);
+    const dt=Math.min(.05,(time-lastTime)/1000||.016);lastTime=time;clock+=dt;
+    const motion=!reducedMotion.matches;
     const before=physics.pressure;stepPressure(physics,target,dt,profile);
+    updateBlink(dt);
     if(Math.abs(before-physics.pressure)>1e-7||cells.some(cell=>cell.damage>0||cell.opening>1e-6))updateGeometry(dt);
-    stage.position.y=reducedMotion.matches?0:Math.sin(time*.00065)*.025;
-    stage.rotation.y=-.22+(reducedMotion.matches?0:Math.sin(time*.00026)*.02);
+    else if(Math.abs(eyeOpen-appliedEye)>1e-4)deformAccessories(true);
+    const ease=1-Math.exp(-dt*4);
+    tilt.x+=((motion?tilt.tx:0)-tilt.x)*ease;tilt.y+=((motion?tilt.ty:0)-tilt.y)*ease;
+    stage.position.y=motion?(Math.sin(time*.00065)+1)*.014:0;
+    stage.rotation.y=-.22+(motion?Math.sin(time*.00026)*.02:0)+tilt.x*.09;
+    stage.rotation.x=tilt.y*.035;
+    placeToy(dt);updateFlecks(dt);
     renderer.render(scene,camera);raf=requestAnimationFrame(frame);
   }
   const resizeObserver=new ResizeObserver(resize);resizeObserver.observe(container);
   setSquishy('butter');raf=requestAnimationFrame(frame);onReady?.();
+  // Redraw the stamp once the rounded UI font is available.
+  document.fonts?.load?.(`700 90px ${STAMP_FONT}`).then(()=>{if(alive)stamp.redraw();},()=>{});
   return {
     setPressure(value){target=Number.isFinite(value)?clamp(value,0,1):0;},setColor,setSquishy,setWaxEnabled,
     reset(){target=0;},resize,
     getStats(){return {available:true,pressure:physics.pressure,targetPressure:target,fragments:cells.length,fractureCount:cells.filter(c=>c.damage>0).length,squishy:spec.id,waxEnabled,width,height,drawCalls:renderer.info.render.calls};},
-    dispose(){alive=false;cancelAnimationFrame(raf);resizeObserver.disconnect();disposeToy();ground.geometry.dispose();[wax,top,edge,coreMaterial,ground.material].forEach(m=>m.dispose());stampTexture.dispose();rindTexture.dispose();rindColorTexture.dispose();renderer.dispose();renderer.domElement.remove();},
+    dispose(){
+      alive=false;cancelAnimationFrame(raf);resizeObserver.disconnect();disposeToy();
+      renderer.domElement.removeEventListener('pointermove',onPointerMove);renderer.domElement.removeEventListener('pointerleave',onPointerLeave);
+      [ground.geometry,contact.geometry,fleckGeometry].forEach(g=>g.dispose());flecks.dispose();
+      [wax,top,edge,coreMaterial,ground.material,contact.material,fleckMaterial,...Object.values(pristine)].forEach(m=>m.dispose());
+      [stamp.map,stamp.bumpMap,rind.bump,rind.map,contactTexture].forEach(t=>t.dispose());envTarget.dispose();
+      renderer.dispose();renderer.domElement.remove();
+    },
   };
 }
