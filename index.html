@@ -45,7 +45,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=4">
 <style>
 h1.hd.hero-h1{font-size:clamp(56px,9.4vw,148px)!important;line-height:.9}
 @media (max-width:960px){h1.hd.hero-h1{font-size:clamp(48px,15vw,88px)!important}.hide-sm{display:none}}
@@ -57,14 +57,17 @@ html{scroll-behavior:smooth}
 .lg.sq{height:40px}
 /* Google Calendar has no dark embed; invert it and rotate hues back so event colors stay recognizable. */
 .cal>iframe{filter:invert(.9) hue-rotate(180deg) saturate(.85) brightness(.95)}
+a[href="projects.html"]:hover .lbl{color:#4ade80!important}
+/* Header height is auto on small screens: anchor its grid to its bottom edge so the lines continue into the hero. */
+@media (max-width:960px){header.gridbg{background-position:0 100%}main>.gridbg:first-child{background-position:0 0!important}}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div style="min-height: 100vh; box-sizing: border-box; background: #05140a; display: flex; flex-direction: column; overflow-x: hidden">
 
-<div class="gridbg" style="display: flex; flex-direction: column">
-<header style="height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 88px">
-<a href="index.html" style="display: flex; align-items: center; gap: 14px; color: #f0faf4"><span class="hd" style="font-size: 26px">FQE</span><span class="mut" style="font-size: 11px">Financial Quants &amp; Engineers</span></a>
+<header class="gridbg" style="height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 88px">
+<a href="index.html" style="display: flex; align-items: center; gap: 14px; color: #f0faf4"><span class="hd" style="font-size: 26px">FQE</span><span class="mut" style="font-size: 12px">Financial Quants &amp; Engineers</span></a>
 <nav class="nav" style="display: flex; align-items: center; gap: 40px; font-size: 15px">
 <a href="about.html">About</a>
 <a href="projects.html">Projects</a>
@@ -72,20 +75,22 @@ html{scroll-behavior:smooth}
 <a class="btn" href="join.html" style="min-height: 44px; color: #4ade80">Join</a>
 </nav>
 </header>
+<main id="main">
+<div class="gridbg" style="display: flex; flex-direction: column; background-position: 0 -88px">
 
-<section data-fx="matrix" data-fx-vignette class="hero" style="padding: 40px 88px 32px; min-height: calc(100vh - 88px); min-height: calc(100svh - 88px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 56px">
+<section data-fx="matrix" data-fx-opacity="0.25" data-fx-vignette class="hero" style="padding: 40px 88px 32px; min-height: calc(100vh - 88px); min-height: calc(100svh - 88px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 56px">
 <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 36px; max-width: 1120px">
 <span class="lbl">Baruch's Premier Quantitative Club</span>
 <h1 class="hd hero-h1">Financial<br>Quants &amp;<br><span style="color: #4ade80">Engineers</span></h1>
 <div style="display: flex; flex-direction: column; gap: 28px; max-width: 620px">
 <p class="body" style="font-size: 20px; color: #f0faf4">We develop Baruch undergraduates into the next generation of quants through interactive workshops, hands-on projects, and technical collaboration.</p>
-<div style="display: flex; align-items: center; gap: 24px"><a class="btn solid" href="about.html">About →</a><a class="btn" href="join.html">Join Us</a></div>
+<div style="display: flex; align-items: center; gap: 24px"><a class="btn solid" href="about.html">About <span aria-hidden="true">→</span></a><a class="btn" href="join.html">Join FQE</a></div>
 </div>
 </div>
-<div class="mut" style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12); font-size: 11px">
-<div style="display: flex; gap: 24px; flex-wrap: wrap"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub</a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn</a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram</a><a href="mailto:baruchfqe@gmail.com" style="color: #a3b8aa">Email</a></div>
+<div class="mut" style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12); font-size: 12px">
+<div style="display: flex; gap: 24px; flex-wrap: wrap"><a class="tap" href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub&nbsp;<span aria-hidden="true">↗</span></a><a class="tap" href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn&nbsp;<span aria-hidden="true">↗</span></a><a class="tap" href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram&nbsp;<span aria-hidden="true">↗</span></a><a class="tap" href="mailto:baruchfqe@gmail.com" style="color: #a3b8aa">Email</a></div>
 <span class="hide-sm">Baruch College · New York, NY</span>
-<a href="#overview" style="color: #a3b8aa">Scroll ↓</a>
+<a class="tap hide-sm" href="#overview" aria-label="Skip to overview" style="color: #a3b8aa">Scroll&nbsp;<span aria-hidden="true">↓</span></a>
 </div>
 </section>
 </div>
@@ -95,11 +100,11 @@ html{scroll-behavior:smooth}
 <span class="lbl">About</span>
 <h2 class="hd" style="font-size: 64px">FQE @ Baruch</h2>
 <p class="body">FQE develops technical depth and professional readiness at the intersection of quantitative finance and technology.</p>
-<a href="about.html" style="font-size: 15px">Meet the team and our alumni →</a>
+<a href="about.html" style="font-size: 15px">Meet the team and our alumni <span aria-hidden="true">→</span></a>
 </div>
-<div style="grid-column: 7 / span 6; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-self: end">
+<div class="trio" style="grid-column: 7 / span 6; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-self: end">
 <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 40px; color: #4ade80">01</span><span class="lbl" style="color: #f0faf4">Workshops</span><span class="body" style="font-size: 14px">Applied sessions in computer science, math, hackathons, and computer architecture.</span></div>
-<a href="projects.html" style="display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 40px; color: #4ade80">02</span><span class="lbl" style="color: #f0faf4">Projects →</span><span class="body" style="font-size: 14px">End-to-end research, backtests, and real world applications.</span></a>
+<a href="projects.html" style="display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 40px; color: #4ade80">02</span><span class="lbl" style="color: #f0faf4">Projects <span aria-hidden="true">→</span></span><span class="body" style="font-size: 14px">End-to-end research, backtests, and real-world applications.</span></a>
 <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 40px; color: #4ade80">03</span><span class="lbl" style="color: #f0faf4">Mentorship</span><span class="body" style="font-size: 14px">Direct access to alumni, faculty, and industry leaders shaping the future of finance.</span></div>
 </div>
 </section>
@@ -121,14 +126,20 @@ html{scroll-behavior:smooth}
 <div style="display: flex; flex-direction: column; border: 1px solid rgba(240,250,244,.15)">
 <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid rgba(240,250,244,.15); background: #0a1f12">
 <div style="display: flex; align-items: center; gap: 16px"><span class="lbl">● Official FQE Schedule</span></div>
-<a class="btn" href="https://calendar.google.com/calendar/embed?src=baruchfqe%40gmail.com&amp;ctz=America%2FNew_York" target="_blank" rel="noopener" style="min-height: 44px">Open Google Calendar ↗</a>
+<a class="btn" href="https://calendar.google.com/calendar/embed?src=baruchfqe%40gmail.com&amp;ctz=America%2FNew_York" target="_blank" rel="noopener" style="min-height: 44px">Open Google Calendar <span aria-hidden="true">↗</span><span class="sr-only"> (opens in new tab)</span></a>
 </div>
-<div class="ph cal" style="height: 780px; border: 0; padding: 0; background: #05140a"><iframe src="https://calendar.google.com/calendar/embed?height=780&amp;wkst=1&amp;ctz=America%2FNew_York&amp;bgcolor=%23ffffff&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=MONTH&amp;src=YmFydWNoZnFlQGdtYWlsLmNvbQ&amp;color=%23039BE5" title="FQE event calendar" loading="lazy"></iframe></div>
+<div class="ph cal" style="height: 780px; border: 0; padding: 0; background: #05140a"><span class="mut" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px">Loading calendar… If it doesn’t appear, use “Open Google Calendar” above.</span><iframe id="fqe-cal" src="https://calendar.google.com/calendar/embed?height=780&amp;wkst=1&amp;ctz=America%2FNew_York&amp;bgcolor=%23ffffff&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=MONTH&amp;src=YmFydWNoZnFlQGdtYWlsLmNvbQ&amp;color=%23039BE5" title="FQE event calendar" loading="lazy"></iframe></div>
+<script>
+(function () {
+  var f = document.getElementById('fqe-cal');
+  if (f && window.matchMedia && matchMedia('(max-width: 600px)').matches) f.src = f.src.replace('mode=MONTH', 'mode=AGENDA');
+})();
+</script>
 </div>
 </section>
 
 <section style="padding: 40px 0; border-top: 1px solid rgba(240,250,244,.1); border-bottom: 1px solid rgba(240,250,244,.1); display: flex; flex-direction: column; gap: 24px; overflow: hidden">
-<div style="display: flex; justify-content: space-between; padding: 0 88px"><span class="mut">Where alumni are</span><a href="about.html#alumni" class="mut" style="color: #4ade80">Alumni stories →</a></div>
+<div style="display: flex; justify-content: space-between; padding: 0 88px"><span class="mut">Where alumni are</span><a href="about.html#alumni" class="mut" style="color: #4ade80">Alumni stories <span aria-hidden="true">→</span></a></div>
 <div style="overflow: hidden"><div class="marquee">
 <img class="lg sq" src="images/logos/logo_americanexpress.png" alt="American Express" loading="lazy">
 <img class="lg" src="images/logos/logo_bankofamerica.svg.png" alt="Bank of America" loading="lazy">
@@ -188,21 +199,22 @@ html{scroll-behavior:smooth}
 <section class="gridbg" style="padding: 128px 88px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
 <h2 class="hd" style="grid-column: span 8; font-size: 60px; line-height: 1.02">Whether you are writing your first backtest or optimizing execution, there is a seat at the table.</h2>
 <div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 16px">
-<a class="btn solid" href="https://linktr.ee/FQEBaruch" style="justify-content: space-between">Apply via Linktree <span>→</span></a>
-<a href="join.html#interview" style="font-size: 15px">How interviews work →</a>
+<a class="btn solid" href="https://linktr.ee/FQEBaruch" style="justify-content: space-between">Apply to FQE <span aria-hidden="true">↗</span></a>
+<a href="join.html#interview" style="font-size: 15px">How interviews work <span aria-hidden="true">→</span></a>
 </div>
 </section>
+</main>
 
 <footer style="flex-grow: 1; padding: 96px 88px 56px; border-top: 1px solid rgba(240,250,244,.1); display: flex; flex-direction: column; gap: 56px">
-<h2 class="hd" style="font-size: 148px; line-height: .9">Stay curious.<br><span style="color: #4ade80">Stay quant.</span></h2>
-<div class="mut" style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12)">
+<p class="hd" style="font-size: 148px; line-height: .9">Stay curious.<br><span style="color: #4ade80">Stay quant.</span></p>
+<div class="mut" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12)">
 <a href="mailto:baruchfqe@gmail.com" style="color: #4ade80">baruchfqe@gmail.com</a>
 <span>Baruch's Premier Quantitative Club</span>
-<div style="display: flex; gap: 20px"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub</a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn</a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram</a></div>
+<div style="display: flex; gap: 20px"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub&nbsp;<span aria-hidden="true">↗</span></a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn&nbsp;<span aria-hidden="true">↗</span></a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram&nbsp;<span aria-hidden="true">↗</span></a></div>
 <span>FQE. Built by Students<a href="alpha-cheese.html" tabindex="-1" aria-hidden="true" style="color: inherit">.</a></span>
 </div>
 </footer>
 </div>
-<script src="fx.js?v=2" defer></script>
+<script src="fx.js?v=3" defer></script>
 </body>
 </html>

@@ -143,6 +143,8 @@
       // ticker
       var delta = open - close;
       var y = canvas.height - charH * 2;
+      ctx.fillStyle = '#05140a';
+      ctx.fillRect(0, y - 2, charW * 26, charH + 4);
       ctx.fillStyle = 'rgba(240, 250, 244, 0.9)';
       ctx.fillText('FQE.TRD', charW, y);
       ctx.fillStyle = delta > 0 ? GREEN : delta < 0 ? RED : 'rgba(163, 184, 170, 0.95)';

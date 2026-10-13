@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=4">
 <style>
 .track{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:28px 32px;text-align:left;background:#0a1f12;border:1px solid rgba(240,250,244,.15);color:#f0faf4;cursor:pointer;font:inherit}
 .track:hover{border-color:rgba(74,222,128,.6)}
@@ -33,11 +33,11 @@
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div style="min-height: 100vh; box-sizing: border-box; background: #05140a; display: flex; flex-direction: column; overflow-x: hidden">
 
-<div class="gridbg" data-fx="pixelblast" style="display: flex; flex-direction: column">
-<header style="height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 88px">
-<a href="index.html" style="display: flex; align-items: center; gap: 14px; color: #f0faf4"><span class="hd" style="font-size: 26px">FQE</span><span class="mut" style="font-size: 11px">Financial Quants &amp; Engineers</span></a>
+<header class="gridbg" style="height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 88px">
+<a href="index.html" style="display: flex; align-items: center; gap: 14px; color: #f0faf4"><span class="hd" style="font-size: 26px">FQE</span><span class="mut" style="font-size: 12px">Financial Quants &amp; Engineers</span></a>
 <nav class="nav" style="display: flex; align-items: center; gap: 40px; font-size: 15px">
 <a href="about.html">About</a>
 <a href="projects.html">Projects</a>
@@ -46,26 +46,28 @@
 </nav>
 </header>
 
+<main id="main">
+<div class="gridbg" data-fx="pixelblast" style="display: flex; flex-direction: column; background-position: 0 -88px">
 <section style="padding: 56px 88px 72px; display: flex; flex-direction: column; gap: 40px">
 <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
-<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 24px"><span class="lbl">Competition</span><h1 class="hd" style="font-size: 104px">Compete with<br>Precision</h1></div>
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 24px"><span class="lbl">Competitions</span><h1 class="hd" style="font-size: 104px">Compete with<br>Precision</h1></div>
 <div style="grid-column: span 5; display: flex; flex-direction: column; gap: 20px">
 <p class="body">FQE runs technical competition tracks for quantitatively curious students. The fall trading competition wrapped up on October 9, and the applied math competition is coming soon.</p>
-<div class="mut" style="display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px"><span style="padding: 7px 11px; border: 1px solid rgba(240,250,244,.2)">Undergraduate Focus</span><span style="padding: 7px 11px; border: 1px solid rgba(240,250,244,.2)">Technical Screening</span><span style="padding: 7px 11px; border: 1px solid rgba(240,250,244,.2)">Live Performance Metrics</span><span style="padding: 7px 11px; border: 1px solid rgba(240,250,244,.2)">Team-Based Format</span></div>
+<div class="mut" style="display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px"><span style="padding: 7px 11px; border: 1px solid rgba(240,250,244,.2)">Undergraduate Focus</span><span style="padding: 7px 11px; border: 1px solid rgba(240,250,244,.2)">Technical Screening</span><span style="padding: 7px 11px; border: 1px solid rgba(240,250,244,.2)">Live Trading Sessions</span><span style="padding: 7px 11px; border: 1px solid rgba(240,250,244,.2)">Team-Based Format</span></div>
 </div>
 </div>
 <div role="tablist" aria-label="Competition tracks" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
-<button type="button" role="tab" aria-selected="true" class="track on" data-track="trading"><span class="lbl" style="color: #f87171">Completed · Trading</span><span class="hd" style="font-size: 32px">FQE Trading Competition</span><span class="mut" style="font-size: 11px">Open to all CUNY students · Held Oct 9, 2026</span></button>
-<button type="button" role="tab" aria-selected="false" class="track" data-track="applied"><span class="lbl" style="color: #fcd34d">Coming Soon · Applied Math</span><span class="hd" style="font-size: 32px">FQE Applied Math Competition</span><span class="mut" style="font-size: 11px">Baruch undergraduates · Teams of up to three</span></button>
+<button type="button" role="tab" id="tab-trading" aria-controls="panel-trading" aria-selected="true" tabindex="0" class="track on" data-track="trading"><span class="lbl" style="color: #f87171">Completed · Trading</span><span class="hd" style="font-size: 32px">FQE Trading Competition</span><span class="mut" style="font-size: 12px">Open to all CUNY students · Held Oct 9, 2026</span></button>
+<button type="button" role="tab" id="tab-applied" aria-controls="panel-applied" aria-selected="false" tabindex="-1" class="track" data-track="applied"><span class="lbl" style="color: #fcd34d">Coming Soon · Applied Math</span><span class="hd" style="font-size: 32px">FQE Applied Math Competition</span><span class="mut" style="font-size: 12px">Baruch undergraduates · Teams of up to three</span></button>
 </div>
 </section>
 </div>
 
-<div data-panel="trading">
-<section data-fx="trading" data-fx-vignette style="padding: 120px 88px 88px; min-height: 420px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; border-top: 1px solid rgba(240,250,244,.1)">
+<div data-panel="trading" id="panel-trading" role="tabpanel" aria-labelledby="tab-trading" tabindex="0">
+<section data-fx="trading" data-fx-opacity="0.3" data-fx-vignette style="padding: 120px 88px 88px; min-height: 420px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; border-top: 1px solid rgba(240,250,244,.1)">
 <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
 <div style="grid-column: span 8; display: flex; flex-direction: column; gap: 20px"><span class="lbl">Fall 2026 · 2nd Annual · <span style="color: #f87171">Completed</span></span><h2 class="hd" style="font-size: 56px; line-height: 1.02">FQE Undergraduate Trading Competition</h2><p class="body" style="max-width: 680px">Financial Quants &amp; Engineers at Baruch hosted a real-time trading strategy competition for CUNY students on October 9, 2026. Thank you to everyone who competed.</p></div>
-<div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 12px"><span style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 24px; border: 1px solid rgba(240,250,244,.3); color: #a3b8aa; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .1em; text-transform: uppercase">Competition Completed</span><span class="mut" style="font-size: 11px">Held Oct 9, 2026</span></div>
+<div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 12px"><span style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 24px; border: 1px solid rgba(240,250,244,.3); background: #05140a; color: #a3b8aa; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .1em; text-transform: uppercase">Competition Completed</span><span class="mut" style="font-size: 12px">Held Oct 9, 2026</span></div>
 </div>
 </section>
 <section style="padding: 64px 88px 120px; display: flex; flex-direction: column; gap: 64px">
@@ -73,37 +75,37 @@
 <div class="card"><span class="lbl">Eligibility and Setup</span><ul class="list"><li>Fall 2026 competition cycle</li><li>Open to all CUNY students</li><li>Coding experience is strongly recommended, but not required</li><li>Discretionary and systematic trading approaches are welcome</li></ul></div>
 <div class="card"><span class="lbl">Key Dates</span>
 <div style="display: flex; flex-direction: column">
-<div class="row"><span>Application deadline</span><span class="mut">Sep 28, 2026</span></div>
-<div class="row"><span>Competition day · Baruch College</span><span class="mut" style="color: #4ade80">Oct 9, 2026</span></div>
-<div class="row"><span>Session 1</span><span class="mut">1:00 to 3:15pm</span></div>
-<div class="row"><span>Break</span><span class="mut">3:15 to 3:45pm</span></div>
-<div class="row" style="border-bottom: 0"><span>Session 2</span><span class="mut">3:45 to 6:00pm</span></div>
+<div class="row"><span>Application Deadline</span><span class="mut">Sep 28, 2026</span></div>
+<div class="row"><span>Competition Day · Baruch College</span><span class="mut" style="color: #4ade80">Oct 9, 2026</span></div>
+<div class="row"><span>Session 1</span><span class="mut">1:00–3:15 pm</span></div>
+<div class="row"><span>Break</span><span class="mut">3:15–3:45 pm</span></div>
+<div class="row" style="border-bottom: 0"><span>Session 2</span><span class="mut">3:45–6:00 pm</span></div>
 </div></div>
 </div>
 <div style="display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; padding: 22px 28px; border: 1px solid rgba(248,113,113,.55); background: rgba(248,113,113,.06)"><span class="mut" style="color: #f87171">Integrity Policy</span><span style="font-size: 15px; line-height: 1.5">AI use is strictly prohibited across all competition processes. Teams found using AI in any part of their process will be immediately disqualified.</span></div>
 <div style="display: flex; flex-direction: column; gap: 32px">
 <div style="display: flex; flex-direction: column; gap: 16px"><span class="lbl">Competition Structure</span><h3 class="hd" style="font-size: 48px">Trading Workflow</h3></div>
 <ol style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px">
-<li class="step" style="border-top-color: #4ade80"><span class="lbl">Step 0 · Due Sep 28</span><span class="t">Interest &amp; Application</span><span class="body" style="font-size: 14px">Submit the interest form by the application deadline to be considered. Applications are open to current CUNY students.</span></li>
-<li class="step"><span class="mut">Step 1 · Before trading day</span><span class="t">Competition Briefing</span><span class="body" style="font-size: 14px">Participants receive instructions and logistics before the live session. Final location details are shared once confirmed.</span></li>
-<li class="step"><span class="mut">Step 2 · 1:00 to 3:15pm</span><span class="t">Session 1</span><span class="body" style="font-size: 14px">Trade in the first live competition session. Apply discretionary or systematic strategies in real time.</span></li>
-<li class="step"><span class="mut">Step 3 · 3:15 to 3:45pm</span><span class="t">Break and Refinement</span><span class="body" style="font-size: 14px">Use the 30-minute break to review performance and refine the strategy. Carry insights from Session 1 into Session 2.</span></li>
-<li class="step"><span class="mut">Step 4 · 3:45 to 6:00pm</span><span class="t">Session 2</span><span class="body" style="font-size: 14px">Trade in the final live session. Final rankings are determined after the session concludes.</span></li>
+<li class="step" style="border-top-color: #4ade80"><span class="lbl">Step 0 · Due Sep 28</span><span class="t">Interest &amp; Application</span><span class="body" style="font-size: 14px">Teams applied through the interest form by the Sep 28 deadline. Applications were open to current CUNY students.</span></li>
+<li class="step"><span class="mut">Step 1 · Before trading day</span><span class="t">Competition Briefing</span><span class="body" style="font-size: 14px">Participants received instructions and logistics before the live session.</span></li>
+<li class="step"><span class="mut">Step 2 · 1:00–3:15 pm</span><span class="t">Session 1</span><span class="body" style="font-size: 14px">Teams traded in the first live session, applying discretionary or systematic strategies in real time.</span></li>
+<li class="step"><span class="mut">Step 3 · 3:15–3:45 pm</span><span class="t">Break and Refinement</span><span class="body" style="font-size: 14px">Teams used the 30-minute break to review performance and refine their strategies for Session 2.</span></li>
+<li class="step"><span class="mut">Step 4 · 3:45–6:00 pm</span><span class="t">Session 2</span><span class="body" style="font-size: 14px">Teams traded in the final live session. Final rankings were set after it concluded.</span></li>
 </ol>
 </div>
-<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
-<div class="card"><span class="lbl">Scoring Framework</span><span class="hd" style="font-size: 40px">Highest P&amp;L</span><div style="display: flex; flex-direction: column"><div class="row"><span>Ranked result</span><span class="mut" style="color: #4ade80">100%</span></div></div><span class="body" style="font-size: 14px">Standings are determined by highest P&amp;L.</span></div>
-<div class="card"><span class="lbl">Live Sessions</span><p class="body" style="font-size: 15px">Participants competed on October 9, 2026 at Baruch College. Session 1 ran from 1:00pm to 3:15pm, followed by a 3:15pm to 3:45pm break and Session 2 from 3:45pm to 6:00pm.</p></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<div class="card"><span class="lbl">Scoring Framework</span><span class="hd" style="font-size: 40px">Highest P&amp;L</span><span class="body" style="font-size: 14px">Teams were ranked by total P&amp;L.</span></div>
 <div class="card"><span class="lbl">Incentives</span><ul class="list"><li>Bragging rights and a LinkedIn feature on FQE channels</li><li>Resume-building experience</li><li>Publication on the FQE website</li></ul></div>
 </div>
+<div style="display: flex; align-items: flex-start"><a href="#applied" class="btn" data-goto="applied">See the Applied Math Competition <span aria-hidden="true">→</span></a></div>
 </section>
 </div>
 
-<div data-panel="applied" hidden>
-<section data-fx="torus" data-fx-vignette style="padding: 120px 88px 88px; min-height: 420px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; border-top: 1px solid rgba(240,250,244,.1)">
+<div data-panel="applied" id="panel-applied" role="tabpanel" aria-labelledby="tab-applied" tabindex="0" hidden>
+<section data-fx="torus" data-fx-opacity="0.4" data-fx-vignette style="padding: 120px 88px 88px; min-height: 420px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; border-top: 1px solid rgba(240,250,244,.1)">
 <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
-<div style="grid-column: span 8; display: flex; flex-direction: column; gap: 20px"><span class="lbl" style="color: #fcd34d">Coming Soon</span><h2 class="hd" style="font-size: 56px; line-height: 1.02">FQE Undergraduate Applied Mathematics Competition</h2><p class="body" style="max-width: 680px">Applications are not open yet. Competition details and application dates will be announced soon.</p></div>
-<div style="grid-column: 10 / span 3"><span style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 24px; border: 1px solid #fcd34d; color: #fcd34d; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .1em; text-transform: uppercase">Applications Soon</span></div>
+<div style="grid-column: span 8; display: flex; flex-direction: column; gap: 20px"><span class="lbl" style="color: #fcd34d">Coming Soon</span><h2 class="hd" style="font-size: 56px; line-height: 1.02">FQE Undergraduate Applied Mathematics Competition</h2><p class="body" style="max-width: 680px">Applications are not open yet. Competition details and application dates will be announced soon. Follow <a href="https://www.instagram.com/baruchfqe/">@baruchfqe</a> or check the <a href="index.html#events">events calendar</a> for the announcement.</p></div>
+<div style="grid-column: 10 / span 3"><span style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 24px; border: 1px solid #fcd34d; color: #fcd34d; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .1em; text-transform: uppercase">Coming Soon</span></div>
 </div>
 </section>
 <section style="padding: 64px 88px 120px; display: flex; flex-direction: column; gap: 64px">
@@ -111,7 +113,7 @@
 <div class="card"><span class="lbl">Requirements</span><ul class="list"><li>Maximum three people per team</li><li>Basic coding and mathematics knowledge</li><li>Current Baruch undergraduate student status</li></ul></div>
 <div class="card"><span class="lbl">Project Ideas</span><ul class="list" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))"><li>Market microstructure modeling</li><li>Disease spread modeling</li><li>Graph theory in network risk</li><li>Logistics optimization</li><li>Chaotic dynamics</li><li>And more</li></ul></div>
 </div>
-<div style="display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; padding: 22px 28px; border: 1px solid rgba(248,113,113,.55); background: rgba(248,113,113,.06)"><span class="mut" style="color: #f87171">Integrity Policy</span><span style="font-size: 15px; line-height: 1.5">The use of Artificial Intelligence to generate code is strictly prohibited. Teams found using AI-generated code will be immediately disqualified.</span></div>
+<div style="display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; padding: 22px 28px; border: 1px solid rgba(248,113,113,.55); background: rgba(248,113,113,.06)"><span class="mut" style="color: #f87171">Integrity Policy</span><span style="font-size: 15px; line-height: 1.5">Using AI to generate code is strictly prohibited. Teams found using AI-generated code will be immediately disqualified.</span></div>
 <div style="display: flex; flex-direction: column; gap: 32px">
 <div style="display: flex; flex-direction: column; gap: 16px"><span class="lbl">Competition Structure</span><h3 class="hd" style="font-size: 48px">Semester Workflow</h3></div>
 <ol style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
@@ -121,41 +123,72 @@
 <li class="step"><span class="mut">Phase 3 · 20 minutes</span><span class="t">Final Presentation</span><ul class="list" style="font-size: 14px; color: #a3b8aa"><li>12 minutes for research presentation.</li><li>8 minutes for technical Q&amp;A.</li><li>Judging panel includes professors, researchers, alumni, and practitioners.</li></ul></li>
 </ol>
 </div>
-<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
 <div class="card"><span class="lbl">Scoring Framework</span>
 <div style="display: flex; flex-direction: column">
-<div class="row mut" style="font-size: 11px"><span>Category · Score</span><span>Weight</span></div>
-<div class="row"><span>Initial Proposal <span class="mut" style="font-size: 10px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">25%</span></div>
-<div class="row"><span>Technical Implementation <span class="mut" style="font-size: 10px">· 1 to 10</span></span><span class="mut" style="color: #4ade80">25%</span></div>
-<div class="row"><span>Originality <span class="mut" style="font-size: 10px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">15%</span></div>
-<div class="row"><span>Empirical Validation <span class="mut" style="font-size: 10px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">15%</span></div>
-<div class="row"><span>Communication and Presentation <span class="mut" style="font-size: 10px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">10%</span></div>
-<div class="row" style="border-bottom: 0"><span>Practical and Research Relevance <span class="mut" style="font-size: 10px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">10%</span></div>
+<div class="row mut" style="font-size: 12px"><span>Category · Score</span><span>Weight</span></div>
+<div class="row"><span>Initial Proposal <span class="mut" style="font-size: 12px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">25%</span></div>
+<div class="row"><span>Technical Implementation <span class="mut" style="font-size: 12px">· 1 to 10</span></span><span class="mut" style="color: #4ade80">25%</span></div>
+<div class="row"><span>Originality <span class="mut" style="font-size: 12px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">15%</span></div>
+<div class="row"><span>Empirical Validation <span class="mut" style="font-size: 12px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">15%</span></div>
+<div class="row"><span>Communication and Presentation <span class="mut" style="font-size: 12px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">10%</span></div>
+<div class="row" style="border-bottom: 0"><span>Practical and Research Relevance <span class="mut" style="font-size: 12px">· 1 to 5</span></span><span class="mut" style="color: #4ade80">10%</span></div>
 </div></div>
-<div class="card"><span class="lbl">Presentation</span><p class="body" style="font-size: 15px">Final presentations are 20 minutes total: 12 minutes for research presentation and 8 minutes for technical Q&amp;A with a panel of judges.</p></div>
-<div class="card"><span class="lbl">Incentives</span><ul class="list"><li>Prize pool of 300, 200, 100 for the top 3 teams</li><li>Bragging rights and LinkedIn feature on FQE channels</li><li>Resume building experience</li><li>Published on the FQE website</li></ul></div>
+<div class="card"><span class="lbl">Incentives</span><ul class="list"><li>Prize pool of 300, 200, 100 for the top three teams</li><li>Bragging rights and a LinkedIn feature on FQE channels</li><li>Resume-building experience</li><li>Publication on the FQE website</li></ul></div>
 </div>
 </section>
 </div>
 
+</main>
+
 <footer style="flex-grow: 1; padding: 72px 88px 56px; border-top: 1px solid rgba(240,250,244,.1); display: flex; flex-direction: column; gap: 40px">
-<div style="display: flex; justify-content: space-between; align-items: end"><h2 class="hd" style="font-size: 72px">Stay curious.<br><span style="color: #4ade80">Stay quant.</span></h2><a class="btn solid" href="join.html">Join FQE →</a></div>
-<div class="mut" style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12)">
+<div style="display: flex; justify-content: space-between; align-items: end"><p class="hd" style="font-size: 72px">Stay curious.<br><span style="color: #4ade80">Stay quant.</span></p><a class="btn solid" href="join.html">Join FQE <span aria-hidden="true">→</span></a></div>
+<div class="mut" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12)">
 <a href="mailto:baruchfqe@gmail.com" style="color: #4ade80">baruchfqe@gmail.com</a>
 <span>Baruch's Premier Quantitative Club</span>
-<div style="display: flex; gap: 20px"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub</a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn</a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram</a></div>
+<div style="display: flex; gap: 20px"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub&nbsp;<span aria-hidden="true">↗</span></a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn&nbsp;<span aria-hidden="true">↗</span></a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram&nbsp;<span aria-hidden="true">↗</span></a></div>
 <span>FQE. Built by Students.</span>
 </div>
 </footer>
 </div>
 <script>
+var tabs = Array.prototype.slice.call(document.querySelectorAll('.track[data-track]'));
 function showTrack(t) {
-  document.querySelectorAll('.track[data-track]').forEach(function (b) { var on = b.dataset.track === t; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  tabs.forEach(function (b) {
+    var on = b.dataset.track === t;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-selected', on);
+    b.tabIndex = on ? 0 : -1; // roving tabindex: only the selected tab is in the Tab order
+  });
   document.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.dataset.panel !== t; });
 }
-document.querySelectorAll('.track[data-track]').forEach(function (b) { b.addEventListener('click', function () { showTrack(b.dataset.track); history.replaceState(null, '', '#' + b.dataset.track); }); });
+function selectTrack(t) { showTrack(t); history.replaceState(null, '', '#' + t); }
+tabs.forEach(function (b) { b.addEventListener('click', function () { selectTrack(b.dataset.track); }); });
+// Arrow keys cycle between tabs, Home/End jump to the first/last; selection follows focus.
+document.querySelector('[role="tablist"]').addEventListener('keydown', function (e) {
+  var i = tabs.indexOf(document.activeElement);
+  if (i < 0) return;
+  var n;
+  if (e.key === 'ArrowRight') n = (i + 1) % tabs.length;
+  else if (e.key === 'ArrowLeft') n = (i - 1 + tabs.length) % tabs.length;
+  else if (e.key === 'Home') n = 0;
+  else if (e.key === 'End') n = tabs.length - 1;
+  else return;
+  e.preventDefault();
+  selectTrack(tabs[n].dataset.track);
+  tabs[n].focus();
+});
+// In-page links that switch tracks (e.g. "See the Applied Math Competition").
+document.querySelectorAll('[data-goto]').forEach(function (a) {
+  a.addEventListener('click', function (e) {
+    e.preventDefault();
+    var t = a.getAttribute('data-goto');
+    selectTrack(t);
+    document.getElementById('tab-' + t).focus();
+  });
+});
 if (location.hash === '#applied') showTrack('applied');
 </script>
-<script src="fx.js?v=2" defer></script>
+<script src="fx.js?v=3" defer></script>
 </body>
 </html>

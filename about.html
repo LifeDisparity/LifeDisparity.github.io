@@ -20,11 +20,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=4">
 <style>
 .co{background:#05140a;height:88px;display:flex;align-items:center;justify-content:center;padding:0 16px}
 .lg{display:block;max-width:72%;max-height:30px;object-fit:contain;filter:brightness(0) invert(1);opacity:.7;transition:opacity .2s}
 .lg.sq{max-height:48px}
+.lg.thin{max-height:40px;max-width:88%}
+.co-more{grid-column:span 4}
+@media (max-width:960px){.co-more{display:none}}
 .co:hover .lg{opacity:1}
 .person{display:flex;flex-direction:column;gap:14px}
 .person .ph{aspect-ratio:1/1}
@@ -32,11 +35,11 @@
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div style="min-height: 100vh; box-sizing: border-box; background: #05140a; display: flex; flex-direction: column; overflow-x: hidden">
 
-<div class="gridbg" style="display: flex; flex-direction: column">
-<header style="height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 88px">
-<a href="index.html" style="display: flex; align-items: center; gap: 14px; color: #f0faf4"><span class="hd" style="font-size: 26px">FQE</span><span class="mut" style="font-size: 11px">Financial Quants &amp; Engineers</span></a>
+<header class="gridbg" style="height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 88px">
+<a href="index.html" style="display: flex; align-items: center; gap: 14px; color: #f0faf4"><span class="hd" style="font-size: 26px">FQE</span><span class="mut" style="font-size: 12px">Financial Quants &amp; Engineers</span></a>
 <nav class="nav" style="display: flex; align-items: center; gap: 40px; font-size: 15px">
 <a href="about.html" aria-current="page" style="color: #f0faf4; text-decoration: underline; text-decoration-color: #4ade80; text-decoration-thickness: 2px; text-underline-offset: 8px">About</a>
 <a href="projects.html">Projects</a>
@@ -45,44 +48,46 @@
 </nav>
 </header>
 
+<main id="main">
+<div class="gridbg" style="display: flex; flex-direction: column; background-position: 0 -88px">
 <section style="padding: 56px 88px 112px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
 <div style="grid-column: span 7; display: flex; flex-direction: column; gap: 28px">
 <span class="lbl">About</span>
 <h1 class="hd" style="font-size: 112px">FQE @<br>Baruch</h1>
-<p class="body" style="font-size: 19px; color: #f0faf4">Financial Quants and Engineers (FQE) develops technical depth and professional readiness at the intersection of quantitative finance and technology. Members work across data science, risk analysis, quantitative modeling, and algorithmic trading through workshops, technical discussions, and practical projects. Our goal is to help Baruch undergraduates build the skills, portfolio, and network needed for competitive quant pathways.</p>
+<p class="body" style="font-size: 19px; color: #f0faf4; max-width: 62ch">Financial Quants and Engineers (FQE) develops technical depth and professional readiness at the intersection of quantitative finance and technology. Members work across data science, risk analysis, quantitative modeling, and algorithmic trading through workshops, technical discussions, and practical projects. Our goal is to help Baruch undergraduates build the skills, portfolio, and network needed for competitive quant pathways.</p>
 </div>
 <div class="ph" style="grid-column: 9 / span 4; aspect-ratio: 3 / 4"><img src="images/site/about-baruch.jpg" alt="Baruch College campus building"></div>
 </section>
 </div>
 
-<section style="padding: 0 88px 112px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
+<section class="trio" style="padding: 0 88px 112px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
 <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 20px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 48px; color: #4ade80">01</span><span class="lbl" style="color: #f0faf4">Workshops</span><span class="body" style="font-size: 15px">Applied sessions in computer science, math, hackathons, and computer architecture.</span></div>
-<div style="display: flex; flex-direction: column; gap: 12px; padding-top: 20px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 48px; color: #4ade80">02</span><span class="lbl" style="color: #f0faf4">Projects</span><span class="body" style="font-size: 15px">End-to-end research, backtests, and real world applications.</span><a href="projects.html" style="font-size: 14px">See our projects →</a></div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding-top: 20px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 48px; color: #4ade80">02</span><span class="lbl" style="color: #f0faf4">Projects</span><span class="body" style="font-size: 15px">End-to-end research, backtests, and real-world applications.</span><a class="tap" href="projects.html" style="font-size: 14px; align-self: flex-start; text-decoration: underline; text-decoration-color: rgba(74,222,128,.45); text-underline-offset: 4px">See our projects&nbsp;<span aria-hidden="true">→</span></a></div>
 <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 20px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 48px; color: #4ade80">03</span><span class="lbl" style="color: #f0faf4">Mentorship</span><span class="body" style="font-size: 15px">Direct access to alumni, faculty, and industry leaders shaping the future of finance.</span></div>
 </section>
 
 <section id="leadership" style="background: #0a1f12; padding: 120px 88px; display: flex; flex-direction: column; gap: 48px">
 <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
-<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 20px"><span class="lbl">Leadership</span><h2 class="hd" style="font-size: 72px">Meet our Leadership</h2></div>
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 20px"><span class="lbl">Leadership</span><h2 class="hd" style="font-size: 72px">Meet Our Leadership</h2></div>
 <p class="body" style="grid-column: span 5">A team committed to excellence, innovation, and member success.</p>
 </div>
 <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 16px">
 
-<div class="person"><div class="ph"><img src="images/leadership/Arthur_Faynin.jpg" alt="Arthur Faynin" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Arthur Faynin</span><span class="mut" style="font-size: 11px">President</span></div></div>
+<div class="person"><div class="ph"><img src="images/leadership/Arthur_Faynin.jpg" alt="Arthur Faynin" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Arthur Faynin</span><span class="mut" style="font-size: 12px">President</span></div></div>
 
-<div class="person"><div class="ph"><img src="images/leadership/Alfred_Leong.jpg" alt="Alfred Leong" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Alfred Leong</span><span class="mut" style="font-size: 11px">Vice-President</span></div></div>
+<div class="person"><div class="ph"><img src="images/leadership/Alfred_Leong.jpg" alt="Alfred Leong" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Alfred Leong</span><span class="mut" style="font-size: 12px">Vice President</span></div></div>
 
-<div class="person"><div class="ph"><img src="images/leadership/Alexi_Tilly.jpg" alt="Alexi Tilly" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Alexi Tilly</span><span class="mut" style="font-size: 11px">Treasurer</span></div></div>
+<div class="person"><div class="ph"><img src="images/leadership/Alexi_Tilly.jpg" alt="Alexi Tilly" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Alexi Tilly</span><span class="mut" style="font-size: 12px">Treasurer</span></div></div>
 
-<div class="person"><div class="ph"><img src="images/leadership/Dmytroo.jpg" alt="Dmytro Popov" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Dmytro Popov</span><span class="mut" style="font-size: 11px">Secretary</span></div></div>
+<div class="person"><div class="ph"><img src="images/leadership/Dmytroo.jpg" alt="Dmytro Popov" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Dmytro Popov</span><span class="mut" style="font-size: 12px">Secretary</span></div></div>
 
-<div class="person"><div class="ph"><img src="images/leadership/placeholder_leader.png" alt="" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">[Name]</span><span class="mut" style="font-size: 11px">Math Officer</span></div></div>
+<div class="person"><div class="ph"><img src="images/leadership/placeholder_leader.png" alt="" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">[Name]</span><span class="mut" style="font-size: 12px">Math Officer</span></div></div>
 
-<div class="person"><div class="ph"><img src="images/leadership/placeholder_leader.png" alt="" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">[Name]</span><span class="mut" style="font-size: 11px">Tech Officer</span></div></div>
+<div class="person"><div class="ph"><img src="images/leadership/placeholder_leader.png" alt="" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">[Name]</span><span class="mut" style="font-size: 12px">Tech Officer</span></div></div>
 
-<div class="person"><div class="ph"><img src="images/leadership/Maahin%20Nafi%20Headshot.jpg" alt="Maahin Nafi" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Maahin Nafi</span><span class="mut" style="font-size: 11px">Marketing Officer</span></div></div>
+<div class="person"><div class="ph"><img src="images/leadership/Maahin%20Nafi%20Headshot.jpg" alt="Maahin Nafi" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Maahin Nafi</span><span class="mut" style="font-size: 12px">Marketing Officer</span></div></div>
 
-<div class="person"><div class="ph"><img src="images/leadership/Abie_Lent.jpg" alt="Abie Lent" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Abie Lent</span><span class="mut" style="font-size: 11px">Events Officer</span></div></div>
+<div class="person"><div class="ph"><img src="images/leadership/Abie_Lent.jpg" alt="Abie Lent" loading="lazy"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Abie Lent</span><span class="mut" style="font-size: 12px">Events Officer</span></div></div>
 
 </div>
 </section>
@@ -92,20 +97,20 @@
 <div style="grid-column: span 7; display: flex; flex-direction: column; gap: 20px"><span class="lbl">Alumni</span><h2 class="hd" style="font-size: 72px">Where Alumni Are</h2></div>
 <p class="body" style="grid-column: span 5">Our alumni build quantitative strategies, trading systems, and data technology at leading financial and technology firms.</p>
 </div>
-<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
+<div class="trio" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
 <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 18px; border-top: 1px solid #4ade80"><span class="lbl" style="color: #f0faf4">Alpha &amp; Portfolio Strategies</span><span class="body" style="font-size: 15px">Systematic funds and asset management firms</span></div>
 <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 18px; border-top: 1px solid #4ade80"><span class="lbl" style="color: #f0faf4">Derivatives &amp; Market Structure</span><span class="body" style="font-size: 15px">Quant research, trading, and market making</span></div>
 <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 18px; border-top: 1px solid #4ade80"><span class="lbl" style="color: #f0faf4">Data, ML &amp; Infrastructure</span><span class="body" style="font-size: 15px">Quant engineering and financial systems</span></div>
 </div>
 <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: rgba(240,250,244,.1); border: 1px solid rgba(240,250,244,.1)">
 <div class="co"><img class="lg sq" src="images/logos/logo_americanexpress.png" alt="American Express" loading="lazy"></div>
-<div class="co"><img class="lg" src="images/logos/logo_bankofamerica.svg.png" alt="Bank of America" loading="lazy"></div>
+<div class="co"><img class="lg thin" src="images/logos/logo_bankofamerica.svg.png" alt="Bank of America" loading="lazy"></div>
 <div class="co"><img class="lg" src="images/logos/logo_bloomberg.svg.png" alt="Bloomberg" loading="lazy"></div>
 <div class="co"><img class="lg" src="images/logos/logo_bnymellon.svg.png" alt="BNY Mellon" loading="lazy"></div>
 <div class="co"><img class="lg" src="images/logos/logo_cargill.svg.png" alt="Cargill" loading="lazy"></div>
 <div class="co"><img class="lg" src="images/logos/logo_chimera.svg.svg" alt="Chimera" loading="lazy"></div>
 <div class="co"><img class="lg" src="images/logos/logo_citi.png" alt="Citi" loading="lazy"></div>
-<div class="co"><img class="lg" src="images/logos/logo_creditagricolecib.svg.png" alt="Credit Agricole CIB" loading="lazy"></div>
+<div class="co"><img class="lg thin" src="images/logos/logo_creditagricolecib.svg.png" alt="Credit Agricole CIB" loading="lazy"></div>
 <div class="co"><img class="lg" src="images/logos/logo_deloitte.svg.png" alt="Deloitte" loading="lazy"></div>
 <div class="co"><img class="lg" src="images/logos/logo_deutschebank.svg.png" alt="Deutsche Bank" loading="lazy"></div>
 <div class="co"><img class="lg sq" src="images/logos/logo_ey.svg.png" alt="EY" loading="lazy"></div>
@@ -124,37 +129,34 @@
 <div class="co"><img class="lg" src="images/logos/logo_vaneck.png" alt="VanEck" loading="lazy"></div>
 <div class="co"><img class="lg sq" src="images/logos/logo_wellsfargo-text.png" alt="Wells Fargo" loading="lazy"></div>
 <div class="co"><img class="lg" src="images/logos/logo_wolferesearch.png" alt="Wolfe Research" loading="lazy"></div>
-<div class="co"></div>
-<div class="co"></div>
-<div class="co"></div>
-<div class="co"></div>
+<div class="co co-more" aria-hidden="true"></div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 24px; margin-top: 24px">
 <div style="display: flex; justify-content: space-between; align-items: end"><h3 class="hd" style="font-size: 44px">Alumni Stories</h3><span class="mut">05 stories</span></div>
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
 <figure style="grid-column: span 2; margin: 0; background: #4ade80; padding: 40px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px">
 <blockquote style="margin: 0; font-family: Sora, sans-serif; font-size: 28px; line-height: 1.35; color: #05140a">"FQE prepares students for the 'real' Wall Street. By focusing on low-latency execution and model back-testing, members enter internships with a technical maturity that sets them apart from typical undergraduates."</blockquote>
-<figcaption style="display: flex; flex-direction: column; gap: 4px"><span style="font-family: Sora, sans-serif; font-weight: 700; font-size: 17px; color: #05140a">Mathematics, Class 2025</span><span class="mut" style="font-size: 11px; color: #0a1f12">Systematic Trading @ Investment Bank</span></figcaption>
+<figcaption style="display: flex; flex-direction: column; gap: 4px"><span style="font-family: Sora, sans-serif; font-weight: 700; font-size: 17px; color: #05140a">Mathematics, Class 2025</span><span class="mut" style="font-size: 12px; color: #0a1f12">Systematic Trading @ Investment Bank</span></figcaption>
 </figure>
 
 <figure style="margin: 0; background: #0a1f12; border: 1px solid rgba(240,250,244,.1); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px">
 <blockquote style="margin: 0; font-size: 16px; line-height: 1.6; color: #f0faf4">"The FQE community is filled with like-minded students who are genuinely passionate about math and coding. It's the best place on campus to find a study partner for stochastic calculus or a teammate for a trading competition."</blockquote>
-<figcaption style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid rgba(240,250,244,.12)"><span style="font-family: Sora, sans-serif; font-weight: 600; font-size: 16px">Computer Science, Class 2024</span><span class="mut" style="font-size: 11px">Senior Developer @ Financial Data Provider</span></figcaption>
+<figcaption style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid rgba(240,250,244,.12)"><span style="font-family: Sora, sans-serif; font-weight: 600; font-size: 16px">Computer Science, Class 2024</span><span class="mut" style="font-size: 12px">Senior Developer @ Financial Data Provider</span></figcaption>
 </figure>
 
 <figure style="margin: 0; background: #0a1f12; border: 1px solid rgba(240,250,244,.1); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px">
 <blockquote style="margin: 0; font-size: 16px; line-height: 1.6; color: #f0faf4">"By working on innovative projects like Unscented Kalman Filters for volatility surfaces or Sentiment Analysis, students gain hands-on technical experience that makes them competitive candidates for quantitative roles."</blockquote>
-<figcaption style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid rgba(240,250,244,.12)"><span style="font-family: Sora, sans-serif; font-weight: 600; font-size: 16px">Statistics &amp; Quantitative Modeling, Class 2023</span><span class="mut" style="font-size: 11px">Power Trading @ Investment Bank</span></figcaption>
+<figcaption style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid rgba(240,250,244,.12)"><span style="font-family: Sora, sans-serif; font-weight: 600; font-size: 16px">Statistics &amp; Quantitative Modeling, Class 2023</span><span class="mut" style="font-size: 12px">Power Trading @ Investment Bank</span></figcaption>
 </figure>
 
 <figure style="margin: 0; background: #0a1f12; border: 1px solid rgba(240,250,244,.1); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px">
 <blockquote style="margin: 0; font-size: 16px; line-height: 1.6; color: #f0faf4">"I went from having a traditional financial math background with an interest in coding to a competitive MFE candidate because the club pushed me to apply what I learn around Linear Algebra and C++, the gatekeeper skills for any top program."</blockquote>
-<figcaption style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid rgba(240,250,244,.12)"><span style="font-family: Sora, sans-serif; font-weight: 600; font-size: 16px">Financial Math, Class 2019</span><span class="mut" style="font-size: 11px">Quant Research @ Investment Bank</span></figcaption>
+<figcaption style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid rgba(240,250,244,.12)"><span style="font-family: Sora, sans-serif; font-weight: 600; font-size: 16px">Financial Math, Class 2019</span><span class="mut" style="font-size: 12px">Quant Research @ Investment Bank</span></figcaption>
 </figure>
 
 <figure style="margin: 0; background: #0a1f12; border: 1px solid rgba(240,250,244,.1); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px">
 <blockquote style="margin: 0; font-size: 16px; line-height: 1.6; color: #f0faf4">"By working on innovative projects like Unscented Kalman Filters for volatility surfaces or Sentiment Analysis, students gain hands-on technical experience that makes them competitive candidates for quantitative roles and prepared me for graduate school applications."</blockquote>
-<figcaption style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid rgba(240,250,244,.12)"><span style="font-family: Sora, sans-serif; font-weight: 600; font-size: 16px">Financial Math, Class 2023</span><span class="mut" style="font-size: 11px">Quant Trader @ Hedge Fund</span></figcaption>
+<figcaption style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid rgba(240,250,244,.12)"><span style="font-family: Sora, sans-serif; font-weight: 600; font-size: 16px">Financial Math, Class 2023</span><span class="mut" style="font-size: 12px">Quant Trader @ Hedge Fund</span></figcaption>
 </figure>
 
 </div>
@@ -166,18 +168,19 @@
 <div style="grid-column: span 7; display: flex; flex-direction: column; gap: 20px"><span class="lbl">Advisors</span><h2 class="hd" style="font-size: 72px">Advisors &amp; Mentors</h2></div>
 <p class="body" style="grid-column: span 5">Faculty who guide our members, projects, and competitions.</p>
 </div>
-<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 16px">
-<div class="person"><div class="ph"><img src="images/advisors/Evan_Fink.jpg" alt="Evan Fink" loading="lazy" onerror="this.onerror=null;this.src='images/leadership/placeholder_leader.png'"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Evan Fink</span><span class="mut" style="font-size: 11px">Lecturer, Mathematics · Baruch College</span></div></div>
-<div class="person"><div class="ph"><img src="images/advisors/Shane_Clark.jpg" alt="Shane Clark" loading="lazy" onerror="this.onerror=null;this.src='images/leadership/placeholder_leader.png'"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Shane Clark</span><span class="mut" style="font-size: 11px">Lecturer, Mathematics · Baruch College</span></div></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 280px)); gap: 24px 16px">
+<div class="person"><div class="ph"><img src="images/advisors/Evan_Fink.jpg" alt="Evan Fink" loading="lazy" onerror="this.onerror=null;this.src='images/leadership/placeholder_leader.png'"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Evan Fink</span><span class="mut" style="font-size: 12px">Lecturer, Mathematics</span></div></div>
+<div class="person"><div class="ph"><img src="images/advisors/Shane_Clark.jpg" alt="Shane Clark" loading="lazy" onerror="this.onerror=null;this.src='images/leadership/placeholder_leader.png'"></div><div style="display: flex; flex-direction: column; gap: 4px"><span class="nm">Shane Clark</span><span class="mut" style="font-size: 12px">Lecturer, Mathematics</span></div></div>
 </div>
 </section>
+</main>
 
 <footer style="flex-grow: 1; padding: 72px 88px 56px; border-top: 1px solid rgba(240,250,244,.1); display: flex; flex-direction: column; gap: 40px">
-<div style="display: flex; justify-content: space-between; align-items: end"><h2 class="hd" style="font-size: 72px">Stay curious.<br><span style="color: #4ade80">Stay quant.</span></h2><a class="btn solid" href="join.html">Join FQE →</a></div>
-<div class="mut" style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12)">
+<div style="display: flex; justify-content: space-between; align-items: end"><p class="hd" style="font-size: 72px">Stay curious.<br><span style="color: #4ade80">Stay quant.</span></p><a class="btn solid" href="join.html">Join FQE <span aria-hidden="true">→</span></a></div>
+<div class="mut" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12)">
 <a href="mailto:baruchfqe@gmail.com" style="color: #4ade80">baruchfqe@gmail.com</a>
 <span>Baruch's Premier Quantitative Club</span>
-<div style="display: flex; gap: 20px"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub</a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn</a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram</a></div>
+<div style="display: flex; gap: 20px"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub&nbsp;<span aria-hidden="true">↗</span></a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn&nbsp;<span aria-hidden="true">↗</span></a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram&nbsp;<span aria-hidden="true">↗</span></a></div>
 <span>FQE. Built by Students.</span>
 </div>
 </footer>
