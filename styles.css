@@ -33,6 +33,10 @@ a:focus-visible{color:#86efac}
 /* Text drawn over animated backgrounds keeps a dark halo so it stays legible */
 [data-fx] .lbl,[data-fx] .mut,[data-fx] .body,[data-fx] .hd{text-shadow:0 0 2px #05140a,0 0 10px #05140a}
 
+/* The site header stays visible while scrolling. The page wrapper uses overflow-x:clip
+   (not hidden) because a hidden overflow would turn it into a scroll container and break sticky. */
+header.gridbg{position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(240,250,244,.08)}
+html{scroll-padding-top:104px}
 [hidden]{display:none!important}
 h1.hd{font-size:clamp(48px,7.2vw,112px)!important}
 footer>.hd{font-size:clamp(44px,9vw,148px)!important}
@@ -44,7 +48,8 @@ footer>.hd{font-size:clamp(44px,9vw,148px)!important}
 @media (max-width:960px){
   section,header,footer{padding-left:24px!important;padding-right:24px!important}
   section{padding-top:64px!important;padding-bottom:64px!important}
-  header{height:auto!important;flex-wrap:wrap;gap:16px;padding-top:16px!important;padding-bottom:16px!important}
+  header{height:auto!important;flex-wrap:wrap;gap:4px 16px;padding-top:12px!important;padding-bottom:8px!important}
+  html{scroll-padding-top:128px}
   header .mut{display:none}
   nav{gap:20px!important;flex-wrap:wrap}
   [style*="grid-template-columns"]{grid-template-columns:minmax(0,1fr)!important}
@@ -65,6 +70,12 @@ footer>.hd{font-size:clamp(44px,9vw,148px)!important}
   figure[style*="#4ade80"]{padding:28px!important}
   figure[style*="#4ade80"] blockquote{font-size:clamp(20px,5.6vw,28px)!important}
   .hide-sm{display:none!important}
+}
+/* Phones: Join sits beside the logo; the four page links share the row below */
+@media (max-width:600px){
+  header{position:relative}
+  header .nav{width:100%;justify-content:space-between;gap:8px!important}
+  header .nav .btn{position:absolute;top:12px;right:24px}
 }
 /* Tablet tier: short three-item rows (class="trio") stay side by side from 600px up */
 @media (min-width:600px) and (max-width:960px){

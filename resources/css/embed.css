@@ -1,0 +1,31 @@
+/* Embed mode: applied when the site runs inside another page (html.is-embedded).
+   js/boot.js sets the class before first paint (?embed=1, or running in an iframe);
+   js/app.js posts the document height to the host so the iframe grows to fit (docs/EMBEDDING.md).
+   The host page owns the window, so this stylesheet removes chrome the host already provides and
+   anything that only makes sense in a scrolling window. Colours come from theme.css tokens only. */
+
+/* The frame is sized to its content, so the document must be able to shrink to its content too:
+   theme.css gives html height:100% and body min-height:100%, which would pin the frame open. */
+html.is-embedded { height: auto; scroll-padding-top: 0; padding-top: 0; padding-bottom: 0; }
+html.is-embedded body { min-height: 0; }
+
+/* The host site has its own footer and legal line. */
+html.is-embedded .foot { display: none; }
+
+/* Masthead: not sticky (an auto-height frame never scrolls, so sticky has no effect except to
+   misplace the bar) and a little more compact. Search, appearance, Menu and the section links
+   stay; the brand stays because it names this guide inside the club site. */
+html.is-embedded { --bar: 3.25rem; } /* 52px: still above the 44px hit target */
+html.is-embedded .masthead { position: relative; top: auto; -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--surface); }
+html.is-embedded .onpage nav { position: static; }
+
+/* The club site already draws its own grid paper; one layer of it is enough. Page headers keep
+   their flat surface, and the roadmap keeps its grid because it is a chart, not decoration. */
+html.is-embedded body { background-image: none; }
+html.is-embedded .page-head { background-image: none; }
+
+/* Dialogs: position:fixed fills the whole frame, which is as tall as the page. Pin the search
+   panel near the top of the frame (app.js asks the host to scroll the frame's top into view when
+   a dialog opens) and size the results list in rem, because vh here means the frame's height. */
+html.is-embedded #searchDlg { align-items: flex-start; padding-top: 4.5rem; }
+html.is-embedded #searchResults { max-height: 26rem; }

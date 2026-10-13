@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir _site
           cp *.html *.js styles.css favicon.ico favicon.png favicon.svg apple-touch-icon.png _site/
-          cp -R images project-pdfs _site/
+          cp -R images project-pdfs resources _site/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

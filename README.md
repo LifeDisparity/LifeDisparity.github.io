@@ -12,18 +12,20 @@ python3 -m http.server 8000
 
 | File | Contents |
 |---|---|
-| `index.html` | Home: hero, trading competition card, events + Google Calendar, alumni marquee. Also redirects old `#/...` links from the previous single-page site. |
+| `index.html` | Home: hero with matrix rain, overview, events + Google Calendar, alumni logo marquee. Also redirects old `#/...` links from the previous single-page site. |
 | `about.html` | About, leadership (`#leadership`), alumni and alumni stories (`#alumni`) |
 | `projects.html` | Current projects (PDF links) and the past-projects archive filtered by year |
 | `competitions.html` | Trading and applied math competitions (`#applied` opens the applied math tab) |
 | `join.html` | Application steps, interview structure (`#interview`), contact (`#contact`) |
 | `alpha-cheese.html` | Hidden easter egg (linked from the final "." in the home page footer) |
 | `404.html` | Not-found page; uses root-absolute paths because Pages serves it at any depth |
+| `resources/` | FQE Resources guide (copied from the private `LifeDisparity/quant_resources` repo): a single-page app with its own `css/` and `js/`, linked from the header's Resources tab. Its masthead has a "Main Site" back button. Update by re-copying `index.html`, `css/` and `js/` from that repo, then re-applying the back button, favicons and `../index.html` club links |
 | `styles.css` | Shared styles. Page-specific rules live in each page's `<style>` block. |
-| `images/` | `leadership/` headshots, `site/` photos, `logos/` company logos (currently unused) |
+| `fx.js` | Background effects (matrix rain, ASCII chart and torus, WebGL pixel pattern), enabled with `data-fx` on a section |
+| `images/` | `leadership/` headshots, `site/` photos, `logos/` alumni company logos, `advisors/` advisor headshots |
 | `project-pdfs/` | PDFs linked from `projects.html` |
 
-The header, banner and footer are repeated in each page, so update all pages when changing them.
+The header and footer are repeated in each page, so update all pages when changing them.
 
 ## Deploying
 

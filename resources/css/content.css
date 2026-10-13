@@ -1,0 +1,419 @@
+/* FQE Resources: everything inside a page (headings, prose, tables, notes, roadmap, cards, tools, forms,
+   next/prev, print). FQE brand language on Apple HIG foundations; tokens come from css/theme.css and the
+   brief is docs/DESIGN.md. No colour is hard-coded here: every colour is a token or a mix of tokens. */
+
+/* ---------------------------------------------------------------------------
+   Scope: local helpers derived from theme tokens
+   --------------------------------------------------------------------------- */
+main {
+  min-width: 0;
+  /* main is the width reference for the full-bleed roadmap (cqw excludes the scrollbar, unlike vw). */
+  container-type: inline-size;
+  /* Form-field and checkbox borders need >= 3:1 against the field and the panel (text-2 alone is
+     heavier than the FQE hairline look needs). */
+  --field-border: color-mix(in srgb, var(--text-2) 78%, var(--surface));
+  --measure: 38em;              /* prose line length: ~70-75 characters of Inter at 17px (68ch of "0" ran ~80) */
+  --label-size: 0.75rem;        /* 12px mono labels: the brief's floor */
+  --label-track: 0.12em;
+}
+
+.page[hidden] { display: none; }
+/* Scrollable regions (tables, roadmap) are focusable for keyboard scrolling; the ring sits outside the box,
+   so the wrapper's own overflow never clips it. */
+.table-wrap:focus-visible, .roadmap-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Headings take programmatic focus on route changes (tabindex="-1"); they are not controls, so no ring. */
+.page h1[tabindex="-1"]:focus, .page-body h2[tabindex="-1"]:focus, .page-body h3[tabindex="-1"]:focus { outline: none; }
+
+/* Shared mono label voice: eyebrows, table headers, tags, legend, form labels */
+.crumb, th, .tag, .legend, .form-grid label, .nextprev small, .roadmap .yr, .updated {
+  font-family: var(--font-mono); font-size: var(--label-size); font-weight: 500;
+  letter-spacing: var(--label-track); text-transform: uppercase; line-height: 1.4;
+}
+
+/* ---------------------------------------------------------------------------
+   Page header: FQE grid paper, display title
+   --------------------------------------------------------------------------- */
+.page-head {
+  background-color: var(--bg);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px; background-position: -1px -1px;
+  border-bottom: 1px solid var(--hairline-strong);
+  padding: 3rem 0 2.25rem;
+}
+.page-head-inner { max-width: 47rem; margin: 0 auto; padding: 0 2rem; }
+.crumb { color: var(--text-2); margin: 0 0 1rem; }
+.crumb a { color: var(--accent-text); text-decoration: none; }
+.crumb a:hover { text-decoration: underline; }
+h1 {
+  font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(1.75rem, 0.85rem + 4.4vw, 3.6rem); line-height: 1; letter-spacing: -0.03em;
+  color: var(--text); margin: 0; max-width: 20ch; overflow-wrap: break-word; hyphens: auto;
+}
+.lede { font-size: 1.1875rem; line-height: 1.5; color: var(--text-2); margin: 1.25rem 0 0; max-width: 38rem; }
+.updated { color: var(--text-2); margin: 1.25rem 0 0; text-transform: none; letter-spacing: 0.04em; }
+
+/* ---------------------------------------------------------------------------
+   Prose
+   --------------------------------------------------------------------------- */
+/* width:100% because auto margins make a grid item shrink-to-fit (it would grow to a wide table's min-content). */
+.page-body { width: 100%; max-width: 47rem; margin: 0 auto; padding: 2.5rem 2rem 4rem; overflow-wrap: break-word; }
+/* Grid/flex children default to min-width:auto; reset it so wide tables scroll inside their wrapper at 320px. */
+.page-body, .page-body > * { min-width: 0; }
+.page-body > p, .page-body > ul, .page-body > ol, .page-body > blockquote, .page-body > h2, .page-body > h3,
+.page-body > .note, .page-body > .legend { max-width: var(--measure); }
+h2 {
+  font-family: var(--font-display); font-weight: 700; font-size: 1.625rem; line-height: 1.2; letter-spacing: -0.02em;
+  color: var(--text); margin: 3rem 0 0.75rem;
+}
+h3 {
+  font-family: var(--font-display); font-weight: 700; font-size: 1.1875rem; line-height: 1.3; letter-spacing: -0.01em;
+  color: var(--text); margin: 2rem 0 0.5rem;
+}
+h2:first-child, h3:first-child { margin-top: 0; }
+.page-body p { margin: 0 0 1rem; }
+.page-body ul, .page-body ol { margin: 0 0 1.25rem; padding-left: 1.5rem; }
+.page-body li { margin-bottom: 0.4rem; padding-left: 0.25rem; }
+.page-body li > ul, .page-body li > ol { margin: 0.4rem 0 0; }
+/* Square-cut bullets; ordered lists take the FQE 01/02/03 numbering because they are real sequences. */
+.page-body ul { list-style-type: square; }
+.page-body ul > li::marker { color: var(--accent); }
+.page-body ol { padding-left: 2.25rem; }
+.page-body ol > li::marker {
+  content: counter(list-item, decimal-leading-zero) "  ";
+  font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; color: var(--accent-text);
+}
+.page-body strong { font-weight: 600; color: var(--text); }
+blockquote { margin: 0 0 1.25rem; padding: 0.25rem 0 0.25rem 1.25rem; border-left: 2px solid var(--accent); color: var(--text-2); }
+hr { border: 0; border-top: 1px solid var(--hairline); margin: 2.5rem 0; }
+code {
+  font-family: var(--font-mono); font-size: 0.875em; color: var(--text);
+  background: var(--surface-2); border: 1px solid var(--hairline); padding: 0.05em 0.3em; border-radius: var(--radius);
+}
+pre {
+  font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6; color: var(--text);
+  background: var(--surface); border: 1px solid var(--hairline); border-left: 3px solid var(--accent);
+  border-radius: var(--radius); padding: 1rem 1.25rem; margin: 0 0 1.25rem; overflow-x: auto; white-space: pre-wrap;
+}
+pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+.page-body kbd {
+  font-family: var(--font-mono); font-size: var(--label-size); text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text); background: var(--surface-2); border: 1px solid var(--hairline-strong); border-bottom-width: 2px;
+  padding: 0.05rem 0.35rem; border-radius: var(--radius);
+}
+
+/* Math: MathJax SVG paints with currentColor, so it follows the text colour in both themes. */
+.math { color: var(--text); overflow-x: auto; overflow-y: hidden; margin: 0 0 1.25rem; padding: 0.25rem 0; }
+.math mjx-container[display="true"] { margin: 0.5em 0 !important; }
+mjx-container svg { color: inherit; }
+/* MathJax failed to load (app.js adds html.no-math): show the TeX source as readable code, not broken prose. */
+.no-math .math {
+  font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--text-2);
+  background: var(--surface-2); border-left: 3px solid var(--hairline-strong); padding: 0.75rem 1rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Tables
+   --------------------------------------------------------------------------- */
+.table-wrap {
+  position: relative; max-width: 100%; overflow-x: auto; margin: 0 0 1.5rem; background: var(--surface);
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+}
+table { border-collapse: collapse; width: 100%; font-size: 0.9375rem; line-height: 1.5; }
+th, td { text-align: left; vertical-align: top; padding: 0.75rem 1rem; border-bottom: 1px solid var(--hairline); }
+th { color: var(--text-2); background: var(--surface-2); white-space: nowrap; border-bottom-color: var(--hairline-strong); }
+tbody tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 600; color: var(--text); }
+table.plain td:first-child { font-weight: 400; }
+
+/* ---------------------------------------------------------------------------
+   Callouts, tags, deadlines
+   --------------------------------------------------------------------------- */
+.note {
+  --note: var(--info); --note-soft: var(--info-soft);
+  background: color-mix(in srgb, var(--note-soft) 50%, var(--surface));
+  border: 1px solid var(--hairline); border-left: 3px solid var(--note);
+  border-radius: var(--radius); padding: 1rem 1.25rem; margin: 0 0 1.5rem;
+}
+.note.good { --note: var(--accent); --note-soft: var(--accent-soft); }
+.note.warn { --note: var(--warning); --note-soft: var(--warning-soft); }
+/* Not colour alone: the caution note carries a text label. */
+.note.warn::before {
+  content: "Caution"; display: block; margin-bottom: 0.35rem;
+  font-family: var(--font-mono); font-size: var(--label-size); font-weight: 500; letter-spacing: var(--label-track);
+  text-transform: uppercase; color: var(--warning);
+}
+.note p:last-child { margin-bottom: 0; }
+.tag {
+  display: inline-block; padding: 0.1rem 0.4rem; margin: 0 0.25rem 0.25rem 0; white-space: nowrap;
+  color: var(--accent-text); border: 1px solid currentColor; border-radius: var(--radius);
+}
+.tag.green { color: var(--accent-text); }
+.tag.blue { color: var(--info); }
+.tag.amber { color: var(--warning); }
+.tag.red { color: var(--danger); }
+.deadline { color: var(--danger); font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* ---------------------------------------------------------------------------
+   Columns, disclosure (FAQ and practice reveals), cards, next/prev
+   --------------------------------------------------------------------------- */
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr)); gap: 1rem; margin: 0 0 1.5rem; }
+.col { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 1.25rem 1.25rem 1rem; }
+.col h3 { margin-top: 0; }
+.col ul { margin-bottom: 0; }
+
+details { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); margin: 0 0 0.75rem; }
+details summary {
+  display: flex; gap: 0.75rem; align-items: flex-start; min-height: var(--tap);
+  padding: 0.7rem 1rem; cursor: pointer; list-style: none; font-weight: 600; color: var(--text);
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "+"; content: "+" / ""; flex: none; display: grid; place-items: center;
+  width: 1.5rem; height: 1.5rem; margin-top: 0.05rem;
+  font-family: var(--font-mono); font-weight: 500; line-height: 1; color: var(--accent-text);
+  border: 1px solid var(--field-border);
+}
+details[open] > summary::before { content: "\2212"; content: "\2212" / ""; background: var(--accent-soft); border-color: var(--accent-text); }
+details summary:hover { background: var(--surface-2); }
+details summary:focus-visible { outline-offset: -2px; }
+details[open] > summary { border-bottom: 1px solid var(--hairline); }
+details .inner { padding: 1rem 1.25rem 0.25rem 3.25rem; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(13.5rem, 100%), 1fr)); gap: 0.75rem; margin: 0 0 1.5rem; }
+.card {
+  display: flex; flex-direction: column; gap: 0.3rem; min-height: var(--tap); padding: 1rem 1.125rem;
+  color: var(--text); text-decoration: none; background: var(--surface);
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+}
+.card:hover { border-color: var(--accent); background: var(--surface-2); }
+.card strong { display: flex; justify-content: space-between; gap: 0.5rem; font-family: var(--font-display); font-weight: 700; font-size: 1.0625rem; line-height: 1.3; color: var(--text); }
+.card strong::after { content: "\2192"; content: "\2192" / ""; font-family: var(--font-mono); font-weight: 400; color: var(--accent-text); }
+.card span { font-size: 0.9375rem; line-height: 1.45; color: var(--text-2); }
+
+.nextprev { display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--hairline); }
+.nextprev a {
+  flex: 0 1 48%; min-height: var(--tap); display: block; padding: 0.75rem 1rem;
+  font-family: var(--font-display); font-weight: 700; font-size: 1rem; line-height: 1.3; color: var(--text); text-decoration: none;
+  background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius);
+}
+.nextprev a:hover { border-color: var(--accent); }
+.nextprev a.next { margin-left: auto; text-align: right; }
+.nextprev small { display: block; margin-bottom: 0.25rem; color: var(--text-2); }
+
+/* ---------------------------------------------------------------------------
+   Home roadmap (a chart: category colour + marker shape + legend)
+   --------------------------------------------------------------------------- */
+.roadmap-wrap {
+  --wide: min(76rem, 100cqw - 3rem);
+  width: var(--wide); margin: 0.5rem calc(50% - var(--wide) / 2) 1rem;
+  overflow-x: auto; position: relative;
+  border: 1px solid var(--hairline-strong); border-radius: var(--radius);
+  background-color: var(--surface);
+  /* FQE corner brackets as fixed backgrounds so they stay put while the chart scrolls; grid paper scrolls with it. */
+  background-image:
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 14px 2px, 2px 14px, 14px 2px, 2px 14px, 48px 48px, 48px 48px;
+  background-position: left top, left top, right bottom, right bottom, -1px -1px, -1px -1px;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+  background-attachment: scroll, scroll, scroll, scroll, local, local;
+}
+.roadmap {
+  /* 11 equal terms; 5.75rem keeps the longest single-term label ("Conversion") unbroken. */
+  display: grid; grid-template-columns: 8rem repeat(11, minmax(5.75rem, 1fr));
+  min-width: calc(8rem + 11 * 5.75rem + 10 * 3px + 2rem); padding: 1rem 1rem 1.25rem; row-gap: 0.625rem; column-gap: 3px;
+}
+.roadmap .yr { color: var(--text-2); text-align: center; padding-bottom: 0.4rem; border-bottom: 1px solid var(--hairline-strong); }
+.roadmap .yr.summer { border-bottom-style: dashed; }
+/* Lane labels stay pinned while the terms scroll sideways. */
+.roadmap .lane {
+  position: sticky; left: 0; z-index: 1; align-self: stretch; display: flex; align-items: center;
+  margin-left: -1rem; padding: 0 0.75rem 0 1rem; background: var(--surface); border-right: 1px solid var(--hairline);
+  font-family: var(--font-display); font-weight: 700; font-size: 0.9375rem; line-height: 1.25; color: var(--text);
+}
+.roadmap .bar {
+  --cat: var(--accent); --cat-soft: var(--accent-soft);
+  position: relative; align-self: stretch; padding: 0.45rem 0.45rem 0.5rem;
+  font-size: 0.8125rem; line-height: 1.35; color: var(--text); overflow-wrap: normal;
+  background: color-mix(in srgb, var(--cat-soft) 85%, var(--surface)); border: 1px solid var(--cat); border-radius: var(--radius);
+}
+/* Marker shape per category (charts.md: don't rely on colour alone). Same shapes as the legend. */
+.roadmap .bar::before, .legend i {
+  content: ""; display: inline-block; width: 0.5625rem; height: 0.5625rem; flex: none;
+  background: var(--cat); vertical-align: 0.05rem; margin-right: 0.375rem;
+}
+.bar.fqe   { --cat: var(--accent);  --cat-soft: var(--accent-soft); }
+.bar.quant { --cat: var(--info);    --cat-soft: var(--info-soft); }
+.bar.bank  { --cat: var(--warning); --cat-soft: var(--warning-soft); }
+.bar.key   { --cat: var(--danger);  --cat-soft: var(--danger-soft); border-width: 2px; font-weight: 600; }
+.bar.quant::before { clip-path: circle(50%); }
+.bar.bank::before { clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.bar.key::before { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); width: 0.6875rem; height: 0.6875rem; vertical-align: -0.02rem; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; color: var(--text-2); margin: 0 0 2rem; }
+.legend > span { display: inline-flex; align-items: center; }
+.legend i { border: 0; }
+/* Legend swatches: <i class="swatch fqe|quant|bank|convert"></i>, same colour and shape as the bars. */
+.swatch.fqe     { --cat: var(--accent); }
+.swatch.quant   { --cat: var(--info);    clip-path: circle(50%); }
+.swatch.bank    { --cat: var(--warning); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.swatch.convert { --cat: var(--danger);  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); width: 0.6875rem; height: 0.6875rem; vertical-align: -0.02rem; }
+
+
+/* ---------------------------------------------------------------------------
+   Tools: tracker and checklist panels, forms, buttons
+   --------------------------------------------------------------------------- */
+.tool {
+  position: relative; margin: 0 0 1.5rem; padding: 1.5rem;
+  background: var(--surface); border: 1px solid var(--hairline-strong); border-radius: var(--radius);
+}
+/* The page's one FQE corner-bracket accent */
+.tool::before, .tool::after { content: ""; position: absolute; width: 14px; height: 14px; pointer-events: none; }
+.tool::before { top: -1px; left: -1px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); }
+.tool::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+.form-grid label { display: flex; flex-direction: column; gap: 0.4rem; color: var(--text-2); }
+.tool input:not([type="checkbox"]), .tool select, .tool textarea, .tracker-table select {
+  font-family: var(--font-text); font-size: 1rem; font-weight: 400; line-height: 1.4; letter-spacing: normal; text-transform: none;
+  color: var(--text); background-color: var(--bg); border: 1px solid var(--field-border); border-radius: var(--radius);
+  min-height: var(--tap); padding: 0.5rem 0.75rem; width: 100%; margin: 0;
+}
+.tool textarea { min-height: 6rem; resize: vertical; }
+.tool select, .tracker-table select {
+  appearance: none; -webkit-appearance: none; padding-right: 2.25rem; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-2) 50%), linear-gradient(135deg, var(--text-2) 50%, transparent 50%);
+  background-position: calc(100% - 1.15rem) 50%, calc(100% - 0.8rem) 50%;
+  background-size: 0.35rem 0.35rem; background-repeat: no-repeat;
+}
+.tool input::placeholder, .tool textarea::placeholder { color: var(--text-2); opacity: 1; }
+.tool input:not([type="checkbox"]):hover, .tool select:hover, .tool textarea:hover, .tracker-table select:hover { border-color: var(--text-2); }
+.tool input:not([type="checkbox"]):focus-visible, .tool select:focus-visible, .tool textarea:focus-visible, .tracker-table select:focus-visible {
+  border-color: var(--accent-text); outline: 2px solid var(--accent-text); outline-offset: 0;
+}
+/* Invalid entry (empty Firm): danger border; the status message says what to fix. */
+.tool input[aria-invalid="true"]:not([type="checkbox"]), .tool input[aria-invalid="true"]:not([type="checkbox"]):hover {
+  border-color: var(--danger); box-shadow: inset 3px 0 0 var(--danger);
+}
+.tool input[aria-invalid="true"]:not([type="checkbox"]):focus-visible { border-color: var(--danger); outline-color: var(--danger); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: var(--tap); min-width: var(--tap); padding: 0 1.25rem; margin: 0;
+  font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.2;
+  cursor: pointer; border-radius: var(--radius);
+  background: var(--accent); color: var(--on-accent); border: 1px solid var(--accent);
+}
+.btn:hover { background: color-mix(in srgb, var(--accent) 85%, var(--surface)); }
+.btn:active { background: color-mix(in srgb, var(--accent) 70%, var(--surface)); }
+.btn.ghost { background: transparent; color: var(--accent-text); border-color: currentColor; }
+.btn.ghost:hover { background: var(--accent-soft); }
+.btn.ghost:active { background: color-mix(in srgb, var(--accent-soft) 60%, var(--accent)); }
+.btn.danger { background: transparent; color: var(--danger); border-color: currentColor; }
+.btn.danger:hover { background: var(--danger-soft); }
+.btn.danger:active { background: color-mix(in srgb, var(--danger-soft) 75%, var(--danger)); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+/* Inline filter label ("Show" + select), as a mono label. */
+.btn-row > label {
+  display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: var(--label-size); font-weight: 500;
+  letter-spacing: var(--label-track); text-transform: uppercase; color: var(--text-2);
+}
+.btn-row > label select { width: auto; min-width: 11rem; }
+.status-msg { display: inline-block; vertical-align: middle; font-size: 0.9375rem; color: var(--text); min-height: 1.5rem; margin: 0.75rem 0.75rem 0 0; }
+.status-msg:empty { margin: 0; min-height: 0; }
+.tool:has([aria-invalid="true"]) .status-msg:not(:empty)::before { background: var(--danger); }
+#tUndo { vertical-align: middle; margin-top: 0.75rem; }
+/* Inline confirmation for "Delete all" (destructive, not undoable): danger edge plus explicit wording. */
+.tool-confirm {
+  margin: 1rem 0 0; padding: 1rem 1.25rem;
+  background: color-mix(in srgb, var(--danger-soft) 60%, var(--surface));
+  border: 1px solid var(--hairline); border-left: 3px solid var(--danger); border-radius: var(--radius);
+}
+.tool-confirm p { margin: 0 0 0.75rem; font-weight: 600; color: var(--text); }
+/* It takes programmatic focus (tabindex=-1): a quiet edge change, not a big ring. */
+.tool-confirm:focus { outline: none; }
+.tool-confirm:focus-visible { outline: 1px solid var(--danger); outline-offset: -1px; }
+.status-msg:not(:empty)::before { content: ""; display: inline-block; width: 0.5rem; height: 0.5rem; margin-right: 0.5rem; background: var(--accent); vertical-align: 0.1rem; }
+
+.tracker-table td { font-weight: 400; vertical-align: middle; }
+.tracker-table td:first-child { font-weight: 600; }
+.tracker-table td:nth-child(4) { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tracker-table select { width: auto; min-width: 10rem; }
+.tracker-table th, .tracker-table td { padding-left: 0.75rem; padding-right: 0.75rem; }
+.tracker-table td.empty, .empty { font-weight: 400; font-style: italic; color: var(--text-2); padding: 1.25rem 1rem; }
+
+.page-body .checklist { list-style: none; margin: 0 0 1rem; padding: 0; }
+.page-body .checklist li {
+  position: relative; display: flex; gap: 0.875rem; align-items: flex-start;
+  min-height: var(--tap); padding: 0.625rem 0; margin: 0; border-bottom: 1px solid var(--hairline); padding-left: 0;
+}
+.checklist li:hover { background: color-mix(in srgb, var(--surface-2) 60%, transparent); }
+.checklist input[type="checkbox"] {
+  flex: none; width: 1.25rem; height: 1.25rem; margin: 0.2rem 0 0; accent-color: var(--accent); cursor: pointer;
+}
+.checklist label { cursor: pointer; }
+/* The whole row is the hit target: the label's overlay covers it and toggles the box. */
+.checklist label::before { content: ""; position: absolute; inset: 0; }
+.checklist li:has(input:checked) label { color: var(--text-2); }
+
+/* Also used on <caption>: absolute positioning takes it out of table layout. */
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Compact width (<= 600px): 16px gutters, tighter type
+   --------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .page-head { padding: 2rem 0 1.5rem; }
+  .page-head-inner { padding: 0 1rem; }
+  .page-body { padding: 1.75rem 1rem 3rem; }
+  .lede { font-size: 1.0625rem; margin-top: 1rem; }
+  h2 { font-size: 1.375rem; margin-top: 2.5rem; }
+  h3 { font-size: 1.125rem; }
+  th, td { padding: 0.625rem 0.75rem; }
+  .roadmap-wrap { --wide: calc(100cqw - 2rem); }
+  .roadmap .lane { font-size: 0.8125rem; padding-right: 0.5rem; }
+  .roadmap { grid-template-columns: 6.5rem repeat(11, minmax(5.75rem, 1fr)); min-width: calc(6.5rem + 11 * 5.75rem + 10 * 3px + 2rem); }
+  /* Three or more columns: keep cells readable and scroll inside the wrapper instead of squeezing. */
+  .table-wrap table:has(th:nth-child(3)) { min-width: 34rem; }
+  .tool { padding: 1.25rem 1rem; }
+  details .inner { padding: 0.875rem 1rem 0.25rem; }
+  .nextprev { flex-direction: column; }
+  .nextprev a { flex-basis: auto; }
+  .nextprev span:empty { display: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   Print: every page, light ink, no interactive chrome
+   --------------------------------------------------------------------------- */
+@media print {
+  .masthead, .nextprev, .onpage, .subnav, .foot { display: none !important; }
+  main {
+    color-scheme: light !important;
+    --bg: Canvas; --surface: Canvas; --surface-2: Canvas; --grid: transparent;
+    --text: CanvasText; --text-2: GrayText; --hairline: GrayText; --hairline-strong: CanvasText;
+    --accent: CanvasText; --accent-text: CanvasText; --accent-soft: transparent; --on-accent: Canvas;
+    --info: CanvasText; --info-soft: transparent; --warning: CanvasText; --warning-soft: transparent;
+    --danger: CanvasText; --danger-soft: transparent; --field-border: GrayText;
+    color: CanvasText; background: Canvas; container-type: normal;
+  }
+  .page[hidden] { display: block !important; }
+  .page { break-after: page; }
+  .page-head { background-image: none; padding: 0 0 1rem; }
+  .page-body { padding: 1.5rem 0 0; max-width: none; }
+  h2, h3 { break-after: avoid; }
+  tr, .note, .col, .card, pre { break-inside: avoid; }
+  .table-wrap, .roadmap-wrap { overflow: visible; }
+  .roadmap-wrap { width: auto; margin: 0 0 1rem; background-image: none; }
+  .roadmap { min-width: 0; grid-template-columns: 5.5rem repeat(11, minmax(0, 1fr)); padding: 0.5rem; }
+  .roadmap .lane { position: static; font-size: 0.75rem; }
+  .roadmap .bar { font-size: 0.6875rem; padding: 0.25rem; overflow-wrap: anywhere; }
+  .roadmap .yr { font-size: 0.5625rem; letter-spacing: 0.04em; }
+  .roadmap .bar::before, .legend i { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .tool .form-grid, .tool .btn-row, .tool-confirm, #tUndo, .status-msg, .tracker-table td:last-child, .tracker-table th:last-child { display: none; }
+  details::details-content { content-visibility: visible; display: block; }
+  .page-body p a[href^="http"]::after, .page-body li a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--text-2); overflow-wrap: anywhere; }
+}

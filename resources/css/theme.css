@@ -1,0 +1,465 @@
+/* FQE Resources: design tokens, base styles, and site chrome (masthead, sheet, search, sub-nav, rail, footer). */
+/* ---------------------------------------------------------------------------
+   FQE tokens. Brand: Financial Quants & Engineers (dark green, Sora / Inter /
+   IBM Plex Mono, grid paper, square corners). Light and dark both follow the
+   system setting (HIG dark-mode.md: people expect apps to respect their
+   preference); the manual toggle stores an override as [data-theme].
+   Contrast (WCAG 2, as HIG accessibility.md uses) is noted next to each text
+   token; see docs/DESIGN.md.
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: light dark;
+  /* Surfaces */
+  --bg: #f4f8f5;              /* page background */
+  --surface: #ffffff;         /* cards, tables, panels, sheets */
+  --surface-2: #eaf3ed;       /* hover / raised / table header / fields */
+  --chrome: rgba(255, 255, 255, 0.85); /* translucent bar material (thick, for legible text) */
+  --grid: rgba(5, 20, 10, 0.06);       /* grid-paper lines */
+  --hairline: #d5e2d9;        /* separators (decorative) */
+  --hairline-strong: #b9cdbf; /* container edges, control borders */
+  /* Text */
+  --text: #05140a;            /* 17.6:1 on --bg */
+  --text-2: #4a5d51;          /* 6.6:1 on --bg, 6.2:1 on --surface-2, 5.9:1 on --accent-soft */
+  /* FQE green */
+  --accent: #149a42;          /* fills, indicators, focus rings: >= 3.2:1 on every light surface */
+  --accent-text: #137337;     /* links and green text: >= 5.1:1 on every light surface incl. --accent-soft */
+  --accent-soft: #dcf5e4;     /* selected-row / tint fill */
+  --on-accent: #05140a;       /* text on --accent fills: 5.2:1 */
+  /* Semantic */
+  --info: #1d5fa8;  --info-soft: #e3eefb;
+  --warning: #9a5b06; --warning-soft: #fbf0dc;
+  --danger: #b42318; --danger-soft: #fde8e7;
+  /* Overlays */
+  --scrim: rgba(5, 20, 10, 0.45);        /* behind modal search */
+  --selection: #b9ebc9;                  /* ::selection fill, --text stays 13:1 on it */
+  --shadow-pop: 0 1.5rem 3rem -1rem rgba(5, 20, 10, 0.35);
+  /* Type */
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-text: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Shape and layout */
+  --radius: 0px;              /* FQE is square-cut */
+  --bar: 3.6rem;              /* masthead height, excluding the top safe-area inset */
+  --tap: 44px;                /* Apple HIG minimum hit target */
+}
+/* Dark: dimmer backgrounds, brighter foregrounds, not an inversion (HIG dark-mode.md). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #05140a; --surface: #0a1f12; --surface-2: #0f2a19; --chrome: rgba(5, 20, 10, 0.86);
+    --grid: rgba(240, 250, 244, 0.05); --hairline: rgba(240, 250, 244, 0.12); --hairline-strong: rgba(240, 250, 244, 0.22);
+    --text: #f0faf4; --text-2: #a3b8aa;
+    --accent: #4ade80; --accent-text: #4ade80; --accent-soft: rgba(74, 222, 128, 0.12); --on-accent: #05140a;
+    --info: #93c5fd; --info-soft: rgba(147, 197, 253, 0.12);
+    --warning: #fcd34d; --warning-soft: rgba(252, 211, 77, 0.12);
+    --danger: #f87171; --danger-soft: rgba(248, 113, 113, 0.12);
+    --scrim: rgba(0, 0, 0, 0.6); --selection: rgba(74, 222, 128, 0.32);
+    --shadow-pop: 0 1.5rem 3rem -1rem rgba(0, 0, 0, 0.7);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #05140a; --surface: #0a1f12; --surface-2: #0f2a19; --chrome: rgba(5, 20, 10, 0.86);
+  --grid: rgba(240, 250, 244, 0.05); --hairline: rgba(240, 250, 244, 0.12); --hairline-strong: rgba(240, 250, 244, 0.22);
+  --text: #f0faf4; --text-2: #a3b8aa;
+  --accent: #4ade80; --accent-text: #4ade80; --accent-soft: rgba(74, 222, 128, 0.12); --on-accent: #05140a;
+  --info: #93c5fd; --info-soft: rgba(147, 197, 253, 0.12);
+  --warning: #fcd34d; --warning-soft: rgba(252, 211, 77, 0.12);
+  --danger: #f87171; --danger-soft: rgba(248, 113, 113, 0.12);
+  --scrim: rgba(0, 0, 0, 0.6); --selection: rgba(74, 222, 128, 0.32);
+  --shadow-pop: 0 1.5rem 3rem -1rem rgba(0, 0, 0, 0.7);
+}
+:root[data-theme="light"] { color-scheme: light; }
+/* Increase Contrast (HIG color.md: colors work in light, dark, and increased contrast). */
+@media (prefers-contrast: more) {
+  :root { --text-2: #2c3b31; --hairline: #a3b9aa; --hairline-strong: #5f7867; --chrome: var(--surface); --accent-text: #0f5f2c; }
+}
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --text-2: #cfe0d4; --hairline: rgba(240, 250, 244, 0.3); --hairline-strong: rgba(240, 250, 244, 0.55); --chrome: var(--surface); --accent-text: #6ee7a0; }
+}
+@media (prefers-contrast: more) {
+  :root[data-theme="dark"] { --text-2: #cfe0d4; --hairline: rgba(240, 250, 244, 0.3); --hairline-strong: rgba(240, 250, 244, 0.55); --chrome: var(--surface); --accent-text: #6ee7a0; }
+}
+
+/* ---------------------------------------------------------------------------
+   Icons: one stroke set (2px, square caps to match FQE's square cut), drawn
+   with currentColor through a mask so they follow every theme.
+   --------------------------------------------------------------------------- */
+:root {
+  --i-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='M15.5 15.5 20 20'/%3E%3C/svg%3E");
+  --i-menu: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square'%3E%3Cpath d='M4 7h16M4 12h16M4 17h16'/%3E%3C/svg%3E");
+  --i-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E");
+  --i-moon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z'/%3E%3C/svg%3E");
+  --i-sun: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4'/%3E%3C/svg%3E");
+  --i-theme: var(--i-moon);   /* the toggle shows where it will take you */
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --i-theme: var(--i-sun); } }
+:root[data-theme="dark"] { --i-theme: var(--i-sun); }
+.ico { display: inline-block; flex: none; width: 1.25rem; height: 1.25rem; background-color: currentColor;
+  -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat; }
+.ico-search { --i: var(--i-search); }
+.ico-menu { --i: var(--i-menu); }
+.ico-close { --i: var(--i-close); }
+.ico-theme { --i: var(--i-theme); }
+#themeBtn[data-appearance="light"] .ico-theme { --i: var(--i-moon); }
+#themeBtn[data-appearance="dark"] .ico-theme { --i: var(--i-sun); }
+@media (forced-colors: active) { .ico { background-color: ButtonText; forced-color-adjust: none; } }
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html {
+  height: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--bar) + 1rem + env(safe-area-inset-top, 0px));
+  scrollbar-color: var(--hairline-strong) var(--bg);
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  margin: 0; min-height: 100%; display: flex; flex-direction: column;
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-text); font-size: 1.0625rem; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility;
+}
+body > main { flex: 1 0 auto; }
+a { color: var(--accent-text); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 0; }
+::selection { background: var(--selection); color: var(--text); }
+img, svg { max-width: 100%; }
+kbd {
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; line-height: 1; letter-spacing: 0.04em;
+  color: var(--text-2); background: var(--surface); border: 1px solid var(--hairline-strong); border-bottom-width: 2px;
+  padding: 0.2rem 0.35rem; white-space: nowrap;
+}
+.visually-hidden, .vh { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; border: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; clip-path: inset(50%) !important; white-space: nowrap !important; }
+/* Skip link: hidden until focused (app.js keeps the route and focuses the page's h1). */
+.skip-link {
+  position: fixed; z-index: 90; top: calc(0.5rem + env(safe-area-inset-top, 0px)); left: max(0.5rem, env(safe-area-inset-left, 0px));
+  display: inline-flex; align-items: center; min-height: var(--tap); padding: 0 1rem;
+  background: var(--accent); color: var(--on-accent); font-weight: 600; text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus, .skip-link:focus-visible { transform: none; outline: 2px solid var(--text); outline-offset: 2px; }
+/* Mono eyebrow: labels, group names (DESIGN.md: 12px, uppercase, 0.12em). */
+.eyebrow, .onpage p, .sheet h2, .foot-label {
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; line-height: 1.3;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-2);
+}
+
+/* Shared bar material (HIG materials.md: a translucent functional layer that lets
+   content peek through; liquid-glass.md › Tauri and Electron: backdrop blur with a
+   saturation boost, and an opaque fill when transparency is reduced). */
+.masthead, .sheet-top {
+  background: var(--surface);
+}
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .masthead, .sheet-top {
+    background: var(--chrome);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .masthead, .sheet-top { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   Masthead: wordmark, section tabs, tools
+   --------------------------------------------------------------------------- */
+.masthead {
+  position: sticky; top: 0; z-index: 40; flex: none;
+  height: calc(var(--bar) + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) max(1.5rem, env(safe-area-inset-right, 0px)) 0 max(1.5rem, env(safe-area-inset-left, 0px));
+  display: flex; align-items: stretch; gap: 1.75rem;
+  border-bottom: 1px solid var(--hairline-strong);
+}
+.brand { display: flex; align-items: center; gap: 0.7rem; flex: none; min-height: var(--tap); color: var(--text); text-decoration: none; }
+.brand-word { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; }
+.brand-label {
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; line-height: 1; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-2); padding-left: 0.7rem; border-left: 1px solid var(--hairline-strong); display: flex; align-items: center; height: 1.25rem;
+}
+.brand:hover .brand-label { color: var(--text); }
+.brand:focus-visible { outline-offset: -2px; }
+
+/* Section tabs: monochrome labels, one green indicator (HIG color.md › Liquid Glass
+   color and toolbars.md: keep bar items monochrome, color only what needs emphasis). */
+nav.sections { display: flex; align-items: stretch; gap: 0.125rem; flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; } /* scrolls only if text is enlarged past the breakpoint */
+nav.sections::-webkit-scrollbar { display: none; }
+nav.sections a {
+  position: relative; display: flex; align-items: center; padding: 0 0.75rem; min-width: var(--tap);
+  color: var(--text-2); text-decoration: none; font-size: 0.9375rem; font-weight: 500; white-space: nowrap;
+}
+nav.sections a::after { content: ""; position: absolute; left: 0.75rem; right: 0.75rem; bottom: 0; height: 3px; background: transparent; }
+nav.sections a:hover { color: var(--text); }
+nav.sections a:hover::after { background: var(--hairline-strong); }
+nav.sections a:active { background: var(--surface-2); }
+nav.sections a[aria-current]:not([aria-current="false"]) { color: var(--text); font-weight: 600; }
+nav.sections a[aria-current]:not([aria-current="false"])::after { background: var(--accent); }
+nav.sections a:focus-visible { outline-offset: -4px; }
+
+/* Back to the club's main site, on the leading edge of the bar (familiar back placement).
+   Separated from the brand by a hairline; the label hides on narrow bars. */
+.back-site { flex: none; color: var(--text-2); text-decoration: none; padding: 0 0.75rem 0 0.5rem; margin-left: -0.5rem; border-right: 1px solid var(--hairline); }
+.back-site:hover { color: var(--text); }
+.ico-back { font-size: 1.05rem; line-height: 1; }
+@media (max-width: 1279px) and (min-width: 1024px) { .back-site .tool-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
+.mast-tools { display: flex; align-items: center; gap: 0.25rem; flex: none; margin-left: auto; }
+.mast-tools button, .tool-btn {
+  -webkit-appearance: none; appearance: none; font: inherit; font-size: 0.9375rem; font-weight: 500; color: var(--text);
+  min-width: var(--tap); min-height: var(--tap); padding: 0 0.625rem; margin: 0;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background: transparent; border: 1px solid transparent; border-radius: 0; cursor: pointer;
+}
+.mast-tools button:hover, .tool-btn:hover { background: var(--surface-2); }
+.mast-tools button:active, .tool-btn:active { background: var(--hairline); }
+/* Search reads as a field on the trailing side of the bar (HIG search-fields.md ›
+   Tablet and desktop) and is the one way to search everything (searching.md). */
+.mast-tools .search-trigger {
+  justify-content: flex-start; width: 15rem; padding: 0 0.5rem 0 0.75rem; margin-right: 0.25rem;
+  background: var(--surface-2); border-color: var(--hairline); color: var(--text-2); font-weight: 400;
+}
+.mast-tools .search-trigger:hover { border-color: var(--hairline-strong); color: var(--text); background: var(--surface-2); }
+.search-trigger kbd { margin-left: auto; }
+/* Theme: a symbol, not a word (toolbars.md › Actions: prefer simple, recognizable
+   symbols). JS writes the word into .theme-label (kept for screen readers) and sets
+   data-appearance, which picks the moon or sun. */
+#themeBtn { padding: 0; width: var(--tap); }
+#menuBtn { display: none; }
+
+/* Wide: all sections in the bar. Narrower: a Menu button opens the all-pages sheet
+   (HIG layout.md › Size classes: same functions, less of them visible). */
+@media (max-width: 1023px) {
+  nav.sections { display: none; }
+  #menuBtn { display: inline-flex; }
+  .masthead { gap: 1rem; }
+}
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .masthead { gap: 1rem; padding-left: max(1rem, env(safe-area-inset-left, 0px)); padding-right: max(1rem, env(safe-area-inset-right, 0px)); }
+  nav.sections a { padding: 0 0.6rem; }
+  nav.sections a::after { left: 0.6rem; right: 0.6rem; }
+  .mast-tools .search-trigger { width: auto; min-width: 9rem; }
+}
+/* The Ctrl K hint only where a hardware keyboard is likely. */
+@media not all and (hover: hover) and (pointer: fine) { .search-trigger kbd { display: none; } }
+@media (max-width: 639px) {
+  .masthead { gap: 0.5rem; padding-left: max(1rem, env(safe-area-inset-left, 0px)); padding-right: max(0.5rem, env(safe-area-inset-right, 0px)); }
+  .mast-tools { gap: 0; }
+  .mast-tools .search-trigger { width: var(--tap); min-width: var(--tap); padding: 0; margin: 0; justify-content: center; background: transparent; border-color: transparent; color: var(--text); }
+  .search-trigger-label, .search-trigger kbd, .tool-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  #menuBtn { padding: 0; }
+}
+@media (max-width: 359px) {
+  .masthead { padding-left: max(0.75rem, env(safe-area-inset-left, 0px)); padding-right: max(0.25rem, env(safe-area-inset-right, 0px)); }
+  .brand { gap: 0.5rem; }
+  .brand-label { padding-left: 0.5rem; }
+}
+
+/* ---------------------------------------------------------------------------
+   All-pages sheet (narrow screens). Full-screen modal with a title that names
+   the task and a standard close symbol (HIG modality.md, sheets.md › Anatomy,
+   toolbars.md › Navigation). Elevated surface in dark (dark-mode.md › Mobile).
+   --------------------------------------------------------------------------- */
+.sheet {
+  position: fixed; inset: 0; z-index: 60; background: var(--surface); color: var(--text);
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+}
+.sheet-top {
+  position: sticky; top: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  height: calc(var(--bar) + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) max(0.5rem, env(safe-area-inset-right, 0px)) 0 max(1.25rem, env(safe-area-inset-left, 0px));
+  border-bottom: 1px solid var(--hairline-strong);
+}
+.sheet-top strong { font-family: var(--font-display); font-weight: 700; font-size: 1.125rem; letter-spacing: -0.01em; }
+.sheet-top .tool-btn { padding: 0; width: var(--tap); }
+#sheetBody {
+  max-width: 72rem; margin: 0 auto;
+  padding: 0.5rem max(1.25rem, env(safe-area-inset-right, 0px)) 0 max(1.25rem, env(safe-area-inset-left, 0px));
+  columns: 17rem; column-gap: 2.5rem;
+}
+.sheet h2 { margin: 1.75rem 0 0; padding: 0 0.75rem 0.5rem; border-bottom: 1px solid var(--hairline-strong); break-after: avoid; }
+.sheet ul { list-style: none; margin: 0; padding: 0; break-inside: avoid-column; } /* keep a group with its label */
+.sheet li { margin: 0; break-inside: avoid; }
+.sheet li a {
+  display: flex; align-items: center; min-height: 3rem; padding: 0.5rem 0.75rem;
+  color: var(--text); text-decoration: none; font-size: 1.0625rem; line-height: 1.3; border-bottom: 1px solid var(--hairline);
+}
+.sheet li a:hover { background: var(--surface-2); }
+.sheet li a:active { background: var(--hairline); }
+.sheet li a[aria-current="page"] { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); font-weight: 600; }
+.sheet li a:focus-visible { outline-offset: -2px; }
+.sheet:not([hidden]) { animation: fqe-rise 0.22s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* ---------------------------------------------------------------------------
+   Search: a modal sheet over a scrim. Cancel, Esc, or a click outside closes it
+   (HIG modality.md › Always give people an obvious way to dismiss a modal view).
+   --------------------------------------------------------------------------- */
+.search-dlg {
+  position: fixed; inset: 0; z-index: 70; background: var(--scrim);
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: calc(12vh + env(safe-area-inset-top, 0px)) max(1.5rem, env(safe-area-inset-right, 0px)) 1.5rem max(1.5rem, env(safe-area-inset-left, 0px));
+}
+.search-dlg:not([hidden]) { animation: fqe-fade 0.18s ease-out; }
+.search-dlg:not([hidden]) .search-panel { animation: fqe-rise 0.22s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.search-panel {
+  position: relative; width: min(42rem, 100%); max-height: 100%; display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--hairline-strong); box-shadow: var(--shadow-pop);
+}
+/* The FQE corner bracket, spent once: on the one modal panel. */
+.search-panel::before, .search-panel::after { content: ""; position: absolute; width: 14px; height: 14px; pointer-events: none; }
+.search-panel::before { top: -1px; left: -1px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); }
+.search-panel::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+.search-field {
+  display: flex; align-items: center; gap: 0.75rem; flex: none; min-height: 3.5rem; padding: 0 1rem;
+  border-bottom: 1px solid var(--hairline); color: var(--text-2);
+}
+.search-field:focus-within { box-shadow: inset 0 -2px 0 var(--accent); }
+.search-field input {
+  -webkit-appearance: none; appearance: none; flex: 1; min-width: 0; min-height: 3.5rem; margin: 0; padding: 0;
+  font: inherit; font-size: 1.0625rem; color: var(--text); background: transparent; border: 0; border-radius: 0;
+}
+.search-field input::placeholder { color: var(--text-2); opacity: 1; }
+.search-field input:focus-visible { outline: none; }
+.search-field input::-webkit-search-cancel-button, .search-field input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+.search-cancel {
+  -webkit-appearance: none; appearance: none; flex: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  min-height: var(--tap); min-width: var(--tap); margin: 0 -0.5rem 0 0; padding: 0 0.5rem; border: 0; border-radius: 0; background: transparent;
+  font: inherit; font-size: 0.9375rem; font-weight: 600; color: var(--accent-text); cursor: pointer;
+}
+.search-cancel:hover { background: var(--surface-2); }
+.search-cancel:active { background: var(--hairline); }
+.search-cancel kbd { font-weight: 500; }
+@media not all and (hover: hover) and (pointer: fine) { .search-cancel kbd { display: none; } }
+.search-results { list-style: none; margin: 0; padding: 0.5rem; overflow-y: auto; overscroll-behavior: contain; max-height: min(60vh, 34rem); scrollbar-width: thin; }
+.search-results li { margin: 0; }
+.search-results li + li { margin-top: 2px; }
+.search-results li a { display: block; min-height: var(--tap); padding: 0.7rem 0.9rem; color: var(--text); text-decoration: none; }
+.search-results li a:hover { background: var(--surface-2); }
+.search-results li a.active, .search-results li a[aria-selected="true"] { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+.search-results li a:focus-visible { outline-offset: -2px; }
+.search-results strong { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; font-size: 1rem; font-weight: 600; line-height: 1.35; }
+.search-results em {
+  flex: none; font-style: normal; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-2);
+}
+.search-results span {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+  margin-top: 0.2rem; font-size: 0.875rem; line-height: 1.45; color: var(--text-2);
+}
+.search-empty { padding: 0.9rem; font-size: 0.9375rem; color: var(--text-2); }
+
+/* Narrow: search becomes a top sheet, field and Cancel in one row, as on iPhone
+   (search-fields.md › Search in a toolbar: at the top when there is no bottom toolbar). */
+@media (max-width: 639px) {
+  .search-dlg { padding: 0; }
+  .search-panel { width: 100%; max-height: 100%; border: 0; border-bottom: 1px solid var(--hairline-strong); }
+  .search-panel::before, .search-panel::after { display: none; }
+  .search-field {
+    padding: env(safe-area-inset-top, 0px) max(1rem, env(safe-area-inset-right, 0px)) 0 max(1rem, env(safe-area-inset-left, 0px));
+    min-height: calc(3.5rem + env(safe-area-inset-top, 0px));
+  }
+  .search-results { max-height: calc(100dvh - 5rem - env(safe-area-inset-top, 0px)); padding: 0.5rem max(0.5rem, env(safe-area-inset-right, 0px)) calc(0.5rem + env(safe-area-inset-bottom, 0px)) max(0.5rem, env(safe-area-inset-left, 0px)); }
+  .search-dlg:not([hidden]) .search-panel { animation: fqe-drop 0.22s cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+
+/* ---------------------------------------------------------------------------
+   Section sub-navigation, inside the page header: square chips, the current one
+   filled with FQE green.
+   --------------------------------------------------------------------------- */
+.subnav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.75rem; padding: 0; list-style: none; }
+.subnav li { margin: 0; flex: none; }
+.subnav a {
+  display: inline-flex; align-items: center; min-height: var(--tap); padding: 0.375rem 0.875rem;
+  font-family: var(--font-text); font-size: 0.9375rem; font-weight: 500; line-height: 1.25; white-space: nowrap;
+  color: var(--text-2); background: var(--surface); border: 1px solid var(--hairline-strong); text-decoration: none;
+}
+.subnav a:hover { color: var(--text); border-color: var(--accent); }
+.subnav a:active { background: var(--surface-2); }
+.subnav a[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+/* Narrow: one scrolling row instead of a tall wall of chips. */
+@media (max-width: 639px) {
+  .subnav { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; scroll-snap-type: x proximity; padding: 2px; margin: -2px -2px 1.5rem; }
+  .subnav::-webkit-scrollbar { display: none; }
+  .subnav li { scroll-snap-align: start; }
+}
+
+/* ---------------------------------------------------------------------------
+   Page grid with an on-this-page rail
+   --------------------------------------------------------------------------- */
+.page-grid { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 47rem; margin: 0 auto; }
+/* Children never outgrow the track: wide tables and the roadmap scroll inside their own
+   wrappers instead of widening the page (margin:auto would size .page-body to its content). */
+.page-grid > * { min-width: 0; }
+.page-grid > .page-body { margin-left: 0; margin-right: 0; }
+.onpage { display: none; }
+@media (min-width: 1180px) {
+  .page-grid.has-rail { grid-template-columns: minmax(0, 47rem) 14rem; gap: 3rem; max-width: 64rem; }
+  .page-grid.has-rail .onpage { display: block; }
+  .page-grid.has-rail .page-body { margin: 0; max-width: none; }
+  .page-head.has-rail .page-head-inner { max-width: 64rem; }
+  .page-head.has-rail .page-head-inner > * { max-width: 47rem; }
+}
+.onpage nav {
+  position: sticky; top: calc(var(--bar) + env(safe-area-inset-top, 0px) + 1.5rem);
+  max-height: calc(100vh - var(--bar) - env(safe-area-inset-top, 0px) - 3rem); overflow-y: auto; scrollbar-width: thin;
+  padding-top: 2rem;
+}
+.onpage p { margin: 0 0 0.5rem; }
+.onpage ul { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--hairline-strong); }
+.onpage li { margin: 0; }
+.onpage a {
+  display: flex; align-items: center; min-height: var(--tap); padding: 0.375rem 0 0.375rem 1rem; margin-left: -1px;
+  border-left: 2px solid transparent; color: var(--text-2); text-decoration: none; font-size: 0.9375rem; line-height: 1.35;
+}
+.onpage a:hover { color: var(--text); border-left-color: var(--hairline-strong); }
+.onpage a.active { color: var(--text); font-weight: 600; border-left-color: var(--accent); }
+.onpage a:focus-visible { outline-offset: -2px; }
+
+/* ---------------------------------------------------------------------------
+   Footer
+   --------------------------------------------------------------------------- */
+.foot {
+  flex: none; background: var(--surface); border-top: 1px solid var(--hairline-strong); color: var(--text-2); font-size: 0.9375rem;
+  padding: 3.5rem max(1.5rem, env(safe-area-inset-right, 0px)) calc(1.75rem + env(safe-area-inset-bottom, 0px)) max(1.5rem, env(safe-area-inset-left, 0px));
+}
+.foot-inner { max-width: 64rem; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr); gap: 2.5rem 2rem; }
+.foot-mark { display: inline-flex; align-items: center; gap: 0.7rem; min-height: var(--tap); color: var(--text); text-decoration: none; }
+.foot-tag {
+  margin: 1.25rem 0 0; font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(1.75rem, 3.6vw, 2.5rem); line-height: 1; letter-spacing: -0.03em; color: var(--text);
+}
+.foot-tag span { display: block; color: var(--accent-text); }
+.foot-label { margin: 0 0 0.5rem; }
+.foot ul { list-style: none; margin: 0; padding: 0; }
+.foot li { margin: 0; }
+.foot-links a { display: inline-flex; align-items: center; min-height: var(--tap); color: var(--text); text-decoration: none; }
+.foot-links a:hover { color: var(--accent-text); text-decoration: underline; text-decoration-thickness: 1px; }
+.foot-base {
+  max-width: 64rem; margin: 2.5rem auto 0; padding-top: 1.25rem; border-top: 1px solid var(--hairline);
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; font-size: 0.875rem; line-height: 1.5;
+}
+.foot-base p { margin: 0; }
+.foot-base .eyebrow { align-self: center; }
+@media (max-width: 767px) {
+  .foot { padding-top: 2.5rem; padding-left: max(1rem, env(safe-area-inset-left, 0px)); padding-right: max(1rem, env(safe-area-inset-right, 0px)); }
+  .foot-inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .foot-brand { grid-column: 1 / -1; }
+}
+
+/* ---------------------------------------------------------------------------
+   Motion: brief and purposeful; fully off under Reduce Motion (HIG accessibility.md ›
+   Be cautious with fast-moving and blinking animations).
+   --------------------------------------------------------------------------- */
+@keyframes fqe-rise { from { opacity: 0; transform: translateY(0.5rem); } }
+@keyframes fqe-drop { from { opacity: 0; transform: translateY(-0.5rem); } }
+@keyframes fqe-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+@media print {
+  .skip-link { display: none !important; }
+}
