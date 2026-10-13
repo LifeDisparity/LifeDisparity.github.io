@@ -1,15 +1,208 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#fcf8f1" />
-    <meta name="description" content="A little room to unwind. Squeeze and crack a virtual wax squishy with your hand, mouse, or touch. Camera processing stays in your browser." />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>Wax Room — A Little Squish, A Softer Day</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Redirect links from the old single-page site (#/route and #section anchors).
+(function () {
+  var map = {
+    '#/trading-competition': 'competitions.html',
+    '#/competitions': 'competitions.html',
+    '#/live-scoreboard': 'competitions.html',
+    '#/applied-math-competition': 'competitions.html#applied',
+    '#/alpha-cheese': 'alpha-cheese.html',
+    '#/alphja-cheese': 'alpha-cheese.html',
+    '#/alpha_cheese': 'alpha-cheese.html',
+    '#/alphacheese': 'alpha-cheese.html',
+    '#about': 'about.html',
+    '#leadership': 'about.html#leadership',
+    '#alumni': 'about.html#alumni',
+    '#projects': 'projects.html',
+    '#competition': 'competitions.html',
+    '#contact': 'join.html',
+    '#calendar': 'index.html#events'
+  };
+  var h = location.hash;
+  if (map[h]) location.replace(map[h]);
+  else if (h.indexOf('#/') === 0 && h !== '#/') location.replace('404.html');
+})();
+</script>
+<title>FQE · Financial Quants &amp; Engineers at Baruch</title>
+<meta name="description" content="Financial Quants &amp; Engineers (FQE) at Baruch develops quantitative finance, coding, and research skills through projects, competitions, workshops, and alumni mentorship.">
+<meta name="theme-color" content="#05140a">
+<link rel="canonical" href="https://baruchfqe.github.io/">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon.png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FQE · Financial Quants &amp; Engineers">
+<meta property="og:description" content="Baruch's premier quantitative club for projects, competitions, technical workshops, and quant career development.">
+<meta property="og:url" content="https://baruchfqe.github.io/">
+<meta property="og:image" content="https://baruchfqe.github.io/images/site/about-baruch.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="styles.css?v=3">
+<style>
+h1.hd.hero-h1{font-size:clamp(56px,9.4vw,148px)!important;line-height:.9}
+@media (max-width:960px){h1.hd.hero-h1{font-size:clamp(48px,15vw,88px)!important}.hide-sm{display:none}}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.marquee{align-items:center}
+.marquee>.lg{margin-right:64px}
+.lg{display:block;height:28px;width:auto;max-width:180px;object-fit:contain;filter:brightness(0) invert(1);opacity:.7}
+.lg.sq{height:40px}
+/* Google Calendar has no dark embed; invert it and rotate hues back so event colors stay recognizable. */
+.cal>iframe{filter:invert(.9) hue-rotate(180deg) saturate(.85) brightness(.95)}
+</style>
+</head>
+<body>
+<div style="min-height: 100vh; box-sizing: border-box; background: #05140a; display: flex; flex-direction: column; overflow-x: hidden">
+
+<div class="gridbg" style="display: flex; flex-direction: column">
+<header style="height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 88px">
+<a href="index.html" style="display: flex; align-items: center; gap: 14px; color: #f0faf4"><span class="hd" style="font-size: 26px">FQE</span><span class="mut" style="font-size: 11px">Financial Quants &amp; Engineers</span></a>
+<nav class="nav" style="display: flex; align-items: center; gap: 40px; font-size: 15px">
+<a href="about.html">About</a>
+<a href="projects.html">Projects</a>
+<a href="competitions.html">Competitions</a>
+<a class="btn" href="join.html" style="min-height: 44px; color: #4ade80">Join</a>
+</nav>
+</header>
+
+<section data-fx="matrix" data-fx-vignette class="hero" style="padding: 40px 88px 32px; min-height: calc(100vh - 88px); min-height: calc(100svh - 88px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 56px">
+<div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 36px; max-width: 1120px">
+<span class="lbl">Baruch's Premier Quantitative Club</span>
+<h1 class="hd hero-h1">Financial<br>Quants &amp;<br><span style="color: #4ade80">Engineers</span></h1>
+<div style="display: flex; flex-direction: column; gap: 28px; max-width: 620px">
+<p class="body" style="font-size: 20px; color: #f0faf4">We develop Baruch undergraduates into the next generation of quants through interactive workshops, hands-on projects, and technical collaboration.</p>
+<div style="display: flex; align-items: center; gap: 24px"><a class="btn solid" href="about.html">About →</a><a class="btn" href="join.html">Join Us</a></div>
+</div>
+</div>
+<div class="mut" style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12); font-size: 11px">
+<div style="display: flex; gap: 24px; flex-wrap: wrap"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub</a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn</a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram</a><a href="mailto:baruchfqe@gmail.com" style="color: #a3b8aa">Email</a></div>
+<span class="hide-sm">Baruch College · New York, NY</span>
+<a href="#overview" style="color: #a3b8aa">Scroll ↓</a>
+</div>
+</section>
+</div>
+
+<section id="overview" style="background: #0a1f12; padding: 112px 88px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px">
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 24px">
+<span class="lbl">About</span>
+<h2 class="hd" style="font-size: 64px">FQE @ Baruch</h2>
+<p class="body">FQE develops technical depth and professional readiness at the intersection of quantitative finance and technology.</p>
+<a href="about.html" style="font-size: 15px">Meet the team and our alumni →</a>
+</div>
+<div style="grid-column: 7 / span 6; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-self: end">
+<div style="display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 40px; color: #4ade80">01</span><span class="lbl" style="color: #f0faf4">Workshops</span><span class="body" style="font-size: 14px">Applied sessions in computer science, math, hackathons, and computer architecture.</span></div>
+<a href="projects.html" style="display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 40px; color: #4ade80">02</span><span class="lbl" style="color: #f0faf4">Projects →</span><span class="body" style="font-size: 14px">End-to-end research, backtests, and real world applications.</span></a>
+<div style="display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid rgba(240,250,244,.2)"><span class="hd" style="font-size: 40px; color: #4ade80">03</span><span class="lbl" style="color: #f0faf4">Mentorship</span><span class="body" style="font-size: 14px">Direct access to alumni, faculty, and industry leaders shaping the future of finance.</span></div>
+</div>
+</section>
+
+<section id="events" data-fx="pixelblast" style="padding: 120px 88px; display: flex; flex-direction: column; gap: 48px">
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 20px"><span class="lbl">Events</span><h2 class="hd" style="font-size: 72px">FQE Activities and Schedule</h2></div>
+<p class="body" style="grid-column: span 5">Ongoing technical programming, collaborative project sessions, and curated industry engagement. Use the live calendar below to navigate the full event schedule.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px">
+<div class="ph" style="grid-column: span 4; min-height: 420px"><img src="images/site/bny-visit.jfif" alt="FQE members on a visit to BNY Mellon" loading="lazy"></div>
+<div style="grid-column: span 8; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: rgba(240,250,244,.12); border: 1px solid rgba(240,250,244,.12)">
+<div style="background: #05140a; padding: 32px; display: flex; flex-direction: column; gap: 10px"><span class="lbl">Workshops</span><span class="body" style="font-size: 15px">Hackathons, resume reviews, LeetCode sessions, and technical walkthroughs.</span></div>
+<div style="background: #05140a; padding: 32px; display: flex; flex-direction: column; gap: 10px"><span class="lbl">Alumni and Networking</span><span class="body" style="font-size: 15px">In-person bank visits, guest speakers, and direct industry exposure.</span></div>
+<div style="background: #05140a; padding: 32px; display: flex; flex-direction: column; gap: 10px"><span class="lbl">Team Culture</span><span class="body" style="font-size: 15px">Poker nights, collaborative socials, and events that strengthen execution as a team.</span></div>
+<div style="background: #05140a; padding: 32px; display: flex; flex-direction: column; gap: 10px"><span class="lbl">Education Events</span><span class="body" style="font-size: 15px">Math primers and focused sessions that build core quantitative depth.</span></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; border: 1px solid rgba(240,250,244,.15)">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid rgba(240,250,244,.15); background: #0a1f12">
+<div style="display: flex; align-items: center; gap: 16px"><span class="lbl">● Official FQE Schedule</span></div>
+<a class="btn" href="https://calendar.google.com/calendar/embed?src=baruchfqe%40gmail.com&amp;ctz=America%2FNew_York" target="_blank" rel="noopener" style="min-height: 44px">Open Google Calendar ↗</a>
+</div>
+<div class="ph cal" style="height: 780px; border: 0; padding: 0; background: #05140a"><iframe src="https://calendar.google.com/calendar/embed?height=780&amp;wkst=1&amp;ctz=America%2FNew_York&amp;bgcolor=%23ffffff&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=MONTH&amp;src=YmFydWNoZnFlQGdtYWlsLmNvbQ&amp;color=%23039BE5" title="FQE event calendar" loading="lazy"></iframe></div>
+</div>
+</section>
+
+<section style="padding: 40px 0; border-top: 1px solid rgba(240,250,244,.1); border-bottom: 1px solid rgba(240,250,244,.1); display: flex; flex-direction: column; gap: 24px; overflow: hidden">
+<div style="display: flex; justify-content: space-between; padding: 0 88px"><span class="mut">Where alumni are</span><a href="about.html#alumni" class="mut" style="color: #4ade80">Alumni stories →</a></div>
+<div style="overflow: hidden"><div class="marquee">
+<img class="lg sq" src="images/logos/logo_americanexpress.png" alt="American Express" loading="lazy">
+<img class="lg" src="images/logos/logo_bankofamerica.svg.png" alt="Bank of America" loading="lazy">
+<img class="lg" src="images/logos/logo_bloomberg.svg.png" alt="Bloomberg" loading="lazy">
+<img class="lg" src="images/logos/logo_bnymellon.svg.png" alt="BNY Mellon" loading="lazy">
+<img class="lg" src="images/logos/logo_cargill.svg.png" alt="Cargill" loading="lazy">
+<img class="lg" src="images/logos/logo_chimera.svg.svg" alt="Chimera" loading="lazy">
+<img class="lg" src="images/logos/logo_citi.png" alt="Citi" loading="lazy">
+<img class="lg" src="images/logos/logo_creditagricolecib.svg.png" alt="Credit Agricole CIB" loading="lazy">
+<img class="lg" src="images/logos/logo_deloitte.svg.png" alt="Deloitte" loading="lazy">
+<img class="lg" src="images/logos/logo_deutschebank.svg.png" alt="Deutsche Bank" loading="lazy">
+<img class="lg sq" src="images/logos/logo_ey.svg.png" alt="EY" loading="lazy">
+<img class="lg" src="images/logos/logo_fidelity.svg.svg" alt="Fidelity" loading="lazy">
+<img class="lg" src="images/logos/logo_fticonsulting.png.png" alt="FTI Consulting" loading="lazy">
+<img class="lg" src="images/logos/logo_goldman.svg.svg" alt="Goldman Sachs" loading="lazy">
+<img class="lg" src="images/logos/logo_intel.svg.svg" alt="Intel" loading="lazy">
+<img class="lg" src="images/logos/logo_jpmorganchase.svg.png" alt="JPMorgan Chase" loading="lazy">
+<img class="lg" src="images/logos/logo_marexsolutions.svg" alt="Marex Solutions" loading="lazy">
+<img class="lg" src="images/logos/logo_meta.svg.svg" alt="Meta" loading="lazy">
+<img class="lg" src="images/logos/logo_mufg.png" alt="MUFG" loading="lazy">
+<img class="lg sq" src="images/logos/logo_pwc.svg" alt="PwC" loading="lazy">
+<img class="lg" src="images/logos/logo_raymondjames.svg" alt="Raymond James" loading="lazy">
+<img class="lg" src="images/logos/logo_statestreet.png" alt="State Street" loading="lazy">
+<img class="lg" src="images/logos/logo_dtcc.png" alt="DTCC" loading="lazy">
+<img class="lg" src="images/logos/logo_vaneck.png" alt="VanEck" loading="lazy">
+<img class="lg sq" src="images/logos/logo_wellsfargo-text.png" alt="Wells Fargo" loading="lazy">
+<img class="lg" src="images/logos/logo_wolferesearch.png" alt="Wolfe Research" loading="lazy">
+<img aria-hidden="true" class="lg sq" src="images/logos/logo_americanexpress.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_bankofamerica.svg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_bloomberg.svg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_bnymellon.svg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_cargill.svg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_chimera.svg.svg" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_citi.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_creditagricolecib.svg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_deloitte.svg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_deutschebank.svg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg sq" src="images/logos/logo_ey.svg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_fidelity.svg.svg" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_fticonsulting.png.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_goldman.svg.svg" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_intel.svg.svg" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_jpmorganchase.svg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_marexsolutions.svg" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_meta.svg.svg" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_mufg.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg sq" src="images/logos/logo_pwc.svg" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_raymondjames.svg" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_statestreet.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_dtcc.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_vaneck.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg sq" src="images/logos/logo_wellsfargo-text.png" alt="" loading="lazy">
+<img aria-hidden="true" class="lg" src="images/logos/logo_wolferesearch.png" alt="" loading="lazy">
+</div></div>
+</section>
+
+<section class="gridbg" style="padding: 128px 88px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
+<h2 class="hd" style="grid-column: span 8; font-size: 60px; line-height: 1.02">Whether you are writing your first backtest or optimizing execution, there is a seat at the table.</h2>
+<div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 16px">
+<a class="btn solid" href="https://linktr.ee/FQEBaruch" style="justify-content: space-between">Apply via Linktree <span>→</span></a>
+<a href="join.html#interview" style="font-size: 15px">How interviews work →</a>
+</div>
+</section>
+
+<footer style="flex-grow: 1; padding: 96px 88px 56px; border-top: 1px solid rgba(240,250,244,.1); display: flex; flex-direction: column; gap: 56px">
+<h2 class="hd" style="font-size: 148px; line-height: .9">Stay curious.<br><span style="color: #4ade80">Stay quant.</span></h2>
+<div class="mut" style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12)">
+<a href="mailto:baruchfqe@gmail.com" style="color: #4ade80">baruchfqe@gmail.com</a>
+<span>Baruch's Premier Quantitative Club</span>
+<div style="display: flex; gap: 20px"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub</a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn</a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram</a></div>
+<span>FQE. Built by Students<a href="alpha-cheese.html" tabindex="-1" aria-hidden="true" style="color: inherit">.</a></span>
+</div>
+</footer>
+</div>
+<script src="fx.js?v=2" defer></script>
+</body>
 </html>

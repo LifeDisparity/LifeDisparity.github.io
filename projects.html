@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects · FQE</title>
+<meta name="description" content="Current and past research projects from Financial Quants &amp; Engineers (FQE) at Baruch: volatility surfaces, sentiment analysis, statistical arbitrage, and more.">
+<meta name="theme-color" content="#05140a">
+<link rel="canonical" href="https://baruchfqe.github.io/projects.html">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon.png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Projects · FQE">
+<meta property="og:description" content="Current and past FQE research projects in quantitative finance.">
+<meta property="og:url" content="https://baruchfqe.github.io/projects.html">
+<meta property="og:image" content="https://baruchfqe.github.io/images/site/about-baruch.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="styles.css?v=3">
+<style>
+.chip{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;box-sizing:border-box;border:1px solid rgba(240,250,244,.2);color:#a3b8aa;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.chip:hover{border-color:#4ade80;color:#f0faf4}
+.chip.on,.chip.on:hover{background:#4ade80;border-color:#4ade80;color:#05140a}
+.ptitle{margin:0;font-family:Sora,sans-serif;font-weight:600;font-size:28px;line-height:1.2}
+.years{display:flex;flex-direction:column;border-top:1px solid rgba(240,250,244,.15)}
+.yr{border-bottom:1px solid rgba(240,250,244,.15);scroll-margin-top:24px}
+.yr>summary{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:80px;cursor:pointer;list-style:none;font-family:Sora,sans-serif;font-weight:800;font-size:clamp(24px,3vw,40px);letter-spacing:-.02em;text-transform:uppercase;color:#f0faf4}
+.yr>summary::-webkit-details-marker{display:none}
+.yr>summary:hover{color:#86efac}
+.yr>summary:focus-visible{outline:2px solid #4ade80;outline-offset:4px}
+.pm::before{content:"+";display:inline-block;width:1ch;margin-left:6px;color:#4ade80}
+.yr[open] .pm::before{content:"\2212"}
+.yr-body{padding:8px 0 40px}
+.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.open .clamp{display:block;-webkit-line-clamp:unset;overflow:visible}
+.card{background:#0a1f12;border:1px solid rgba(240,250,244,.1);padding:28px;display:flex;flex-direction:column;gap:14px;min-height:300px;box-sizing:border-box}
+.card h3{margin:0;font-family:Sora,sans-serif;font-weight:600;font-size:19px;line-height:1.3}
+.card .meta{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:14px;border-top:1px solid rgba(240,250,244,.1)}
+.more{background:none;border:0;padding:0;cursor:pointer;color:#4ade80;font-size:10px;white-space:nowrap}
+.more:hover{color:#86efac}
+</style>
+</head>
+<body>
+<div style="min-height: 100vh; box-sizing: border-box; background: #05140a; display: flex; flex-direction: column; overflow-x: hidden">
+
+<div class="gridbg" style="display: flex; flex-direction: column; border-bottom: 1px solid rgba(240,250,244,.1)">
+<header style="height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 88px">
+<a href="index.html" style="display: flex; align-items: center; gap: 14px; color: #f0faf4"><span class="hd" style="font-size: 26px">FQE</span><span class="mut" style="font-size: 11px">Financial Quants &amp; Engineers</span></a>
+<nav class="nav" style="display: flex; align-items: center; gap: 40px; font-size: 15px">
+<a href="about.html">About</a>
+<a href="projects.html" aria-current="page" style="color: #f0faf4; text-decoration: underline; text-decoration-color: #4ade80; text-decoration-thickness: 2px; text-underline-offset: 8px">Projects</a>
+<a href="competitions.html">Competitions</a>
+<a class="btn" href="join.html" style="min-height: 44px; color: #4ade80">Join</a>
+</nav>
+</header>
+
+<section style="padding: 40px 88px 48px; display: flex; flex-direction: column; gap: 28px">
+<div class="mut" style="display: flex; gap: 10px; font-size: 11px"><a href="index.html" style="color: #a3b8aa">FQE</a><span>/</span><span style="color: #f0faf4">Projects</span></div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
+<h1 class="hd" style="grid-column: span 7; font-size: 112px">Projects</h1>
+<p class="body" style="grid-column: span 5; font-size: 18px">From alpha research to development, we build practical, relevant, hands-on projects.</p>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center">
+<nav aria-label="Jump to" style="display: flex; gap: 8px; flex-wrap: wrap">
+<a class="chip on" href="#current">Current · 3</a>
+<a class="chip" href="#y2025">2025 · 10</a>
+<a class="chip" href="#y2024">2024 · 6</a>
+<a class="chip" href="#y2023">2023 · 4</a>
+</nav>
+<a href="https://github.com/BaruchFinancialQuantsEngineers-FQE" style="font-size: 14px">View on GitHub →</a>
+</div>
+</section>
+</div>
+
+<section id="current" style="padding: 56px 88px 0; display: flex; flex-direction: column; scroll-margin-top: 24px">
+<div style="display: flex; justify-content: space-between; padding: 0 0 20px"><span class="lbl">Current work</span><span class="mut">Fall 2026</span></div>
+<article style="display: grid; grid-template-columns: 80px 1fr 200px; gap: 32px; padding: 36px 0; border-top: 1px solid rgba(240,250,244,.15)">
+<span class="hd" style="font-size: 40px; color: #4ade80">01</span>
+<div style="display: flex; flex-direction: column; gap: 14px"><h2 class="ptitle">Kalman Filter For Volatility Surface</h2><p class="body" style="font-size: 16px; max-width: 820px">We construct a methodology that offers a quick way for option market makers to update their theoretical values for options in real-time. We use an Unscented Kalman Filter (UKF) to quickly calibrate the implied volatility surface parameterization, which replaces the need for a costly objective function that needs to be minimized, allowing for real-time updates of the volatility surface.</p></div>
+<div style="display: flex; justify-content: flex-end; align-items: flex-start"><a class="btn" style="min-height: 44px; padding: 0 18px; font-size: 12px" href="project-pdfs/kalman-filter-for-volatility-surface.pdf" target="_blank" rel="noopener">View PDF ↗</a></div>
+</article>
+<article style="display: grid; grid-template-columns: 80px 1fr 200px; gap: 32px; padding: 36px 0; border-top: 1px solid rgba(240,250,244,.15)">
+<span class="hd" style="font-size: 40px; color: #4ade80">02</span>
+<div style="display: flex; flex-direction: column; gap: 14px"><h2 class="ptitle">Sentiment Analysis Project</h2><p class="body" style="font-size: 16px; max-width: 820px">This project aims to predict stock price movements by integrating sentiment analysis of Twitter posts, financial news articles, and Kalshi event contract names with historical stock data. By quantifying public sentiment overall and toward specific stocks, we seek to uncover patterns and correlations that influence market dynamics. A Long-Short-Term Memory (LSTM) neural network will model temporal dependencies within the combined sentiment metrics and stock prices.</p></div>
+<div style="display: flex; justify-content: flex-end; align-items: flex-start"><span class="mut" style="display: inline-flex; align-items: center; min-height: 44px; font-size: 11px">PDF coming soon</span></div>
+</article>
+<article style="display: grid; grid-template-columns: 80px 1fr 200px; gap: 32px; padding: 36px 0; border-top: 1px solid rgba(240,250,244,.15); border-bottom: 1px solid rgba(240,250,244,.15)">
+<span class="hd" style="font-size: 40px; color: #4ade80">03</span>
+<div style="display: flex; flex-direction: column; gap: 14px"><h2 class="ptitle">Kalshi Predictive Position Building</h2><p class="body" style="font-size: 16px; max-width: 820px">We use market making strategies defined by the level of uncertainty (risk averse and eager counterparties) to define optimal outcomes to build into an event contract position. Given high uncertainty in the market the optimal response is to be more certain, the opposite response is to make the market of an eager competitor with high certainty.</p></div>
+<div style="display: flex; justify-content: flex-end; align-items: flex-start"><a class="btn" style="min-height: 44px; padding: 0 18px; font-size: 12px" href="project-pdfs/kalshi-predictive-position-building.pdf" target="_blank" rel="noopener">View PDF ↗</a></div>
+</article>
+</section>
+
+<section id="archive" style="padding: 88px 88px 120px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end"><span class="lbl">Archive</span><span class="mut">Past projects by year</span></div>
+<div class="years">
+<details class="yr" id="y2025" open>
+<summary><span>2025 Archive</span><span class="mut">10 projects <span class="pm" aria-hidden="true"></span></span></summary>
+<div class="yr-body" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<article class="card">
+<span class="lbl">2025</span>
+<h3>Real-Time Value: A Model for Exchange-Sportsbook Edge Capture</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a real-time valuation engine that identifies mispriced odds by systematically comparing traditional sportsbook lines against the high-efficiency consensus of peer-to-peer betting exchanges. We developed a Bayesian framework to filter market noise and generate credible intervals around true implied probabilities, triggering execution when discrepancies exceeded a pre-defined profitability threshold. The final model serves as a robust statistical arbitrage tool, successfully capturing "edge" through automated liquidity monitoring and sub-second execution logic.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Eli W, Joseph M</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2025</span>
+<h3>Kalshi Predictive Position Building</h3>
+<p class="body clamp" style="font-size: 14px">We use market making strategies defined by the level of uncertainty (risk averse and eager counterparties) to define optimal outcomes to build into an event contract position. Given high uncertainty in the market the optimal response is to be more certain, the opposite response is to make the market of an eager competitor with high certainty.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Alexandre T, Arthur F, Zachary J</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2025</span>
+<h3>Pairs Trading Strategy Exploration</h3>
+<p class="body clamp" style="font-size: 14px">Our team engineered an automated pairs trading system that identifies and exploits transient price discrepancies between highly cointegrated asset pairs. We utilized Kalman Filters for dynamic hedge ratio estimation and implemented an Ornstein-Uhlenbeck process to model the mean-reversion speed of the spread. The final framework successfully backtested a market-neutral strategy, delivering consistent alpha by capturing sub-second "real-time value" during periods of heightened sectoral volatility.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Arthur F, William V</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2025</span>
+<h3>Volatility-Regime Markov Chain</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a Hidden Markov Model (HMM) to systematically identify and transition between distinct volatility regimes in real-time market data. We utilized maximum likelihood estimation to detect latent states—such as "quiet growth" versus "panic selling"—allowing for dynamic position sizing based on the prevailing risk environment. The final framework successfully enhanced a mean-reversion strategy by automatically scaling exposure down during high-volatility regimes to preserve capital and mitigate tail risk.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Daniel S</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2025</span>
+<h3>High-Frequency Trading with Fractional Brownian Motion</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a high-frequency trading system that utilizes Fractional Brownian Motion (fBM) to model asset price paths with long-range dependence and "memory" effects. We developed a real-time estimator for the Hurst exponent to distinguish between trending and mean-reverting regimes, allowing for dynamic adjustments in trade execution. The final framework successfully enhanced alpha generation by capturing sub-second inefficiencies that traditional Markovian models often overlook.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Arthur F, Amber T, Matt C</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2025</span>
+<h3>Markov Switching Variance Gamma</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a Markov Switching framework to capture the heavy tails and volatility clusters of asset returns by allowing Variance Gamma process parameters to transition between latent market states. We utilized an Expectation-Maximization (EM) algorithm to calibrate the model, successfully capturing the "jump-diffusion" characteristics that traditional Black-Scholes models often overlook. The final system improved option pricing accuracy and risk management by dynamically adjusting to regime shifts in skewness and kurtosis.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Kateryna C, Rodrigo S</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2025</span>
+<h3>Momentum Risk Management</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a dynamic risk overlay for momentum strategies to mitigate the impact of sudden trend reversals and "momentum crashes." We utilized a volatility-scaling approach combined with cross-sectional dispersion metrics to adjust position sizes in real-time as market conditions shifted. The final framework significantly improved the Sharpe ratio by preserving capital during high-risk regimes while maintaining exposure to strong performance trends.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Alexandre T, Edward C, Harmony L, Hope L</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2025</span>
+<h3>Pricing Convertible Bonds Using Monte Carlo Simulation</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team developed a Monte Carlo simulation framework to value convertible bonds by integrating path-dependent features such as early redemption, soft calls, and downward adjustment clauses. We utilized the Least Squares Monte Carlo (LSM) method to determine optimal exercise boundaries for the embedded American-style options while accounting for the dynamic coupling of credit risk and stock price volatility. The completed model successfully provided more accurate pricing than traditional lattice-based methods, particularly for complex hybrid securities in volatile market regimes.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Alexi T, Alan W, Megumi A</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2025</span>
+<h3>Sentiment Metrics and Investor Demand</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a system to quantify investor sentiment and its direct impact on asset demand shocks, distinguishing between institutional and individual behavioral drivers. We utilized Natural Language Processing (NLP) to extract real-time features from news and social media, integrating them into a predictive framework to identify shifts from safe to speculative securities. The completed project successfully demonstrated that sentiment-induced demand serves as a robust indicator for short-term market mispricing and return reversals across different volatility regimes.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Arthur F, Dmytro P, Emily P, Mantra S</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2025</span>
+<h3>Forecasting Foreign Exchange Behavior</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team developed a forecasting framework that utilizes Principal Component Analysis (PCA) to identify the dominant "eigen-factors" driving movements across a basket of global currencies. We engineered an adaptive eigenvector scaling model that dynamically reweights these factors to capture shifting correlations and lead-lag relationships during different market regimes. The completed system successfully enhanced FX return predictions and risk decomposition, providing a more robust alternative to traditional static correlation models in high-dimensional currency markets.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Alexi T, Andy L, Bryan L, Saikaung S</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+</div>
+</details>
+<details class="yr" id="y2024">
+<summary><span>2024 Archive</span><span class="mut">06 projects <span class="pm" aria-hidden="true"></span></span></summary>
+<div class="yr-body" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<article class="card">
+<span class="lbl">2024</span>
+<h3>Front Running Event Contracts</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team developed a trade surveillance system to identify front-running behaviors within event contracts, focusing on order book imbalances that precede major price-moving outcomes. We analyzed high-frequency transaction data and limit order flows to build a scoring model that flags suspicious liquidity-taking trades occurring just before significant event-driven volatility. The completed framework successfully distinguished between legitimate hedging strategies and predatory "trading ahead," providing actionable insights for improving market integrity and regulatory compliance.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Alexandre T, Andrew S, Dzara M</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2024</span>
+<h3>Mean Reversion Portfolio</h3>
+<p class="body clamp" style="font-size: 14px">Our team engineered a mean-reverting portfolio by applying L1-regularization to select a sparse, tradable subset of assets from a high-dimensional universe. We formulated an optimization problem that maximizes the Ornstein-Uhlenbeck reversion speed while simultaneously minimizing the number of active positions to reduce transaction costs. The final framework provided a robust statistical arbitrage strategy that maintained high predictive accuracy even under significant market regime shifts.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Daniel S, Joseph M, Liam L, Moussa K</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2024</span>
+<h3>Kelly Criterion Portfolio Optimization</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a dynamic asset allocation system by applying the Kelly Criterion to maximize the long-term exponential growth rate of a diversified portfolio. We developed a fractional Kelly model to mitigate high turnover and extreme drawdown risks, incorporating a shrinkage-based covariance estimator to stabilize return forecasts. The completed framework successfully outperformed equal-weighted benchmarks in backtesting, demonstrating superior risk-adjusted returns through mathematically optimized position sizing.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">William V</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2024</span>
+<h3>News Sentiment Analysis</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a real-time sentiment pipeline that converts unstructured financial news and headlines into actionable trading signals. We utilized FinBERT and LLM-based classification to extract polarity scores, which were then integrated into a Long Short-Term Memory (LSTM) network alongside historical price data. The completed framework demonstrated that incorporating news-based variables significantly enhanced predictive accuracy, identifying short-term market mispricings that traditional technical indicators often overlook.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Joseph G, Joseph M</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2024</span>
+<h3>Kelly-Criterion Portfolio Optimization with Re-Sampling</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team enhanced the Kelly Criterion by integrating Resampled Efficiency to address the formula’s inherent sensitivity to estimation errors in mean returns and covariance. We utilized Monte Carlo simulations to generate a distribution of optimal portfolios, averaging them to create a "resampled" allocation that is more robust to market noise. The completed framework significantly reduced portfolio turnover and extreme drawdowns compared to a traditional Kelly approach while maintaining superior long-term exponential growth.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">William V</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2024</span>
+<h3>Kelly-Criterion Portfolio Optimization with Re-Sampling</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered an automated statistical arbitrage system that identifies and exploits transient price discrepancies between highly cointegrated asset pairs. We utilized the Engle-Granger two-step method to establish long-term equilibrium and applied Kalman Filters to dynamically update the hedge ratio in real-time. The final framework successfully executed a market-neutral strategy, generating consistent alpha by capturing mean-reverting spreads while mitigating exposure to broader market volatility.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Colin A, Nick G</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+</div>
+</details>
+<details class="yr" id="y2023">
+<summary><span>2023 Archive</span><span class="mut">04 projects <span class="pm" aria-hidden="true"></span></span></summary>
+<div class="yr-body" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<article class="card">
+<span class="lbl">2023</span>
+<h3>Quantile ML Cross-Section Returns</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a Quantile Regression framework combined with Machine Learning to model the conditional distribution of cross-sectional asset returns. We utilized Gradient Boosted Trees with pinball loss functions to predict specific return quantiles, allowing for a more granular assessment of tail risk and potential upside compared to traditional mean-based models. The completed project successfully generated robust factor signals that outperformed standard linear regressions by capturing non-linear relationships and conditional skewness across various market regimes.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Elhaam B, Zhi L</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2023</span>
+<h3>Stock Factor Library</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a high-performance factor research library designed to systematically compute and evaluate traditional and alternative alpha signals across a broad equity universe. We implemented a modular pipeline for calculating momentum, value, and quality factors, incorporating robust techniques like Winsorization and Z-score normalization to ensure cross-sectional comparability. The completed library serves as a scalable backtesting engine, enabling rapid factor attribution and the identification of decay profiles across different market regimes.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">William V, Elhaam B</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2023</span>
+<h3>Cointegration Dispersion Pairs Trade</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team expanded the traditional pairs trading framework into a dispersion-based model by identifying cointegration clusters among multiple stocks within the same sector. We utilized Johansen tests to establish a long-term equilibrium between an index and its components, enabling us to trade the relative value of the basket's spread against the broader market. The final system successfully exploited implied volatility discrepancies and mean-reverting relationships, delivering a market-neutral return profile even during periods of individual stock decoupling.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Colin A, Daniel S, Matt M</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+<article class="card">
+<span class="lbl">2023</span>
+<h3>Factor Momentum Trading</h3>
+<p class="body clamp" style="font-size: 14px">In this project, our team engineered a factor momentum strategy that captures persistent trends in the performance of classic equity factors like value, size, and quality. We utilized a recursive weighting scheme based on historical information ratios to dynamically allocate capital toward the strongest-trending factors while de-emphasizing those showing signs of mean reversion. The completed framework successfully enhanced traditional static factor models by adapting to shifting market regimes and reducing the impact of factor crashes.</p>
+<div style="flex-grow: 1"></div>
+<div class="meta"><span class="mut" style="font-size: 10px">Colin A, Zhi L</span><button type="button" class="more mut" aria-expanded="false">Read →</button></div>
+</article>
+</div>
+</details>
+</div>
+</section>
+
+<footer style="flex-grow: 1; padding: 72px 88px 56px; border-top: 1px solid rgba(240,250,244,.1); display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; justify-content: space-between; align-items: end"><h2 class="hd" style="font-size: 72px">Stay curious.<br><span style="color: #4ade80">Stay quant.</span></h2><a class="btn solid" href="join.html">Join FQE →</a></div>
+<div class="mut" style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12)">
+<a href="mailto:baruchfqe@gmail.com" style="color: #4ade80">baruchfqe@gmail.com</a>
+<span>Baruch's Premier Quantitative Club</span>
+<div style="display: flex; gap: 20px"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub</a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn</a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram</a></div>
+<span>FQE. Built by Students.</span>
+</div>
+</footer>
+</div>
+<script>
+// Jump chips: open the target year's dropdown, then scroll to it.
+var chips = document.querySelectorAll('.chip');
+function jump(hash, smooth) {
+  var el = document.querySelector(hash);
+  if (!el) return;
+  if (el.tagName === 'DETAILS') el.open = true;
+  chips.forEach(function (c) { c.classList.toggle('on', c.getAttribute('href') === hash); });
+  el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+}
+chips.forEach(function (c) {
+  c.addEventListener('click', function (e) {
+    e.preventDefault();
+    var h = c.getAttribute('href');
+    history.replaceState(null, '', h);
+    jump(h, !matchMedia('(prefers-reduced-motion: reduce)').matches);
+  });
+});
+if (/^#(current|y20\d\d)$/.test(location.hash)) jump(location.hash, false);
+document.querySelectorAll('.more').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var open = btn.closest('article').classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    btn.textContent = open ? 'Less ↑' : 'Read →';
+  });
+});
+</script>
+</body>
+</html>

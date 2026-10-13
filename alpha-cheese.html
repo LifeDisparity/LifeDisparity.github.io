@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alpha Cheese | FQE</title>
+<meta name="description" content="You found the forbidden quant artifact.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05140a">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon.png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="styles.css?v=3">
+<style>
+  /* ---- Alpha Cheese page-specific styles ---- */
+  .ac-wrap { position: relative; }
+
+  @keyframes acPulse {
+    0%, 100% { color: #f0faf4; }
+    50% { color: #4ade80; }
+  }
+  @keyframes acFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes acMarquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes acMarqueeRev {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+  }
+  @keyframes acRain {
+    0% { transform: translateY(-12vh) rotate(0deg); opacity: 0; }
+    10% { opacity: .75; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+  @keyframes acSpin {
+    0% { transform: rotate(0deg) translateY(0); }
+    50% { transform: rotate(180deg) translateY(-10px); }
+    100% { transform: rotate(360deg) translateY(0); }
+  }
+  @keyframes acRainbow {
+    from { filter: hue-rotate(0deg) saturate(1); }
+    to { filter: hue-rotate(360deg) saturate(1.35); }
+  }
+  @keyframes acWobble {
+    0%, 100% { transform: rotate(0deg) translateX(0); }
+    25% { transform: rotate(1deg) translateX(2px); }
+    50% { transform: rotate(-1deg) translateX(-2px); }
+    75% { transform: rotate(1deg) translateX(1px); }
+  }
+  @keyframes acTileWobble {
+    0%, 100% { transform: rotate(var(--r)) scale(calc(var(--s) * 1.05)); }
+    25% { transform: rotate(calc(var(--r) + 1deg)) translateX(2px) scale(calc(var(--s) * 1.05)); }
+    50% { transform: rotate(calc(var(--r) - 1deg)) translateX(-2px) scale(calc(var(--s) * 1.05)); }
+    75% { transform: rotate(calc(var(--r) + 1deg)) translateX(1px) scale(calc(var(--s) * 1.05)); }
+  }
+  @keyframes acJumpZoom {
+    0% { transform: scale(.65); }
+    35% { transform: scale(1.25); }
+    70% { transform: scale(2.15); }
+    100% { transform: scale(3.1); }
+  }
+
+  .ac-pulse { animation: acPulse 1.6s ease-in-out infinite; }
+  .ac-float { animation: acFloat 2.2s ease-in-out infinite; }
+
+  /* Global modes */
+  .ac-rainbow { animation: acRainbow 2.5s linear infinite; }
+  .ac-shake { animation: acWobble 180ms linear infinite; }
+
+  /* Floating cheese photos */
+  .ac-photo {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    opacity: .17;
+    pointer-events: none;
+    z-index: 0;
+    animation: acSpin 8s linear infinite;
+  }
+
+  /* Cheese rain */
+  .ac-rain-layer { position: fixed; inset: 0; pointer-events: none; z-index: 40; overflow: hidden; }
+  .ac-rain {
+    position: absolute;
+    top: -10vh;
+    font-size: 1.2rem;
+    opacity: .7;
+    animation-name: acRain;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  /* Buttons */
+  .ac-btns { display: flex; flex-wrap: wrap; gap: 12px; }
+  /* zero-specificity resets so the shared .btn / .btn.solid rules always win */
+  :where(button.btn) { font: inherit; color: #4ade80; background: transparent; cursor: pointer; }
+  .ac-btns .btn[aria-pressed="true"] { background: rgba(74, 222, 128, .12); }
+
+  /* Stats */
+  .ac-stat { background: #0a1f12; border: 1px solid rgba(240, 250, 244, .1); padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .ac-stat .hd { font-size: 48px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+  /* Marquees */
+  .ac-marquee { overflow: hidden; border: 1px solid rgba(240, 250, 244, .1); padding: 18px 0; }
+  .ac-marquee.alpha { background: #0a1f12; border-color: rgba(74, 222, 128, .35); }
+  .ac-track { display: flex; width: max-content; animation: acMarquee 18s linear infinite; }
+  .ac-track.rev { animation: acMarqueeRev 14s linear infinite; }
+  .ac-track span { white-space: nowrap; padding-right: 40px; }
+  .ac-track span::before { content: "/// "; opacity: .5; }
+
+  /* Cheese tiles */
+  .ac-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; }
+  .ac-tile {
+    --r: 0deg;
+    --s: 1;
+    appearance: none;
+    font: inherit;
+    color: inherit;
+    text-align: center;
+    cursor: pointer;
+    background: #0a1f12;
+    border: 1px solid rgba(240, 250, 244, .1);
+    padding: 12px 12px 16px;
+    transform: rotate(var(--r)) scale(var(--s));
+    transition: transform 300ms ease, border-color 200ms ease;
+  }
+  .ac-tile:hover, .ac-tile:focus-visible {
+    border-color: #4ade80;
+    transform: rotate(var(--r)) scale(calc(var(--s) * 1.05));
+  }
+  .ac-tile:hover { animation: acTileWobble 350ms ease-in-out 1; }
+  .ac-tile img { display: block; width: 100%; height: 240px; object-fit: cover; }
+  .ac-tile .lbl { display: block; margin-top: 14px; }
+
+  /* Jumpscare */
+  .ac-jump {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(240, 250, 244, .96);
+    animation: acRainbow 90ms linear infinite;
+    overflow: hidden;
+  }
+  .ac-jump.on { display: flex; }
+  .ac-jump img { display: block; width: min(90vw, 560px); height: auto; object-fit: contain; margin: 0 auto; }
+  .ac-jump.on img { animation: acJumpZoom 950ms cubic-bezier(.1, .85, .2, 1) forwards; }
+  .ac-jump p { color: #05140a; font-size: clamp(28px, 6vw, 52px); margin-top: 12px; text-align: center; position: relative; }
+
+  @media (max-width: 960px) {
+    .ac-hero h1.hd { font-size: clamp(44px, 14vw, 112px) !important; }
+    .ac-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .ac-tile img { height: 180px; }
+    .ac-stat .hd { font-size: 36px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ac-pulse, .ac-float, .ac-photo, .ac-rainbow, .ac-shake,
+    .ac-tile, .ac-tile:hover, .ac-jump, .ac-jump.on img, .ac-track, .ac-track.rev {
+      animation: none !important;
+      transition: none !important;
+    }
+    .ac-rain-layer { display: none; }
+    .ac-rainbow { filter: hue-rotate(140deg) saturate(1.35); }
+    .ac-track { width: auto; flex-wrap: wrap; row-gap: 10px; padding: 0 24px; }
+    .ac-track [aria-hidden="true"] { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="ac-rain-layer" id="ac-rain" aria-hidden="true"></div>
+
+<div class="ac-jump" id="ac-jump" aria-hidden="true">
+  <div>
+    <img src="images/site/alpha_cheese.png" alt="">
+    <p class="hd">Jumpscare: Alpha Cheese</p>
+  </div>
+</div>
+
+<div id="ac-page" class="ac-wrap" style="min-height: 100vh; box-sizing: border-box; background: #05140a; display: flex; flex-direction: column; overflow-x: hidden">
+<img class="ac-photo" src="https://images.pexels.com/photos/773253/pexels-photo-773253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=240&amp;w=240" alt="" style="top: 96px; left: 8vw">
+<img class="ac-photo" src="https://images.pexels.com/photos/821365/pexels-photo-821365.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=240&amp;w=240" alt="" style="top: 28vh; right: 10vw; animation-duration: 10s">
+<img class="ac-photo" src="https://images.pexels.com/photos/4198024/pexels-photo-4198024.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=240&amp;w=240" alt="" style="top: 72vh; left: 16vw; animation-duration: 12s">
+<img class="ac-photo" src="https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=240&amp;w=240" alt="" style="top: 84vh; right: 14vw; animation-duration: 9s">
+
+<div class="gridbg" style="display: flex; flex-direction: column; position: relative; z-index: 1">
+<header style="height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 88px">
+<a href="index.html" style="display: flex; align-items: center; gap: 14px; color: #f0faf4"><span class="hd" style="font-size: 26px">FQE</span><span class="mut" style="font-size: 11px">Financial Quants &amp; Engineers</span></a>
+<nav class="nav" style="display: flex; align-items: center; gap: 40px; font-size: 15px">
+<a href="about.html">About</a>
+<a href="projects.html">Projects</a>
+<a href="competitions.html">Competitions</a>
+<a class="btn" href="join.html" style="min-height: 44px; color: #4ade80">Join</a>
+</nav>
+</header>
+
+<section class="ac-hero" style="padding: 120px 88px 96px; display: flex; flex-direction: column; gap: 28px">
+  <a class="lbl" href="index.html">&larr; Back to Main Site</a>
+  <div class="ac-float" style="display: flex; flex-direction: column; gap: 28px">
+    <span class="lbl">&#10022; Easter Egg Found</span>
+    <h1 class="hd ac-pulse" style="font-size: 112px">Alpha<br>Cheese</h1>
+    <p class="body" style="max-width: 640px">Congratulations. You found the forbidden quant artifact that backtests at 10,000x speed.</p>
+    <p class="lbl" id="ac-quote" aria-live="polite">If it is yellow, it is probably alpha.</p>
+  </div>
+  <div class="ac-btns">
+    <button type="button" class="btn" id="ac-rainbow-btn" aria-pressed="false">Enable Rainbow Quant Mode</button>
+    <button type="button" class="btn" id="ac-shake-btn" aria-pressed="false">Enable Volatility Mode</button>
+    <button type="button" class="btn" id="ac-quote-btn">Generate New Cheese Quote</button>
+  </div>
+</section>
+</div>
+
+<section style="padding: 96px 88px 48px; display: flex; flex-direction: column; gap: 32px; position: relative; z-index: 1">
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+    <div class="ac-stat"><span class="lbl">Alpha Generated</span><p class="hd" id="ac-alpha">420%</p></div>
+    <div class="ac-stat"><span class="lbl">Sigma Consumed</span><p class="hd" id="ac-sigma">100</p></div>
+    <div class="ac-stat"><span class="lbl">Cheese Minted</span><p class="hd" id="ac-minted">0</p></div>
+  </div>
+  <div>
+    <button type="button" class="btn solid" id="ac-mint-btn">Mint More Cheese (+1 Alpha)</button>
+  </div>
+</section>
+
+<section style="padding: 48px 0; display: flex; flex-direction: column; gap: 16px; position: relative; z-index: 1" aria-label="Alpha ticker">
+  <div class="ac-marquee alpha"><div class="ac-track lbl" id="ac-track-alpha"></div></div>
+  <div class="ac-marquee"><div class="ac-track rev mut" id="ac-track-beta"></div></div>
+</section>
+
+<section style="padding: 96px 88px 120px; display: flex; flex-direction: column; gap: 48px; position: relative; z-index: 1">
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <span class="lbl">Portfolio Holdings</span>
+    <h2 class="hd" style="font-size: 56px">100% Cheese.<br><span style="color: #4ade80">Zero Beta.</span></h2>
+  </div>
+  <div class="ac-tiles" id="ac-tiles"></div>
+  <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.1)">
+    <p class="mut">this page is not investment advice (unless cheese breaks resistance)</p>
+    <p class="lbl">current fake sharpe: <span id="ac-sharpe">10.0</span></p>
+  </div>
+</section>
+
+<footer style="flex-grow: 1; padding: 72px 88px 56px; border-top: 1px solid rgba(240,250,244,.1); display: flex; flex-direction: column; gap: 40px; position: relative; z-index: 1">
+<div style="display: flex; justify-content: space-between; align-items: end"><h2 class="hd" style="font-size: 72px">Stay curious.<br><span style="color: #4ade80">Stay quant.</span></h2><a class="btn solid" href="join.html">Join FQE →</a></div>
+<div class="mut" style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding-top: 24px; border-top: 1px solid rgba(240,250,244,.12)">
+<a href="mailto:baruchfqe@gmail.com" style="color: #4ade80">baruchfqe@gmail.com</a>
+<span>Baruch's Premier Quantitative Club</span>
+<div style="display: flex; gap: 20px"><a href="https://github.com/BaruchFinancialQuantsEngineers-FQE/" style="color: #a3b8aa">GitHub</a><a href="https://www.linkedin.com/company/fqe-baruch/" style="color: #a3b8aa">LinkedIn</a><a href="https://www.instagram.com/baruchfqe/" style="color: #a3b8aa">Instagram</a></div>
+<span>FQE. Built by Students.</span>
+</div>
+</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var cheeseTiles = [
+    { r: -3, s: 1, caption: 'alpha signal' },
+    { r: 2, s: 0.95, caption: 'risk on' },
+    { r: -1, s: 1.05, caption: 'cheese factor' },
+    { r: 4, s: 1, caption: 'latency: 0ms' },
+    { r: -4, s: 0.95, caption: 'sigma approved' },
+    { r: 1, s: 1.05, caption: 'edge detected' },
+    { r: -2, s: 1, caption: 'stonks only' },
+    { r: 3, s: 0.95, caption: 'market neutral?' },
+    { r: -5, s: 1, caption: 'quant vibes' },
+    { r: 5, s: 1, caption: 'buy the dip' },
+    { r: -2, s: 0.95, caption: 'backtest cooked' },
+    { r: 1, s: 1.05, caption: 'max sharpe' }
+  ];
+
+  var memeQuotes = [
+    'If it is yellow, it is probably alpha.',
+    'Cheese is temporary. Edge is eternal.',
+    'Risk parity, but make it dairy.',
+    'I came for finance. I stayed for cheddar.',
+    'No beta, only brie.'
+  ];
+
+  var alphaCarouselPhrases = [
+    'alpha cheese generated +420 bps',
+    'latency lowered to 0.0001 parmesan-seconds',
+    'portfolio rebalanced into pure gouda',
+    'cheddar momentum breakout confirmed',
+    'quant stack upgraded with dairy acceleration',
+    'mean reversion but for mozzarella',
+    'volatility absorbed by provolone hedge',
+    'signal strength: extra sharp'
+  ];
+
+  var betaCarouselPhrases = [
+    'sell beta buy cheddar',
+    'risk-free rate replaced with brie yield',
+    'drawdown avoided via camembert overlay',
+    'factor model says: overweight cheese',
+    'options desk now trading swiss spreads',
+    'liquidity powered by fondue flow',
+    'market regime: aggressively cheesy',
+    'this is definitely peer reviewed'
+  ];
+
+  var motionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function reducedMotion() { return !!(motionQuery && motionQuery.matches); }
+
+  var page = document.getElementById('ac-page');
+  var rainLayer = document.getElementById('ac-rain');
+  var jump = document.getElementById('ac-jump');
+  var alphaEl = document.getElementById('ac-alpha');
+  var sigmaEl = document.getElementById('ac-sigma');
+  var mintedEl = document.getElementById('ac-minted');
+  var sharpeEl = document.getElementById('ac-sharpe');
+  var quoteEl = document.getElementById('ac-quote');
+  var rainbowBtn = document.getElementById('ac-rainbow-btn');
+  var shakeBtn = document.getElementById('ac-shake-btn');
+
+  var state = {
+    rainbow: false,
+    shake: false,
+    minted: 0,
+    quoteIndex: 0,
+    sigma: 100 + Math.floor(Math.random() * 300),
+    jumpActive: false
+  };
+  var chaosAlpha = 420 + Math.floor(Math.random() * 580);
+  var chaosSharpe = 10 + Math.floor(Math.random() * 90);
+
+  // Always land at the top of the page (the original SPA forced this on route entry).
+  if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  // ---- Marquees: two identical copies so translateX(-50%) loops seamlessly ----
+  function fillTrack(id, phrases) {
+    var track = document.getElementById(id);
+    for (var copy = 0; copy < 2; copy++) {
+      for (var i = 0; i < phrases.length; i++) {
+        var span = document.createElement('span');
+        span.textContent = phrases[i];
+        if (copy === 1) span.setAttribute('aria-hidden', 'true');
+        track.appendChild(span);
+      }
+    }
+  }
+  fillTrack('ac-track-alpha', alphaCarouselPhrases);
+  fillTrack('ac-track-beta', betaCarouselPhrases);
+
+  // ---- Cheese tiles ----
+  var tilesEl = document.getElementById('ac-tiles');
+  cheeseTiles.forEach(function (tile) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ac-tile';
+    btn.style.setProperty('--r', tile.r + 'deg');
+    btn.style.setProperty('--s', String(tile.s));
+    var img = document.createElement('img');
+    img.src = 'images/site/alpha_cheese.png';
+    img.alt = 'Alpha Cheese';
+    img.loading = 'lazy';
+    var cap = document.createElement('span');
+    cap.className = 'lbl';
+    cap.textContent = tile.caption;
+    btn.appendChild(img);
+    btn.appendChild(cap);
+    btn.addEventListener('click', triggerJumpScare);
+    tilesEl.appendChild(btn);
+  });
+
+  // ---- Jumpscare ----
+  function triggerJumpScare() {
+    if (state.jumpActive) return;
+    state.jumpActive = true;
+    jump.classList.add('on');
+    window.setTimeout(function () {
+      state.jumpActive = false;
+      jump.classList.remove('on');
+    }, 1050);
+  }
+
+  // ---- Cheese rain: count grows as more cheese is minted ----
+  function rainCount() { return Math.min(18 + state.minted * 3, 180); }
+  function syncRain() {
+    var target = rainCount();
+    for (var i = rainLayer.children.length; i < target; i++) {
+      var drop = document.createElement('span');
+      drop.className = 'ac-rain';
+      drop.textContent = '🧀';
+      drop.style.left = ((i * 13) % 100) + '%';
+      drop.style.animationDuration = (5 + (i % 7)) + 's';
+      drop.style.animationDelay = ((i % 9) * 0.6) + 's';
+      rainLayer.appendChild(drop);
+    }
+  }
+
+  // ---- Rendering ----
+  function render() {
+    alphaEl.textContent = (chaosAlpha + state.minted) + '%';
+    mintedEl.textContent = String(state.minted);
+    sharpeEl.textContent = chaosSharpe + '.' + (state.minted % 10);
+    quoteEl.textContent = memeQuotes[state.quoteIndex];
+
+    page.classList.toggle('ac-rainbow', state.rainbow);
+    rainLayer.classList.toggle('ac-rainbow', state.rainbow);
+    rainbowBtn.textContent = state.rainbow ? 'Disable Rainbow Quant Mode' : 'Enable Rainbow Quant Mode';
+    rainbowBtn.setAttribute('aria-pressed', String(state.rainbow));
+
+    page.classList.toggle('ac-shake', state.shake);
+    shakeBtn.textContent = state.shake ? 'Disable Volatility Mode' : 'Enable Volatility Mode';
+    shakeBtn.setAttribute('aria-pressed', String(state.shake));
+
+    syncRain();
+  }
+
+  function renderSigma() { sigmaEl.textContent = state.sigma.toLocaleString(); }
+
+  // ---- Sigma ticker ----
+  var sigmaTimer = null;
+  function startSigma() {
+    if (sigmaTimer) window.clearInterval(sigmaTimer);
+    sigmaTimer = window.setInterval(function () {
+      state.sigma += 25 + Math.floor(Math.random() * 140) + (state.minted % 11);
+      renderSigma();
+    }, reducedMotion() ? 1000 : 120);
+  }
+  if (motionQuery) {
+    if (motionQuery.addEventListener) motionQuery.addEventListener('change', startSigma);
+    else if (motionQuery.addListener) motionQuery.addListener(startSigma);
+  }
+
+  // ---- Controls ----
+  rainbowBtn.addEventListener('click', function () { state.rainbow = !state.rainbow; render(); });
+  shakeBtn.addEventListener('click', function () { state.shake = !state.shake; render(); });
+  document.getElementById('ac-quote-btn').addEventListener('click', function () {
+    state.quoteIndex = (state.quoteIndex + 1) % memeQuotes.length;
+    render();
+  });
+  document.getElementById('ac-mint-btn').addEventListener('click', function () {
+    state.minted += 1;
+    render();
+  });
+
+  render();
+  renderSigma();
+  startSigma();
+})();
+</script>
+</body>
+</html>

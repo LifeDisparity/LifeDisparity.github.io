@@ -1,0 +1,46 @@
+/* FQE shared styles. Page-specific rules live in each page's <style> block. */
+body{margin:0;background:#05140a;color:#f0faf4;font-family:Inter,system-ui,sans-serif}
+a{color:#4ade80;text-decoration:none}a:hover{color:#86efac}
+.lbl{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#4ade80}
+.mut{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#a3b8aa}
+.hd{font-family:Sora,system-ui,sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:-.03em;line-height:.98;margin:0;color:#f0faf4}
+.body{font-size:17px;line-height:1.6;color:#a3b8aa;margin:0}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 24px;box-sizing:border-box;border:1px solid #4ade80;color:#4ade80;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;background:transparent;cursor:pointer}
+.btn.solid,.btn.solid:hover{background:#4ade80;color:#05140a}
+.ph{position:relative;background:repeating-linear-gradient(135deg,#0a1f12 0 12px,#0c2415 12px 24px);border:1px solid rgba(240,250,244,.12);display:flex;align-items:flex-end;padding:16px;box-sizing:border-box;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a3b8aa}
+.ph::before{content:"";position:absolute;top:-1px;left:-1px;width:14px;height:14px;border-top:2px solid #4ade80;border-left:2px solid #4ade80;z-index:1}
+.ph::after{content:"";position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;border-bottom:2px solid #4ade80;border-right:2px solid #4ade80;z-index:1}
+.ph>img,.ph>iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;display:block}
+.gridbg{background-color:#05140a;background-image:linear-gradient(rgba(240,250,244,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(240,250,244,.05) 1px,transparent 1px);background-size:48px 48px}
+.nav a{color:#a3b8aa}.nav a:hover{color:#f0faf4}
+
+[hidden]{display:none!important}
+h1.hd{font-size:clamp(48px,7.2vw,112px)!important}
+footer>h2.hd{font-size:clamp(44px,9vw,148px)!important}
+@media (max-width:960px){
+  section,header,footer{padding-left:24px!important;padding-right:24px!important}
+  section{padding-top:64px!important;padding-bottom:64px!important}
+  header{height:auto!important;flex-wrap:wrap;gap:16px;padding-top:16px!important;padding-bottom:16px!important}
+  header .mut{display:none}
+  nav{gap:20px!important;flex-wrap:wrap}
+  [style*="grid-template-columns"]{grid-template-columns:minmax(0,1fr)!important}
+  [style*="repeat(6"],[style*="repeat(4"],[style*="repeat(8"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  [style*="grid-column"]{grid-column:auto!important}
+  [style*="justify-content: space-between"]{flex-wrap:wrap;gap:16px}
+  h1.hd{font-size:clamp(44px,13vw,72px)!important}
+  h2.hd{font-size:clamp(32px,9vw,48px)!important}
+  footer>h2.hd{font-size:clamp(40px,13vw,72px)!important}
+  .ph[style*="height: 780px"]{height:480px!important}
+  [style="display: flex; justify-content: space-between; padding: 0 88px"]{padding:0!important}
+  .tab{padding:0 14px!important;white-space:nowrap}
+  [style*="align-items: center; gap: 20px"],[style*="align-items: center; gap: 24px"],[style*="align-items: center; gap: 28px"]{flex-wrap:wrap}
+}
+.marquee{display:flex;width:max-content;white-space:nowrap;animation:fqe-marquee 70s linear infinite}
+.marquee:hover{animation-play-state:paused}
+.marquee>span{padding-right:56px}
+@keyframes fqe-marquee{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.marquee{animation:none}}
+
+
+/* Film grain over every page */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.04;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")}
