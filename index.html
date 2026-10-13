@@ -45,9 +45,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" href="styles.css?v=7">
 <style>
-h1.hd.hero-h1{font-size:clamp(56px,9.4vw,148px)!important;line-height:.9}
+/* Scales with width AND height so the whole hero fits short laptop screens */
+h1.hd.hero-h1{font-size:clamp(48px,min(9.4vw,14vh),148px)!important;line-height:.9}
 @media (max-width:960px){h1.hd.hero-h1{font-size:clamp(48px,15vw,88px)!important}.hide-sm{display:none}}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -80,11 +81,11 @@ a[href="projects.html"]:hover .lbl{color:#4ade80!important}
 <div class="gridbg" style="display: flex; flex-direction: column; background-position: 0 -88px">
 
 <section data-fx="matrix" data-fx-opacity="0.25" data-fx-vignette class="hero" style="padding: 40px 88px 32px; min-height: calc(100vh - 88px); min-height: calc(100svh - 88px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 56px">
-<div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 36px; max-width: 1120px">
+<div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 28px; max-width: 1120px">
 <span class="lbl">Baruch's Premier Quantitative Club</span>
 <h1 class="hd hero-h1">Financial<br>Quants &amp;<br><span style="color: #4ade80">Engineers</span></h1>
-<div style="display: flex; flex-direction: column; gap: 28px; max-width: 620px">
-<p class="body" style="font-size: 20px; color: #f0faf4">We develop Baruch undergraduates into the next generation of quants through interactive workshops, hands-on projects, and technical collaboration.</p>
+<div style="display: flex; flex-direction: column; gap: 24px; max-width: 720px">
+<p class="body" style="font-size: 18px; color: #f0faf4">We develop Baruch undergraduates into the next generation of financial professionals, quants, mathematicians, computer scientists, and engineers through interactive workshops, hands-on projects, and technical collaboration.</p>
 <div style="display: flex; align-items: center; gap: 24px"><a class="btn solid" href="about.html">About <span aria-hidden="true">→</span></a><a class="btn" href="join.html">Join FQE</a></div>
 </div>
 </div>
@@ -113,7 +114,7 @@ a[href="projects.html"]:hover .lbl{color:#4ade80!important}
 <section id="events" data-fx="pixelblast" style="padding: 120px 88px; display: flex; flex-direction: column; gap: 48px">
 <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
 <div style="grid-column: span 7; display: flex; flex-direction: column; gap: 20px"><span class="lbl">Events</span><h2 class="hd" style="font-size: 72px">FQE Activities and Schedule</h2></div>
-<p class="body" style="grid-column: span 5">Ongoing technical programming, collaborative project sessions, and curated industry engagement. Use the live calendar below to navigate the full event schedule.</p>
+<p class="body aside-r" style="grid-column: span 5">Ongoing technical programming, collaborative project sessions, and curated industry engagement. Use the live calendar below to navigate the full event schedule.</p>
 </div>
 <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px">
 <div class="ph" style="grid-column: span 4; min-height: 420px"><img src="images/site/bny-visit.jfif" alt="FQE members on a visit to BNY Mellon" loading="lazy"></div>
@@ -198,7 +199,7 @@ a[href="projects.html"]:hover .lbl{color:#4ade80!important}
 </section>
 
 <section class="gridbg" style="padding: 128px 88px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
-<h2 class="hd" style="grid-column: span 8; font-size: 60px; line-height: 1.02">Whether you are writing your first backtest or optimizing execution, there is a seat at the table.</h2>
+<h2 class="hd" style="grid-column: span 8; font-size: 60px; line-height: 1.02">Whether you are coding your first personal project or already have your job offer secured, there is a seat at the table in our technical club.</h2>
 <div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 16px">
 <a class="btn solid" href="https://linktr.ee/FQEBaruch" style="justify-content: space-between">Apply to FQE <span aria-hidden="true">↗</span></a>
 <a href="join.html#interview" style="font-size: 15px">How interviews work <span aria-hidden="true">→</span></a>

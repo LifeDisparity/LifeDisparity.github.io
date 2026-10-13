@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" href="styles.css?v=7">
 <style>
 .chip{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;box-sizing:border-box;border:1px solid rgba(240,250,244,.2);color:#a3b8aa;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
 .chip:hover{border-color:#4ade80;color:#f0faf4}
@@ -34,6 +34,8 @@
 .yr>summary:focus-visible{outline:2px solid #4ade80;outline-offset:4px}
 .pm::before{content:"+";display:inline-block;width:1ch;margin-left:6px;color:#4ade80}
 .yr[open] .pm::before{content:"\2212"}
+.yr-note{margin:8px 0 8px;padding:16px 20px;border-left:2px solid #4ade80;background:#0a1f12;font-size:15px;line-height:1.6;color:#a3b8aa;max-width:760px}
+.yr-note .lbl{margin-right:10px}
 .yr-body{padding:8px 0 40px}
 .yr-body>.card:last-child:nth-child(3n+1){grid-column:1/-1;min-height:0}
 section[tabindex="-1"]:focus{outline:none}
@@ -67,7 +69,7 @@ section[tabindex="-1"]:focus{outline:none}
 <div class="mut" style="display: flex; align-items: center; gap: 10px; font-size: 12px"><a class="tap" href="index.html" style="color: #a3b8aa; text-decoration: underline; text-decoration-color: rgba(74,222,128,.45); text-underline-offset: 4px">FQE</a><span>/</span><span style="color: #f0faf4">Projects</span></div>
 <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
 <h1 class="hd" style="grid-column: span 7; font-size: 112px">Projects</h1>
-<p class="body" style="grid-column: span 5; font-size: 18px">From alpha research to development, we build practical, relevant, hands-on projects.</p>
+<p class="body aside-r" style="grid-column: span 5; font-size: 18px">From alpha research to development, we build practical, relevant, hands-on projects.</p>
 </div>
 <div style="display: flex; justify-content: space-between; align-items: center">
 <nav aria-label="Jump to" style="display: flex; gap: 8px; flex-wrap: wrap">
@@ -227,6 +229,7 @@ section[tabindex="-1"]:focus{outline:none}
 </details>
 <details class="yr" id="y2023">
 <summary><span>2023 Archive</span><span class="mut">04 projects <span class="pm" aria-hidden="true"></span></span></summary>
+<p class="yr-note"><span class="lbl">Note</span> Before these projects, FQE was primarily a networking-focused club.</p>
 <div class="yr-body" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
 <article class="card">
 <span class="lbl">2023</span>

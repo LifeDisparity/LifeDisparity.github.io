@@ -37,6 +37,9 @@ a:focus-visible{color:#86efac}
    (not hidden) because a hidden overflow would turn it into a scroll container and break sticky. */
 header.gridbg{position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(240,250,244,.08)}
 html{scroll-padding-top:104px}
+/* Short intro paragraphs beside a section heading sit flush right on wide screens */
+.aside-r{text-align:right}
+@media (max-width:960px){.aside-r{text-align:left}}
 [hidden]{display:none!important}
 h1.hd{font-size:clamp(48px,7.2vw,112px)!important}
 footer>.hd{font-size:clamp(44px,9vw,148px)!important}
@@ -81,7 +84,7 @@ footer>.hd{font-size:clamp(44px,9vw,148px)!important}
 @media (min-width:600px) and (max-width:960px){
   .trio{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 }
-.marquee{display:flex;width:max-content;white-space:nowrap;animation:fqe-marquee 70s linear infinite}
+.marquee{display:flex;width:max-content;white-space:nowrap;animation:fqe-marquee 45s linear infinite}
 .marquee:hover,.marquee:focus-within{animation-play-state:paused}
 .marquee>span{padding-right:56px}
 @keyframes fqe-marquee{to{transform:translateX(-50%)}}

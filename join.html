@@ -20,9 +20,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" href="styles.css?v=7">
 <style>
 .list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.5;color:#f0faf4}
+.track-card{gap:16px}
+.track-title{margin:0;font-family:Sora,sans-serif;font-weight:600;font-size:22px;line-height:1.3}
+.track-card .list strong{color:#f0faf4;font-weight:600}
 .panel{background:#05140a;border:1px solid rgba(240,250,244,.1);padding:32px;display:flex;flex-direction:column;gap:14px}
 .stepcard{background:#0a1f12;border:1px solid rgba(240,250,244,.12);padding:32px;display:flex;flex-direction:column;gap:14px}
 .stepcard .t{font-family:Sora,sans-serif;font-weight:600;font-size:20px}
@@ -51,7 +54,7 @@
 <div style="grid-column: span 7; display: flex; flex-direction: column; gap: 28px">
 <span class="lbl">Join</span>
 <h1 class="hd" style="font-size: 112px">Join FQE</h1>
-<p style="margin: 0; font-family: Sora, sans-serif; font-size: 26px; line-height: 1.4; color: #f0faf4; max-width: 680px">Whether you are writing your first backtest or optimizing execution, there is a seat at the table.</p>
+<p style="margin: 0; font-family: Sora, sans-serif; font-size: 26px; line-height: 1.4; color: #f0faf4; max-width: 680px">Whether you are writing your first line of code or building systems at scale, there is a seat at the table for every technical student.</p>
 </div>
 <div style="grid-column: 9 / span 4; background: #0a1f12; border: 1px solid rgba(74,222,128,.45); padding: 36px; display: flex; flex-direction: column; gap: 20px">
 <span class="lbl">Applications</span>
@@ -65,19 +68,35 @@
 
 <section class="trio" style="padding: 0 88px 120px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
 <div class="stepcard"><span class="hd" style="font-size: 48px; color: #4ade80">01</span><span class="t">Apply</span><span class="body" style="font-size: 15px">Submit your application through Linktree during the term's application window.</span></div>
-<div class="stepcard"><span class="hd" style="font-size: 48px; color: #4ade80">02</span><span class="t">Interview</span><span class="body" style="font-size: 15px">A behavioral interview, two technical questions, and a LeetCode-style coding question.</span></div>
+<div class="stepcard"><span class="hd" style="font-size: 48px; color: #4ade80">02</span><span class="t">Interview</span><span class="body" style="font-size: 15px">General members: a behavioral interview and two technical questions, no coding. Project members: one LeetCode-style coding question.</span></div>
 <div class="stepcard"><span class="hd" style="font-size: 48px; color: #4ade80">03</span><span class="t">Project Placement</span><span class="body" style="font-size: 15px">Minimum technical performance is required for project placement.</span></div>
 </section>
 
 <section id="interview" style="background: #0a1f12; padding: 120px 88px; display: flex; flex-direction: column; gap: 56px">
 <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: end">
 <div style="grid-column: span 7; display: flex; flex-direction: column; gap: 20px"><span class="lbl">Interview Information</span><h2 class="hd" style="font-size: 72px">Interview Structure</h2></div>
-<p class="body" style="grid-column: span 5">Attempt each question, explain your reasoning clearly, think independently and maintain integrity.</p>
+<p class="body aside-r" style="grid-column: span 5">Attempt each question, explain your reasoning clearly, think independently and maintain integrity.</p>
 </div>
-<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
-<div class="panel"><span class="lbl">Behavioral Interview</span><p class="body" style="font-size: 15px">We assess communication skills, professionalism, independence, and motivation.</p></div>
-<div class="panel"><span class="lbl">Technical (2 Questions)</span><p class="body" style="font-size: 15px">A foundational quantitative question designed to be relatively quick and a more complex quantitative problem focused on structure, logic, and assumptions.</p><span class="mut" style="font-size: 12px; line-height: 1.8">Expected value · basic probability · logic puzzles · exponential growth · intro finance</span></div>
-<div class="panel"><span class="lbl">LeetCode-Style Coding</span><p class="body" style="font-size: 15px">You may be asked to code live, explain complexity, and discuss edge cases.</p><span class="mut" style="font-size: 12px; line-height: 1.8">Array/list manipulation · sorting and merging · parentheses validation · number transformations · basic algorithms</span></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<div class="panel track-card">
+<span class="lbl">General Member</span>
+<h3 class="track-title">Traditional Interview</h3>
+<p class="body" style="font-size: 15px">A behavioral interview and two technical questions. No coding.</p>
+<ul class="list">
+<li><strong>Behavioral:</strong> we assess communication skills, professionalism, independence, and motivation.</li>
+<li><strong>Technical (2 questions):</strong> a foundational quantitative question designed to be relatively quick, and a more complex problem focused on structure, logic, and assumptions.</li>
+</ul>
+<span class="mut" style="font-size: 12px; line-height: 1.8">Expected value · basic probability · logic puzzles · exponential growth · intro finance</span>
+</div>
+<div class="panel track-card">
+<span class="lbl">Project Member</span>
+<h3 class="track-title">Coding Interview</h3>
+<p class="body" style="font-size: 15px">One LeetCode-style coding question, built around one of the technical interview questions. You solve it in code.</p>
+<ul class="list">
+<li>Expect to code live, explain your approach and its complexity, and discuss edge cases.</li>
+</ul>
+<span class="mut" style="font-size: 12px; line-height: 1.8">Array/list manipulation · sorting and merging · parentheses validation · number transformations · basic algorithms</span>
+</div>
 </div>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
 <div class="panel" style="padding: 36px; gap: 20px">
@@ -88,13 +107,13 @@
 <span class="cell">Advanced technical</span>
 <span class="cell">Coding ability</span>
 </div>
-<p class="body" style="font-size: 15px">Candidates are compared within similar academic levels.</p>
+<p class="body" style="font-size: 15px">General member interviews are scored on behavioral fit and the two technical questions; project member interviews on coding ability. Candidates are compared within similar academic levels.</p>
 <p class="body" style="font-size: 15px">We look for members who will contribute meaningfully, grow technically, strengthen the FQE network, and take projects seriously.</p>
 </div>
 <div style="border: 1px solid rgba(248,113,113,.55); background: rgba(248,113,113,.06); padding: 36px; display: flex; flex-direction: column; gap: 20px">
 <span class="mut" style="color: #f87171">Note on Integrity</span>
 <p style="margin: 0; font-family: Sora, sans-serif; font-weight: 600; font-size: 22px; line-height: 1.35">Technical interviews assess independent reasoning ability.</p>
-<ul class="list"><li>Calculators are not allowed</li><li>AI tools are not allowed</li><li>You may be asked to show written work and/or share your screen during coding</li></ul>
+<ul class="list"><li>Calculators are not allowed</li><li>AI tools are not allowed</li><li>You may be asked to show written work, and to share your screen during the coding interview</li></ul>
 <p class="body" style="font-size: 15px">Individuals found cheating during interviews will be disqualified from consideration.</p>
 </div>
 </div>
